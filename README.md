@@ -1,2 +1,2 @@
-# structural-pipeline
-dHCP structural pipeline
+# dHCP structural pipeline
+This is a placeholder for the structural pipeline code.
