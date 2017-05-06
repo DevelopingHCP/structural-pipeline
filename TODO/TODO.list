@@ -1,27 +1,38 @@
-- new file system (workdir mv/cp)
-- logs
-- check/set MIRTK specific version
-- atlas 'independent'
+- restore image instead of N4 in misc pipeline etc 
+
 - additional files flag e.g. dofs, posteriors
 - additional files flag e.g. vtk
-- common run function
-- no version in the dhcp pipeline
-- subj is fixed to subjectID-sessionID - no argument in dhcp pipeline
-- mirtk project-onto-surface instead of surface-assign-labels in process-surfaces-hemispheres.sh
+
+- auto setup - get different packages, link atlases
 
 - include measurements (and surface-scalar.. in applications)
 - include qc - copy output pdf to derived data folder
 - measures WM different
 
-- completed/not completed per stage not in log - or check if subject final directory exists
-- atlas/DRAWEM independent
-- spherical mesh dir
+- fsl independent
 - N4
 
-- auto setup - get different packages, link atlases
-- post seg - cp template dof
-- license
-- add atlases to config
+- license - N4, MNI atlas, ioannis atlas, SphericalMesh
 
-- drawem restore/T2 - N4
+- drawem restore/T2 - N4 care
 - drawem atlasname
+- drawem log
+
+- copyright in all files - drawem
+
+- fslmaths -> mirtk
+- BET in CARE
+- fslreorienthd in getdump
+
+
+# checklist
+
+- usages
+- new file system (workdir mv/cp)
+- logs
+- check/set MIRTK specific version
+- atlas 'independent'
+- common run function
+- mirtk project-onto-surface instead of surface-assign-labels in process-surfaces-hemispheres.sh
+- completed/not completed per stage not in log - or check if subject final directory exists
+- post seg - cp template dof

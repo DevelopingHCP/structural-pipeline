@@ -11,12 +11,13 @@ Arguments:
   sessionID                     session ID
   scan_age                      Number: Subject age in weeks. This is used to select the appropriate template for the initial registration. 
                                 If the age is <28w or >44w, it will be set to 28w or 44w respectively.
-  -T2 <subject_T2.nii.gz>       Nifti Image: The T2 image of the subject (Required)
-  -T1 <subject_T1.nii.gz>       Nifti Image: The T1 image of the subject
+  -T2 <subject_T2.nii.gz>       Nifti Image: The T2 image of the subject
+  -T1 <subject_T1.nii.gz>       Nifti Image: The T1 image of the subject (Optional)
 
 Options:
   -d / -data-dir  <directory>   The directory used to run the script and output the files. 
   -t / -threads  <number>       Number of threads (CPU cores) allowed for the registration to run in parallel (default: 1)
+  -no-reorient                  The images will not be reoriented before processing (using the FSL fslreorient2std command) (default: False) 
   -h / -help / --help           Print usage.
 "
   exit;
@@ -39,14 +40,16 @@ typeset -fx run
 # log function for completion
 runpipeline()
 {
-  log=$datadir/logs/$subj.$pipeline.log
-  err=$datadir/logs/$subj.$pipeline.err
+  pipeline=$1
+  shift
+  log=$logdir/$subj.$pipeline.log
+  err=$logdir/$subj.$pipeline.err
   echo "running $pipeline pipeline"
   echo "$@"
   "$@" >$log 2>$err
   if [ ! $? -eq 0 ]; then
     echo "failed: see log files $log , $err for details"
-    echo "NO" > $datadir/logs/$subj.failed
+    echo "NO" > $infodir/$subj.failed
     exit 1
   fi
   echo "-----------------------"
@@ -67,6 +70,7 @@ T1="-"
 T2="-"
 datadir=`pwd`
 threads=1
+noreorient=0
 codedir=$(dirname "$BASH_SOURCE")
 scriptdir=$codedir/scripts
 
@@ -77,6 +81,7 @@ while [ $# -gt 0 ]; do
     -T1)  shift; T1=$1; ;;
     -d|-data-dir)  shift; datadir=$1; ;;
     -t|-threads)  shift; threads=$1; ;; 
+    -no-reorient) noreorient=1;
     -h|-help|--help) usage; ;;
     -*) echo "$0: Unrecognized option $1" >&2; usage; ;;
      *) break ;;
@@ -87,10 +92,9 @@ done
 ################ Checks ################
 
 [ "$T2" != "-" -a "$T2" != "" ] || { echo "T2 image not provided!" >&2; exit 1; }
-[ $threads -eq 1 ] || { echo "Warning: Number of threads>1: This may result in minor reproducibility differences"; }
 
 # check whether the different tools are set and load parameters
-. ./$codedir/parameters/configuration.sh
+. $codedir/parameters/configuration.sh
 
 ################ Run ################
 
@@ -104,12 +108,17 @@ Age:         $age
 T1:          $T1
 T2:          $T2
 Directory:   $datadir 
-Threads:     $threads
+Threads:     $threads"
+[ $threads -eq 1 ] || { echo "Warning: Number of threads>1: This may result in minor reproducibility differences"; }
+echo "
 
 $BASH_SOURCE $command
 ----------------------------"
 
-mkdir -p $datadir/logs 
+infodir=$datadir/info 
+workdir=$datadir/workdir
+logdir=$workdir/logs
+mkdir -p $infodir $workdir $logdir
 
 # copy files in the T1/T2 directory
 for modality in T1 T2;do 
@@ -117,33 +126,33 @@ for modality in T1 T2;do
   if [ "$mf" == "-" -o "$mf" == "" ]; then continue; fi
   if [ ! -f "$mf" ];  then echo "The $modality image provided as argument does not exist!" >&2; exit 1; fi
 
-  mkdir -p $datadir/$modality
-  newf=$datadir/$modality/$subj.nii.gz
-  fslreorient2std $mf $newf
+  mkdir -p $workdir/$modality
+  newf=$workdir/$modality/$subj.nii.gz
+  if [ $noreorient -eq 1 ];then
+    cp $mf $newf
+  else
+    fslreorient2std $mf $newf
+  fi
   eval "$modality=$newf"
 done
 
 
-if [ ! -f $datadir/logs/$subj.completed -o ! -f $datadir/logs/$subj.failed ];then
+if [ ! -f $infodir/$subj.completed -a ! -f $infodir/$subj.failed ];then
 
   # segmentation
-  pipeline=segmentation
-  runpipeline $scriptdir/segmentation/pipeline.sh $T2 $age -d $datadir -t $threads
+  runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $age -d $workdir -t $threads
 
   # generate some additional files
-  pipeline=additional
-  runpipeline $scriptdir/misc/pipeline.sh $subj $age -d $datadir -t $threads
+  runpipeline additional $scriptdir/misc/pipeline.sh $subj $age -d $workdir -t $threads
 
   # surface extraction
-  pipeline=surface
-  runpipeline $scriptdir/surface/pipeline.sh $subj -d $datadir -t $threads
-
-  # create data directory for subject
-  pipeline=data
-  runpipeline $scriptdir/misc/strucure-data.sh $subj $age -d $datadir -t $threads
+  runpipeline surface $scriptdir/surface/pipeline.sh $subj -d $workdir -t $threads
 
   # measurements
-  # run $scriptdir/measures/pipeline.sh $subjectID $sessionID $subj $age -d $datadir
+  # run $scriptdir/measures/pipeline.sh $subjectID $sessionID $subj $age -d $workdir
 
-  echo "OK" > $datadir/logs/$subj.completed
+  # create data directory for subject
+  runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $age $datadir $workdir 
+
+  echo "OK" > $infodir/$subj.completed
 fi

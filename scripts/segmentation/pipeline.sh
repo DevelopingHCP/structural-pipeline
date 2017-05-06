@@ -20,16 +20,17 @@ Options:
 
 ################ ARGUMENTS ################
 
-[ $# -ge 2 ] || { usage; }
+[ $# -ge 3 ] || { usage; }
 command=$@
 T2=$1
-age=$2
+subj=$2
+age=$3
 
 datadir=`pwd`
 threads=1
 scriptdir=$(dirname "$BASH_SOURCE")
 
-shift; shift
+shift; shift; shift
 while [ $# -gt 0 ]; do
   case "$1" in
     -d|-data-dir)  shift; datadir=$1; ;;
@@ -42,7 +43,9 @@ while [ $# -gt 0 ]; do
 done
 
 echo "dHCP Segmentation pipeline
+T2:         $T2 
 Subject:    $subj 
+Age:        $age 
 Directory:  $datadir 
 Threads:    $threads
 
@@ -54,8 +57,10 @@ $BASH_SOURCE $command
 
 cd $datadir
 
-if [ ! -f $datadir/segmentations/${subj}_all_labels.nii.gz ];then
+if [ ! -f segmentations/${subj}_all_labels.nii.gz ];then
   run $DRAWEMDIR/pipelines/neonatal-pipeline-v1.1.sh $T2 $age -t $threads -c 1 -p 1 -v 1
+  echo "----------------------------
+"
 fi
 
 

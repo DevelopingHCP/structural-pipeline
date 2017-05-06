@@ -16,20 +16,12 @@ Options:
   exit;
 }
 
-run(){
-  echo "$@" >>$log 2>>$err
-  "$@" >>$log 2>>$err 
-  if [ ! $? -eq 0 ]; then
-    echo " failed: see log file $err for details"
-    exit 1
-  fi
-}
 
 process_image(){
   m=$1
   run fslmaths restore/$m/$subj.nii.gz -thr 0 restore/$m/$subj.nii.gz
   run fslmaths restore/$m/$subj.nii.gz -mul masks/${subj}_mask_defaced.nii.gz restore/$m/${subj}_defaced.nii.gz
-  run $DRAWEMDIR/ThirdParty/ITK/N4 3 -i restore/$m/$subj.nii.gz -x segmentations/${subj}_brain_mask.nii.gz -o "[restore/$m/${subj}_restore.nii.gz,restore/$m/${subj}_bias.nii.gz]" -c "[50x50x50,0.001]" -s 2 -b "[100,3]" -t "[0.15,0.01,200]"
+  run $N4 3 -i restore/$m/$subj.nii.gz -x segmentations/${subj}_brain_mask.nii.gz -o "[restore/$m/${subj}_restore.nii.gz,restore/$m/${subj}_bias.nii.gz]" -c "[50x50x50,0.001]" -s 2 -b "[100,3]" -t "[0.15,0.01,200]"
   #run fslmaths restore/$m/$subj.nii.gz -div bias/$subj.nii.gz -thr 0 restore/$m/${subj}_restore.nii.gz
   run fslmaths restore/$m/${subj}_restore.nii.gz -mul masks/${subj}_mask_defaced restore/$m/${subj}_restore_defaced.nii.gz
   run fslmaths restore/$m/${subj}_restore.nii.gz -mul masks/$subj.nii.gz restore/$m/${subj}_restore_brain.nii.gz
@@ -80,7 +72,7 @@ mkdir -p restore/T1 restore/T2
 if [ ! -f masks/${subj}_mask_defaced.nii.gz ];then 
     if [ ! -f dofs/$subj-MNI-n.dof.gz ];then 
       run mirtk compose-dofs dofs/$subj-template-$age-n.dof.gz $MNI_dofs/template-$age-MNI-n.dof.gz dofs/$subj-MNI-init-n.dof.gz 
-      run mirtk register N4/$subj.nii.gz $MNI_T1 -dofin dofs/$subj-MNI-init-n.dof.gz -dofout dofs/$subj-MNI-n.dof.gz -parin $registration_config > /dev/null
+      run mirtk register N4/$subj.nii.gz $MNI_T1 -dofin dofs/$subj-MNI-init-n.dof.gz -dofout dofs/$subj-MNI-n.dof.gz -parin $registration_config -threads $threads > /dev/null
       rm dofs/$subj-MNI-init-n.dof.gz 
     fi
     run mirtk transform-image $MNI_T1_mask masks/${subj}_MNI_mask.nii.gz -dofin dofs/$subj-MNI-n.dof.gz -target N4/$subj.nii.gz
@@ -97,7 +89,7 @@ fi
 if [ -f T1/$subj.nii.gz -a ! -f restore/T1/${subj}_restore_bet.nii.gz ];then 
     if [ ! -f dofs/$subj-T2-T1-r.dof.gz ];then 
         run mirtk padding N4/$subj.nii.gz segmentations/${subj}_tissue_labels.nii.gz restore/T1/$subj-T2-brain.nii.gz 3 $CSF_label $CGM_label $BG_label 0
-        run mirtk register restore/T1/$subj-T2-brain.nii.gz T1/$subj.nii.gz -model Rigid -dofout dofs/$subj-T2-T1-r.dof.gz
+        run mirtk register restore/T1/$subj-T2-brain.nii.gz T1/$subj.nii.gz -model Rigid -dofout dofs/$subj-T2-T1-r.dof.gz -threads $threads
         rm restore/T1/$subj-T2-brain.nii.gz
     fi
     run mirtk transform-image T1/$subj.nii.gz restore/T1/$subj.nii.gz -target T2/$subj.nii.gz -dofin dofs/$subj-T2-T1-r.dof.gz -bspline

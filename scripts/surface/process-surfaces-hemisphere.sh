@@ -171,8 +171,8 @@ if  [ ! -f $outwb/$subj.$h.$surf.native.label.gii ];then
   run mirtk padding $outvtk/$hs.labels.nii.gz $outvtk/$hs.mask.nii.gz $outvtk/$hs.labels.nii.gz 2 2 3 -100 -invert
   run extend-image-slices $outvtk/$hs.labels.nii.gz $outvtk/$hs.labels.ext.nii.gz -xyz 10
   # TODO: replace the next (uncommented) line with the following
-  # run mirtk project-onto-surface $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$subj.$h.$surf.native.label.vtk -labels $outvtk/$hs.labels.ext.nii.gz -name curv -pointdata -smooth 10 -fill -min-ratio 0.05 
-  run surface-assign-labels $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$subj.$h.$surf.native.label.vtk -labels $outvtk/$hs.labels.ext.nii.gz -name curv -pointdata -smooth 10 -fill -min-ratio 0.05 
+  run mirtk project-onto-surface $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$subj.$h.$surf.native.label.vtk -labels $outvtk/$hs.labels.ext.nii.gz -name curv -pointdata -smooth 10 -fill -min-ratio 0.05 
+  # run surface-assign-labels $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$subj.$h.$surf.native.label.vtk -labels $outvtk/$hs.labels.ext.nii.gz -name curv -pointdata -smooth 10 -fill -min-ratio 0.05 
   
   # mask out the subcortical structures (both original and dilated)
   run mirtk copy-pointset-attributes $outvtk/$subj.$h.$insurf2.native.surf.vtk $outvtk/$subj.$h.$surf.native.label.vtk -celldata-as-pointdata RegionId
