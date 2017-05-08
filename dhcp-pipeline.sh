@@ -81,7 +81,7 @@ while [ $# -gt 0 ]; do
     -T1)  shift; T1=$1; ;;
     -d|-data-dir)  shift; datadir=$1; ;;
     -t|-threads)  shift; threads=$1; ;; 
-    -no-reorient) noreorient=1;
+    -no-reorient) noreorient=1; ;;
     -h|-help|--help) usage; ;;
     -*) echo "$0: Unrecognized option $1" >&2; usage; ;;
      *) break ;;
