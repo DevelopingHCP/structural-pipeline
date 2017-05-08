@@ -98,7 +98,7 @@ done
 
 ################ Run ################
 
-dhcpversion=`git -C "$codedir" branch`
+dhcpversion=`git -C "$codedir" branch | grep \* | cut -d ' ' -f2`
 gitversion=`git -C "$codedir" rev-parse HEAD`
 
 echo "dHCP pipeline $dhcpversion (branch version: $gitversion)
