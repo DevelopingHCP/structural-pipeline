@@ -32,8 +32,8 @@ export MNI_mask=$code_dir/atlases/MNI/MNI152_T1_1mm_facemask.nii.gz
 export MNI_dofs=$code_dir/atlases/non-rigid-v2/dofs-MNI
 
 export template_name="non-rigid-v2"
-export template_T2=$code_dir/atlases/atlases/non-rigid-v2/T2
-export template_dofs=$code_dir/atlases/atlases/non-rigid-v2/dofs
+export template_T2=$code_dir/atlases/non-rigid-v2/T2
+export template_dofs=$code_dir/atlases/non-rigid-v2/dofs
 
 export registration_config=$parameters_dir/ireg-structural.cfg
 export registration_config_template=$parameters_dir/ireg.cfg

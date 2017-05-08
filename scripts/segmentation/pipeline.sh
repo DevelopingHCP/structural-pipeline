@@ -84,8 +84,14 @@ if [ "$template_name" != "non-rigid-v2" ];then
   mv dofs/$subj-template-$age-n.dof.gz dofs/$subj-drawem-template-$age-n.dof.gz
 fi
 
-mkdir -p masks 
+# Note:
+# DrawEM computes the N4 bias-correction, we don't have to do it at the misc/pipeline.sh
+mkdir -p restore/T2
+fslmaths T2/$subj.nii.gz -div bias/$subj.nii.gz -thr 0 restore/T2/${subj}_restore.nii.gz
+cp bias/$subj.nii.gz restore/T2/${subj}_bias.nii.gz
 
+
+mkdir -p masks 
 # mask based on the tissue seg
 if [ ! -f masks/$subj.nii.gz ];then 
     run mirtk padding segmentations/${subj}_tissue_labels.nii.gz segmentations/${subj}_tissue_labels.nii.gz masks/$subj-labels.nii.gz 2 $CSF_label $BG_label 0

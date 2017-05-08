@@ -8,6 +8,7 @@ Prerequisites:
 - VTK
 - [MIRTK](https://github.com/BioMedIA/MIRTK) with DrawEM package ENABLED
 - [SphericalMesh](https://gitlab.doc.ic.ac.uk/am411/SphericalMesh) package
+- wb_command
 
 cmake/make this package (dhcp-structural-pipeline)
 

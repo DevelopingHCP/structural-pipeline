@@ -148,9 +148,6 @@ if [ ! -f $infodir/$subj.completed -a ! -f $infodir/$subj.failed ];then
   # surface extraction
   runpipeline surface $scriptdir/surface/pipeline.sh $subj -d $workdir -t $threads
 
-  # measurements
-  # run $scriptdir/measures/pipeline.sh $subjectID $sessionID $subj $age -d $workdir
-
   # create data directory for subject
   runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $age $datadir $workdir 
 
