@@ -148,7 +148,7 @@ if  [ ! -f $outwb/$subj.$h.$surf.native.surf.gii ];then
   echo
   echo "-------------------------------------------------------------------------------------"
   echo "Extract $h spherical surface"
-  mesh-to-sphere $outvtk/$subj.$h.$insurf.native.surf.vtk $outvtk/$subj.$h.$surf.native.surf.vtk -parin $SPHERICALMESHDIR/parameters/parin
+  mesh-to-sphere $outvtk/$subj.$h.$insurf.native.surf.vtk $outvtk/$subj.$h.$surf.native.surf.vtk -parin $parameters_dir/spherical-mesh.cfg
   vtktogii $outvtk/$subj.$h.$surf.native.surf.vtk $outwb/$subj.$h.$surf.native.surf.gii SPHERICAL GRAY_WHITE
 fi
 

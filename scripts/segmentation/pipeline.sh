@@ -58,7 +58,8 @@ $BASH_SOURCE $command
 cd $datadir
 
 if [ ! -f segmentations/${subj}_all_labels.nii.gz ];then
-  run $DRAWEMDIR/pipelines/neonatal-pipeline-v1.1.sh $T2 $age -t $threads -c 1 -p 1 -v 1
+  # run Draw-EM
+  run neonatal-pipeline-v1.1.sh $T2 $age -t $threads -c 1 -p 1 -v 1
   echo "----------------------------
 "
 fi

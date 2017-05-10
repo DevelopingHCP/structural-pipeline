@@ -1,28 +1,27 @@
-- restore image instead of N4 in misc pipeline etc 
-
 - additional files flag e.g. dofs, posteriors
 - additional files flag e.g. vtk
 
 - auto setup - get different packages, link atlases
-
-- include measurements (and surface-scalar.. in applications)
-- include qc - copy output pdf to derived data folder
-- measures WM different
-
-- fsl independent
-- N4
 
 - license - N4, MNI atlas, ioannis atlas, SphericalMesh
 
 - drawem restore/T2 - N4 care
 - drawem atlasname
 - drawem log
+- drawem register parallel
 
 - copyright in all files - drawem
 
+- fsl independent
 - fslmaths -> mirtk
 - BET in CARE
 - fslreorienthd in getdump
+
+
+- include measurements (and surface-scalar.. in applications)
+- include qc - copy output pdf to derived data folder
+- measures WM different
+
 
 
 # checklist

@@ -1,17 +1,5 @@
 #!/bin/bash
 
-if [ -n "$DRAWEMDIR" ]; then
-  [ -d "$DRAWEMDIR" ] || { echo "DRAWEMDIR environment variable invalid!" 1>&2; exit 1; }
-else
-  echo "DRAWEMDIR environment variable not set!" 1>&2; exit 1;
-fi
-
-if [ -n "$SPHERICALMESHDIR" ]; then
-  [ -d "$SPHERICALMESHDIR" ] || { echo "SPHERICALMESHDIR environment variable invalid!" 1>&2; exit 1; }
-else
-  echo "SPHERICALMESHDIR environment variable not set!" 1>&2; exit 1;
-fi
-
 export parameters_dir=$(dirname "$BASH_SOURCE")
 export code_dir=$parameters_dir/..
 
