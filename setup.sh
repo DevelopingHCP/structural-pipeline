@@ -5,50 +5,38 @@ usage(){
     exit 1
 }
 
+run(){
+  echo "$@"
+  # "$@"
+  if [ ! $? -eq 0 ]; then
+    echo "$@ : command failed"
+    exit 1
+  fi
+}
+
+set_if_undef(){
+    arg=$1
+    name=`echo $arg|cut -d'=' -f1`
+    val=`echo $arg|cut -d'=' -f2-`
+    if [[ ! -v $name ]];then
+        eval "$name=\$val"
+    fi
+}
+
 code_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-build_dir=$code_dir/build
 num_cores=6
 
-
-packages="WORKBENCH VTK MIRTK SPHERICALMESH"
-vars="install git branch version folder build cmake_flags"
-
-WORKBENCH_install=1
-WORKBENCH_git=git@github.com:Washington-University/workbench.git
-WORKBENCH_branch=master
-WORKBENCH_version=019ba364bf1b4f42793d43427848e3c77154c173
-WORKBENCH_folder=$build_dir/WORKBENCH
-WORKBENCH_build=$WORKBENCH_folder/build
-
-VTK_install=1
-VTK_git=git@github.com:Kitware/VTK.git
-VTK_branch=release
-# VTK_version=b86da7eef93f75c4a7f524b3644523ae6b651bc4
-VTK_version=v7.0.0
-VTK_folder=$build_dir/VTK
-VTK_build=$VTK_folder/build
-
-MIRTK_install=1
-MIRTK_git=git@github.com:BioMedIA/MIRTK.git
-MIRTK_branch=master
-# MIRTK_version=a30957a5bb3ff24fc789ebd3841f9dd2f870992e
-MIRTK_folder=$build_dir/MIRTK
-MIRTK_build=$MIRTK_folder/build
-MIRTK_cmake_flags='-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_TBB=ON'
-
-SPHERICALMESH_install=1
-SPHERICALMESH_git=git@gitlab.doc.ic.ac.uk:am411/SphericalMesh.git
-SPHERICALMESH_branch=dhcp
-SPHERICALMESH_version=826897dfc4ff7d74c503d5a22de3ea9fea9c332e
-SPHERICALMESH_folder=$build_dir/SphericalMesh
-SPHERICALMESH_build=$SPHERICALMESH_folder/build
-SPHERICALMESH_cmake_flags='-DMIRTK_DIR=$MIRTK_build -DVTK_DIR=$VTK_build'
-
-cmake_flags='-DMIRTK_DIR=$MIRTK_build'
-
+packages="VTK MIRTK SPHERICALMESH"
+vars="install git branch version folder build cmake_flags make_flags"
 
 while [ $# -gt 0 ]; do
   case "$1" in
+    -j)
+          shift;
+          num_cores=$1 ;;
+    -build)
+          shift;
+          build_dir=$1 ;;
     -*_DIR=*)  
           param=`echo $1|sed -e 's:^-::g'`;
           pkg=`echo $param|cut -d'=' -f1|sed -e 's:_DIR::g'`
@@ -59,8 +47,7 @@ while [ $# -gt 0 ]; do
           done
           if [ ! $ok -eq 1 ];then usage;fi
           eval ${pkg}_install=0
-          eval ${pkg}_build=$val
-          ;;
+          eval ${pkg}_build=$val ;;
     -D*=*)   
           param=`echo $1|sed -e 's:^-D::g'`;
           flag=`echo $param|cut -d'=' -f1`
@@ -82,32 +69,68 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-echo ""
-echo mkdir -p $build_dir
+
+
+
+set_if_undef build_dir=$code_dir/build
+
+set_if_undef WORKBENCH_install=1
+set_if_undef WORKBENCH_git=git@github.com:Washington-University/workbench.git
+set_if_undef WORKBENCH_branch=master
+set_if_undef WORKBENCH_version=019ba364bf1b4f42793d43427848e3c77154c173
+set_if_undef WORKBENCH_folder="$build_dir/WORKBENCH"
+set_if_undef WORKBENCH_build="$build_dir/WORKBENCH/build"
+set_if_undef WORKBENCH_cmake_flags="-DCMAKE_CXX_FLAGS=-std=c++11 $WORKBENCH_folder/src"
+set_if_undef WORKBENCH_make_flags="wb_command"
+
+set_if_undef VTK_install=1
+set_if_undef VTK_git=git@github.com:Kitware/VTK.git
+set_if_undef VTK_branch=release
+set_if_undef VTK_version=v7.0.0
+set_if_undef VTK_folder="$build_dir/VTK"
+set_if_undef VTK_build="$build_dir/VTK/build"
+
+set_if_undef MIRTK_install=1
+set_if_undef MIRTK_git=git@github.com:BioMedIA/MIRTK.git
+set_if_undef MIRTK_branch=master
+set_if_undef MIRTK_version=a30957a5bb3ff24fc789ebd3841f9dd2f870992e
+set_if_undef MIRTK_folder="$build_dir/MIRTK"
+set_if_undef MIRTK_build="$build_dir/MIRTK/build"
+set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_TBB=ON"
+
+set_if_undef SPHERICALMESH_install=1
+set_if_undef SPHERICALMESH_git=git@gitlab.doc.ic.ac.uk:am411/SphericalMesh.git
+set_if_undef SPHERICALMESH_branch=dhcp
+set_if_undef SPHERICALMESH_version=826897dfc4ff7d74c503d5a22de3ea9fea9c332e
+set_if_undef SPHERICALMESH_folder="$build_dir/SphericalMesh"
+set_if_undef SPHERICALMESH_build="$build_dir/SphericalMesh/build"
+set_if_undef SPHERICALMESH_cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build"
+
+set_if_undef cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build"
+
+
+run mkdir -p $build_dir
 
 for package in ${packages};do 
     for var in ${vars};do 
-        name=${package}_${var}
-        val=`eval echo ${!name}`
-        eval "package_$var=\$val"
+        eval "package_$var=\${${package}_${var}}"
     done
 
     if [ ! $package_install -eq 1 ];then continue;fi
 
-    echo "Downloading $package
-    git clone --recursive -b $package_branch $package_git $package_folder
-    cd $package_folder
-    git reset --hard $package_version
-    mkdir $package_build
-    cd $package_build
-    cmake $package_folder $package_cmake_flags
-    make -j$num_cores
-    "
+    echo "Downloading $package"
+    [ -d $package_folder ] || run git clone --recursive -b $package_branch $package_git $package_folder
+    run cd $package_folder
+    run git reset --hard $package_version
+    run mkdir -p $package_build
+    run cd $package_build
+    run cmake $package_folder $package_cmake_flags
+    run make -j$num_cores $package_make_flags
+    
 done
 
 cmake_flags=`eval echo $cmake_flags`
-echo "
-mkdir $build_dir
-cd $build_dir
-cmake $code_dir $cmake_flags
-make -j$num_cores"
+
+run cd $build_dir
+run cmake $code_dir $cmake_flags
+run make -j$num_cores
