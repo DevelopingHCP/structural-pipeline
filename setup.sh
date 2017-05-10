@@ -7,7 +7,7 @@ usage(){
 
 run(){
   echo "$@"
-  # "$@"
+  "$@"
   if [ ! $? -eq 0 ]; then
     echo "$@ : command failed"
     exit 1
@@ -26,7 +26,7 @@ set_if_undef(){
 code_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 num_cores=6
 
-packages="VTK MIRTK SPHERICALMESH"
+packages="WORKBENCH VTK MIRTK SPHERICALMESH"
 vars="install git branch version folder build cmake_flags make_flags"
 
 while [ $# -gt 0 ]; do
@@ -78,8 +78,8 @@ set_if_undef WORKBENCH_install=1
 set_if_undef WORKBENCH_git=git@github.com:Washington-University/workbench.git
 set_if_undef WORKBENCH_branch=master
 set_if_undef WORKBENCH_version=019ba364bf1b4f42793d43427848e3c77154c173
-set_if_undef WORKBENCH_folder="$build_dir/WORKBENCH"
-set_if_undef WORKBENCH_build="$build_dir/WORKBENCH/build"
+set_if_undef WORKBENCH_folder="$build_dir/workbench"
+set_if_undef WORKBENCH_build="$build_dir/workbench/build"
 set_if_undef WORKBENCH_cmake_flags="-DCMAKE_CXX_FLAGS=-std=c++11 $WORKBENCH_folder/src"
 set_if_undef WORKBENCH_make_flags="wb_command"
 
