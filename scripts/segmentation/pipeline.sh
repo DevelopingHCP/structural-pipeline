@@ -59,7 +59,7 @@ cd $datadir
 
 if [ ! -f segmentations/${subj}_all_labels.nii.gz ];then
   # run Draw-EM
-  run $DRAWEMDIR/pipelines/neonatal-pipeline-v1.1.sh $T2 $age -t $threads -c 1 -p 1 -v 1
+  run $DRAWEMDIR/pipelines/neonatal-pipeline.sh $T2 $age -t $threads -c 1 -p 1 -v 1
   echo "----------------------------
 "
 fi
