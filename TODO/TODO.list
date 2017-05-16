@@ -10,6 +10,7 @@
 - drawem log
 - drawem register parallel
 
+
 - copyright in all files - drawem
 
 - fsl independent
@@ -22,6 +23,15 @@
 - include qc - copy output pdf to derived data folder
 - measures WM different
 
+- "git describe --tags" for dhcp pipeline version
+
+- verbose option in setup
+
+- drawem use the dhcp version instead - setup MIRTK tag
+
+
+- rerun subject option in pipeline
+- git clone --depth
 
 
 # checklist

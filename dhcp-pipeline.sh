@@ -23,20 +23,6 @@ Options:
   exit;
 }
 
-# log function
-run()
-{
-  echo "$@"
-  "$@"
-  if [ ! $? -eq 0 ]; then
-    echo "failed"
-    exit 1
-  fi
-}
-
-# make run function global
-typeset -fx run
-
 # log function for completion
 runpipeline()
 {
@@ -63,6 +49,11 @@ command=$@
 subjectID=$1
 sessionID=$2
 age=$3
+
+
+roundedAge=`printf "%.*f\n" 0 $age` #round
+[ $roundedAge -lt 44 ] || { roundedAge=44; }
+[ $roundedAge -gt 28 ] || { roundedAge=28; }
 
 # alias for the specific session
 subj=$subjectID-$sessionID
@@ -140,16 +131,16 @@ done
 if [ ! -f $infodir/$subj.completed -a ! -f $infodir/$subj.failed ];then
 
   # segmentation
-  runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $age -d $workdir -t $threads
+  runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $roundedAge -d $workdir -t $threads
 
   # generate some additional files
-  runpipeline additional $scriptdir/misc/pipeline.sh $subj $age -d $workdir -t $threads
+  runpipeline additional $scriptdir/misc/pipeline.sh $subj $roundedAge -d $workdir -t $threads
 
   # surface extraction
   runpipeline surface $scriptdir/surface/pipeline.sh $subj -d $workdir -t $threads
 
   # create data directory for subject
-  runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $age $datadir $workdir 
+  # runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $roundedAge $datadir $workdir 
 
   echo "OK" > $infodir/$subj.completed
 fi

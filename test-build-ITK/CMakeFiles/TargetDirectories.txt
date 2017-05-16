@@ -1,0 +1,12 @@
+/home/benuix/Setup/structural-pipeline/test-build-ITK/CMakeFiles/edit_cache.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/CMakeFiles/rebuild_cache.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/applications/CMakeFiles/surface-assign-labels.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/applications/CMakeFiles/dilate-labels.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/applications/CMakeFiles/edit_cache.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/applications/CMakeFiles/surface-scalar-statistics.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/applications/CMakeFiles/rebuild_cache.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/applications/CMakeFiles/mid-surface.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/applications/CMakeFiles/extend-image-slices.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/ThirdParty/ANTs/CMakeFiles/edit_cache.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/ThirdParty/ANTs/CMakeFiles/rebuild_cache.dir
+/home/benuix/Setup/structural-pipeline/test-build-ITK/ThirdParty/ANTs/CMakeFiles/N4.dir

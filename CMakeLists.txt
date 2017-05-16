@@ -33,9 +33,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 macro(add_dhcp_executable name)
   add_executable(${name} ${name}.cc ${ARGN})
   target_link_libraries(${name} ${MIRTK_LIBRARIES})
-  #target_link_libraries(${name} "-lMIRTKPointSet -lMIRTKIO -lMIRTKImage -lMIRTKCommon -lMIRTKNumerics")
   target_link_libraries(${name} ${VTK_LIBRARIES})
 endmacro()
 
 SUBDIRS(applications)
+SUBDIRS(ThirdParty/ANTs)
 

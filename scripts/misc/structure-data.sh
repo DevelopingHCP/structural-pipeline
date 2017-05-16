@@ -14,17 +14,6 @@ Arguments:
   exit;
 }
 
-run()
-{
-  "$@"
-  if [ $? -eq 0 ]; then
-    echo " done"
-  else
-    echo " failed"
-    exit 1
-  fi
-}
-
 [ $# -ge 5 ] || { usage; }
 
 subjectID=$1
@@ -40,12 +29,12 @@ if [ $# -ge 6 ];then
     datadir=`pwd`
 fi
 
-
+action=ln
 Hemi=('left' 'right');
 Cortex=('CORTEX_LEFT' 'CORTEX_RIGHT');
 
+subjdir=sub-$subjectID
 sessiondir=ses-$sessionID
-
 prefix=${subjdir}_${sessiondir}
 anat=$subjdir/$sessiondir/anat
 outputRawDir=$releasedir/sourcedata/$anat
@@ -59,17 +48,17 @@ mkdir -p $outputSurfDir $outputWarpDir $outputRawDir
 for m in T1 T2;do
   for restore in "_defaced" "_restore_defaced" "_restore_brain" "_bias";do
       nrestore=`echo $restore |sed -e 's:_defaced::g' |sed -e 's:_bias:_biasfield:g'`
-      run mv restore/$m/${subj}${restore}.nii.gz $outputDerivedDir/${prefix}_${m}w${nrestore}.nii.gz
+      run $action restore/$m/${subj}${restore}.nii.gz $outputDerivedDir/${prefix}_${m}w${nrestore}.nii.gz
   done
 done
 
 # masks
-run mv masks/$subj.nii.gz $outputDerivedDir/${prefix}_brainmask_drawem.nii.gz
-run mv masks/$subj-bet.nii.gz $outputDerivedDir/${prefix}_brainmask_bet.nii.gz
+run $action masks/$subj.nii.gz $outputDerivedDir/${prefix}_brainmask_drawem.nii.gz
+run $action masks/$subj-bet.nii.gz $outputDerivedDir/${prefix}_brainmask_bet.nii.gz
 
 # segmentations
 for seg in all_labels tissue_labels;do
-    run mv segmentations/${subj}_${seg}.nii.gz $outputDerivedDir/${prefix}_drawem_${seg}.nii.gz
+    run $action segmentations/${subj}_${seg}.nii.gz $outputDerivedDir/${prefix}_drawem_${seg}.nii.gz
 done
 
 # warps
@@ -84,9 +73,9 @@ done
 surfdir=surfaces/$subj/workbench
 
 # myelin images etc.
-run mv $surfdir/$subj.ribbon.nii.gz $outputDerivedDir/${prefix}_ribbon.nii.gz
-run mv $surfdir/$subj.T1wDividedByT2w_defaced.nii.gz $outputDerivedDir/${prefix}_T1wdividedbyT2w.nii.gz
-run mv $surfdir/$subj.T1wDividedByT2w_ribbon.nii.gz $outputDerivedDir/${prefix}_T1wdividedbyT2w_ribbon.nii.gz
+run $action $surfdir/$subj.ribbon.nii.gz $outputDerivedDir/${prefix}_ribbon.nii.gz
+run $action $surfdir/$subj.T1wDividedByT2w_defaced.nii.gz $outputDerivedDir/${prefix}_T1wdividedbyT2w.nii.gz
+run $action $surfdir/$subj.T1wDividedByT2w_ribbon.nii.gz $outputDerivedDir/${prefix}_T1wdividedbyT2w_ribbon.nii.gz
 
 # surfaces
 for f in corrThickness curvature drawem inflated MyelinMap pial roi sphere sulc thickness white; do
@@ -97,12 +86,12 @@ for f in corrThickness curvature drawem inflated MyelinMap pial roi sphere sulc 
     so=`echo $so | sed -e 's:corrThickness:corr_thickness:g' | sed -e 's:SmoothedMyelinMap:smoothed_myelin_map:g' | sed -e 's:MyelinMap:myelin_map:g'`
     so=`echo $so | sed -e 's:.native::g' | sed -e 's:_L.:_left_:g'| sed -e 's:_R.:_right_:g'`
     
-    run mv $sf $outputDerivedDir/Native/$so
+    run $action $sf $outputDerivedDir/Native/$so
   done
 done
 
 # original images
-run mv restore/T2/${subj}_defaced.nii.gz $outputRawDir/${prefix}_T2w.nii.gz
+run $action restore/T2/${subj}_defaced.nii.gz $outputRawDir/${prefix}_T2w.nii.gz
 run mirtk transform-image masks/${subj}_mask_defaced.nii.gz masks/${subj}_mask_defaced_T1.nii.gz -target T1/$subj.nii.gz -dofin dofs/$subj-T2-T1-r.dof.gz -invert
 run fslmaths T1/${subj}.nii.gz -thr 0 -mul masks/${subj}_mask_defaced_T1.nii.gz $outputRawDir/${prefix}_T1w.nii.gz
 rm masks/${subj}_mask_defaced_T1.nii.gz

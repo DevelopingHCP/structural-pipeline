@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 2.4)
+if(COMMAND cmake_policy)
+  cmake_policy(SET CMP0003 NEW)
+endif(COMMAND cmake_policy)
+
+PROJECT( N4 )
+
+# Set up ITK
+FIND_PACKAGE(ITK)
+IF(ITK_FOUND)
+  INCLUDE(${ITK_USE_FILE})
+ELSE(ITK_FOUND)
+  MESSAGE(FATAL_ERROR
+    "Cannot build without ITK.  Please set ITK_DIR.")
+ENDIF(ITK_FOUND)
+INCLUDE_DIRECTORIES(${ITK_INCLUDE_DIRS})
+
+# FLAGS
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVCL_CAN_STATIC_CONST_INIT_FLOAT=0")
+
+SET(SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/antsCommandLineParser" "${CMAKE_CURRENT_SOURCE_DIR}/antsCommandLineOption" )
+ADD_EXECUTABLE( N4 N4.cxx ${SOURCES} )
+if( "${ITK_VERSION_MAJOR}" LESS 4 )
+  target_link_libraries(N4 ITKReview ${ITK_LIBRARIES})
+else( "${ITK_VERSION_MAJOR}" LESS 4 )
+  target_link_libraries(N4 ${ITK_LIBRARIES})
+endif( "${ITK_VERSION_MAJOR}" LESS 4 )
+
+
+

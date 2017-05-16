@@ -1,4 +1,6 @@
 [bB]uild*
 Debug*
 Release*
-atlases/non-rigid-v2/T2
+atlases*
+parameters/path.sh
+setup.log

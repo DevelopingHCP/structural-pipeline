@@ -5,17 +5,19 @@ Installation
 ------------
 Prerequisites:
 - FSL
-- VTK
-- [MIRTK](https://github.com/BioMedIA/MIRTK) with DrawEM package ENABLED
-- [SphericalMesh](https://gitlab.doc.ic.ac.uk/am411/SphericalMesh) package
-- wb_command
 
-cmake/make this package (dhcp-structural-pipeline)
 
-Add the following binary dirs to the PATH (e.g. add to .bashrc file):
-- export PATH=$PATH:< location of DRAWEM build bin directory >:< location of DRAWEM pipelines directory >
-- export PATH=$PATH:< location of SPHERICALMESH build bin directory >
-- export PATH=$PATH:< location of dhcp-structural-pipeline build bin directory >
+Dependencies
+------------
+gcc-c++ git
+openssl qt qt-devel
+cmake tbb tbb-devel boost boost-devel eigen eigen-devel
+curl wget
+
+overview table libraries/dependencies, links to licenses
+
+discuss: libraries, setup packages, fsl, N4 care, path, licences
+
 
 
 Run
