@@ -108,7 +108,7 @@ pipeline_build=`full_path_dir $pipeline_build`
 
 
 set_if_undef WORKBENCH_install=1
-set_if_undef WORKBENCH_git=git@github.com:Washington-University/workbench.git
+set_if_undef WORKBENCH_git=https://github.com/Washington-University/workbench.git
 set_if_undef WORKBENCH_branch=master
 set_if_undef WORKBENCH_version=019ba364bf1b4f42793d43427848e3c77154c173
 set_if_undef WORKBENCH_folder="$pipeline_build/workbench"
@@ -117,7 +117,7 @@ set_if_undef WORKBENCH_cmake_flags="-DCMAKE_CXX_FLAGS=-std=c++11 $WORKBENCH_fold
 set_if_undef WORKBENCH_make_flags="wb_command"
 
 set_if_undef ITK_install=1
-set_if_undef ITK_git=git@github.com:InsightSoftwareConsortium/ITK.git
+set_if_undef ITK_git=https://github.com/InsightSoftwareConsortium/ITK.git
 set_if_undef ITK_branch=master
 set_if_undef ITK_version=v4.11.1
 set_if_undef ITK_folder="$pipeline_build/ITK"
@@ -125,14 +125,14 @@ set_if_undef ITK_build="$pipeline_build/ITK/build"
 set_if_undef ITK_cmake_flags="-DBUILD_EXAMPLES=OFF"
 
 set_if_undef VTK_install=1
-set_if_undef VTK_git=git@github.com:Kitware/VTK.git
+set_if_undef VTK_git=https://github.com/Kitware/VTK.git
 set_if_undef VTK_branch=release
 set_if_undef VTK_version=v7.0.0
 set_if_undef VTK_folder="$pipeline_build/VTK"
 set_if_undef VTK_build="$pipeline_build/VTK/build"
 
 set_if_undef MIRTK_install=1
-set_if_undef MIRTK_git=git@github.com:BioMedIA/MIRTK.git
+set_if_undef MIRTK_git=https://github.com/BioMedIA/MIRTK.git
 set_if_undef MIRTK_branch=master
 set_if_undef MIRTK_version=88c8266b016b465551d0bbafca9aed6340fdc1fb
 set_if_undef MIRTK_folder="$pipeline_build/MIRTK"
