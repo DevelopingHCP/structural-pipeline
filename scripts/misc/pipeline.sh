@@ -20,9 +20,7 @@ Options:
 process_image(){
   m=$1
   run fslmaths restore/$m/$subj.nii.gz -thr 0 restore/$m/$subj.nii.gz
-  if [ ! -f restore/$m/${subj}_restore.nii.gz ];then
-    run N4 3 -i restore/$m/$subj.nii.gz -x masks/$subj-bet.nii.gz -o "[restore/$m/${subj}_restore.nii.gz,restore/$m/${subj}_bias.nii.gz]" -c "[50x50x50,0.001]" -s 2 -b "[100,3]" -t "[0.15,0.01,200]"
-  fi
+  run N4 3 -i restore/$m/$subj.nii.gz -x masks/$subj-bet.nii.gz -o "[restore/$m/${subj}_restore.nii.gz,restore/$m/${subj}_bias.nii.gz]" -c "[50x50x50,0.001]" -s 2 -b "[100,3]" -t "[0.15,0.01,200]"
   run fslmaths restore/$m/${subj}_restore.nii.gz -mul masks/$subj.nii.gz restore/$m/${subj}_restore_brain.nii.gz
   run fslmaths restore/$m/${subj}_restore.nii.gz -mul masks/$subj-bet.nii.gz restore/$m/${subj}_restore_bet.nii.gz
 }

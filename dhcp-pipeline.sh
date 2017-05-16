@@ -107,8 +107,8 @@ $BASH_SOURCE $command
 ----------------------------"
 
 infodir=$datadir/info 
-workdir=$datadir/workdir
-logdir=$workdir/logs
+logdir=$datadir/logs
+workdir=$datadir/workdir/$subj
 mkdir -p $infodir $workdir $logdir
 
 # copy files in the T1/T2 directory
@@ -140,7 +140,10 @@ if [ ! -f $infodir/$subj.completed -a ! -f $infodir/$subj.failed ];then
   runpipeline surface $scriptdir/surface/pipeline.sh $subj -d $workdir -t $threads
 
   # create data directory for subject
-  # runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $roundedAge $datadir $workdir 
+  runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $roundedAge $datadir $workdir 
+
+  # clean-up
+  # runpipeline cleanup rm -r $workdir
 
   echo "OK" > $infodir/$subj.completed
 fi

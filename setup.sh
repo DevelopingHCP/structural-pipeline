@@ -151,7 +151,6 @@ set_if_undef SPHERICALMESH_cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk
 set_if_undef cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build -DITK_DIR=$ITK_build"
 DRAWEMDIR=$MIRTK_folder/Packages/DrawEM
 
-
 for package in ${packages};do 
     for var in ${vars};do 
         eval "package_$var=\${${package}_${var}}"
@@ -164,6 +163,14 @@ for package in ${packages};do
     run cd $package_folder
     run git reset --hard $package_version
     run git submodule update
+
+    # install specific version of DrawEM
+    if [ "$package" == "MIRTK" ];then 
+        cd $DRAWEMDIR
+        git reset --hard b9d1a523596b1f2ae90ecb093318d83b384b7b62
+        cd $package_folder
+    fi
+
     run mkdir -p $package_build
     run cd $package_build
     run cmake $package_folder $package_cmake_flags
@@ -201,6 +208,9 @@ echo "export DRAWEMDIR=$DRAWEMDIR" >> $code_dir/parameters/path.sh
 echo "export PATH=$pathext"'${PATH}' >> $code_dir/parameters/path.sh
 chmod +x $code_dir/parameters/path.sh
 
+# replace Draw-EM N4 pre-built binary with the built one from this setup
+rm $DRAWEMDIR/ThirdParty/ITK/N4
+ln -s $pipeline_build/bin/N4 $DRAWEMDIR/ThirdParty/ITK/N4
 
 
 echo_green "Setup completed successfully!"

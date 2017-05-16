@@ -28,8 +28,13 @@ if [ $# -ge 6 ];then
     cd $datadir
     datadir=`pwd`
 fi
+minimal=1
+if [ $# -ge 7 ];then 
+  minimal=$7
+fi
 
-action=ln
+
+action=cp
 Hemi=('left' 'right');
 Cortex=('CORTEX_LEFT' 'CORTEX_RIGHT');
 
@@ -43,9 +48,10 @@ outputSurfDir=$outputDerivedDir/Native
 outputWarpDir=$outputDerivedDir/xfms
 
 mkdir -p $outputSurfDir $outputWarpDir $outputRawDir
-
 # images
-for m in T1 T2;do
+ms=T2
+if [ -f T1/$subj.nii.gz ];then ms="T1 T2"; fi
+for m in ${ms};do
   for restore in "_defaced" "_restore_defaced" "_restore_brain" "_bias";do
       nrestore=`echo $restore |sed -e 's:_defaced::g' |sed -e 's:_bias:_biasfield:g'`
       run $action restore/$m/${subj}${restore}.nii.gz $outputDerivedDir/${prefix}_${m}w${nrestore}.nii.gz
@@ -65,20 +71,13 @@ done
 ages="$age"
 if [ $age != 40 ];then ages="$ages 40";fi
 for cage in ${ages};do
-  mirtk convert-dof dofs/template-$cage-$subj-n.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w.nii.gz -input-format mirtk -output-format fsl -target $code_dir/atlases/non-rigid-v2/T2/template-$cage.nii.gz -source N4/$subj.nii.gz
-  mirtk convert-dof dofs/$subj-template-$cage-n.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat.nii.gz -input-format mirtk -output-format fsl -source $code_dir/atlases/non-rigid-v2/T2/template-$cage.nii.gz -target N4/$subj.nii.gz
+  run mirtk convert-dof dofs/template-$cage-$subj-n.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w.nii.gz -input-format mirtk -output-format fsl -target $code_dir/atlases/non-rigid-v2/T2/template-$cage.nii.gz -source $outputRawDir/${prefix}_T2w.nii.gz
+  run mirtk convert-dof dofs/$subj-template-$cage-n.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat.nii.gz -input-format mirtk -output-format fsl -source $code_dir/atlases/non-rigid-v2/T2/template-$cage.nii.gz -target $outputRawDir/${prefix}_T2w.nii.gz
 done
 
 # surfaces
 surfdir=surfaces/$subj/workbench
-
-# myelin images etc.
-run $action $surfdir/$subj.ribbon.nii.gz $outputDerivedDir/${prefix}_ribbon.nii.gz
-run $action $surfdir/$subj.T1wDividedByT2w_defaced.nii.gz $outputDerivedDir/${prefix}_T1wdividedbyT2w.nii.gz
-run $action $surfdir/$subj.T1wDividedByT2w_ribbon.nii.gz $outputDerivedDir/${prefix}_T1wdividedbyT2w_ribbon.nii.gz
-
-# surfaces
-for f in corrThickness curvature drawem inflated MyelinMap pial roi sphere sulc thickness white; do
+for f in corrThickness curvature drawem inflated pial roi sphere sulc thickness white MyelinMap; do
   sfiles=`ls $surfdir/$subj.*$f*`
   for sf in ${sfiles};do
     so=`echo $sf | sed -e "s:$surfdir.::g"|sed -e "s:$subj.:${prefix}_:g"`
@@ -90,11 +89,28 @@ for f in corrThickness curvature drawem inflated MyelinMap pial roi sphere sulc 
   done
 done
 
+
 # original images
-run $action restore/T2/${subj}_defaced.nii.gz $outputRawDir/${prefix}_T2w.nii.gz
-run mirtk transform-image masks/${subj}_mask_defaced.nii.gz masks/${subj}_mask_defaced_T1.nii.gz -target T1/$subj.nii.gz -dofin dofs/$subj-T2-T1-r.dof.gz -invert
-run fslmaths T1/${subj}.nii.gz -thr 0 -mul masks/${subj}_mask_defaced_T1.nii.gz $outputRawDir/${prefix}_T1w.nii.gz
-rm masks/${subj}_mask_defaced_T1.nii.gz
+run cp $outputDerivedDir/${prefix}_T2w.nii.gz $outputRawDir/${prefix}_T2w.nii.gz
+
+wbvols="T2w_restore"
+wbmetrics="sulc thickness curvature corr_thickness"
+wbsurfs="white pial midthickness inflated very_inflated sphere"
+
+if [ -f T1/$subj.nii.gz ];then
+  wbvols="$wbvols T1w_restore T1wdividedbyT2w T1wdividedbyT2w_ribbon"
+  wbmetrics="$wbmetrics myelin_map smoothed_myelin_map"
+  # myelin images etc.
+  run $action $surfdir/$subj.ribbon.nii.gz $outputDerivedDir/${prefix}_ribbon.nii.gz
+  run $action $surfdir/$subj.T1wDividedByT2w_defaced.nii.gz $outputDerivedDir/${prefix}_T1wdividedbyT2w.nii.gz
+  run $action $surfdir/$subj.T1wDividedByT2w_ribbon.nii.gz $outputDerivedDir/${prefix}_T1wdividedbyT2w_ribbon.nii.gz
+
+  # original images
+  run mirtk transform-image masks/${subj}_mask_defaced.nii.gz masks/${subj}_mask_defaced_T1.nii.gz -target T1/$subj.nii.gz -dofin dofs/$subj-T2-T1-r.dof.gz -invert
+  run fslmaths T1/${subj}.nii.gz -thr 0 -mul masks/${subj}_mask_defaced_T1.nii.gz $outputRawDir/${prefix}_T1w.nii.gz
+  rm masks/${subj}_mask_defaced_T1.nii.gz
+fi
+
 
 # create spec file
 cd $outputDerivedDir/Native
@@ -105,17 +121,61 @@ rm -f $spec
 for hi in {0..1}; do
   h=${Hemi[$hi]}
   C=${Cortex[$hi]}
-  for surf in white pial midthickness inflated very_inflated sphere;do
+  for surf in ${wbsurfs};do
     run wb_command -add-to-spec-file $spec $C ${prefix}_${h}_$surf.surf.gii
   done
 done
 
 C=INVALID
-for metric in sulc thickness curvature myelin_map smoothed_myelin_map corr_thickness;do
+for metric in ${wbmetrics};do
     run wb_command -add-to-spec-file $spec $C ${prefix}_$metric.dscalar.nii
 done
 run wb_command -add-to-spec-file $spec $C ${prefix}_drawem.dlabel.nii
 
-for file in T2w_restore T1w_restore T1wdividedbyT2w T1wdividedbyT2w_ribbon;do
+for file in ${wbvols};do
   run wb_command -add-to-spec-file $spec $C ../${prefix}_$file.nii.gz
 done
+
+
+
+if [ ! $minimal -eq 1 ];then
+  # segmentations
+  seg=labels
+  run $action segmentations/${subj}_${seg}.nii.gz $outputDerivedDir/${prefix}_drawem_${seg}.nii.gz
+  
+  # warps
+  for cage in ${ages};do
+    run mirtk convert-dof dofs/template-$cage-$subj-n.dof.gz dofs/template-$cage-$subj-r.dof.gz -input-format mirtk -output-format rigid
+    run mirtk convert-dof dofs/$subj-template-$cage-n.dof.gz dofs/$subj-template-$cage-r.dof.gz -input-format mirtk -output-format rigid
+
+    run mirtk convert-dof dofs/template-$cage-$subj-r.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w.mat -input-format mirtk -output-format fsl -target $code_dir/atlases/non-rigid-v2/T2/template-$cage.nii.gz -source $outputRawDir/${prefix}_T2w.nii.gz
+    run mirtk convert-dof dofs/$subj-template-$cage-r.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat.mat -input-format mirtk -output-format fsl -source $code_dir/atlases/non-rigid-v2/T2/template-$cage.nii.gz -target $outputRawDir/${prefix}_T2w.nii.gz
+
+    run $action dofs/template-$cage-$subj-r.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w-r.dof.gz
+    run $action dofs/$subj-template-$cage-r.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat-r.dof.gz
+
+    run $action dofs/template-$cage-$subj-n.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w-n.dof.gz
+    run $action dofs/$subj-template-$cage-n.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat-n.dof.gz
+  done
+  
+  run mirtk convert-dof dofs/$subj-MNI-n.dof.gz dofs/$subj-MNI-r.dof.gz -input-format mirtk -output-format rigid
+  run mirtk convert-dof dofs/$subj-MNI-n.dof.gz $outputWarpDir/${prefix}_MNI2anat.nii.gz -input-format mirtk -output-format fsl -target $outputRawDir/${prefix}_T2w.nii.gz -source $MNI_T1
+  run mirtk convert-dof dofs/$subj-MNI-r.dof.gz $outputWarpDir/${prefix}_MNI2anat.mat -input-format mirtk -output-format fsl -target $outputRawDir/${prefix}_T2w.nii.gz -source $MNI_T1
+  run $action dofs/$subj-MNI-n.dof.gz $outputWarpDir/${prefix}_MNI2anat-n.dof.gz
+  run $action dofs/$subj-MNI-r.dof.gz $outputWarpDir/${prefix}_MNI2anat-r.dof.gz
+
+  if [ -f T1/$subj.nii.gz ];then
+    run mirtk convert-dof dofs/$subj-T2-T1-r.dof.gz $outputWarpDir/${prefix}_T1w2anat.mat -input-format mirtk -output-format fsl -target $outputRawDir/${prefix}_T2w.nii.gz -source $outputRawDir/${prefix}_T1w.nii.gz
+    run $action dofs/$subj-T2-T1-r.dof.gz $outputWarpDir/${prefix}_T1w2anat-r.dof.gz
+  fi
+
+  # copy posteriors
+  outputPostDir=$outputDerivedDir/posteriors
+  mkdir -p $outputPostDir
+  structs=`ls posteriors`
+  for str in ${structs};do
+    run $action posteriors/$str/$subj.nii.gz $outputPostDir/${prefix}_drawem_${str}.nii.gz
+  done
+
+
+fi

@@ -75,7 +75,7 @@ fi
 # $subj_L_pial.nii.gz         : left hemisphere pial mask for surface reconstruction
 # $subj_R_pial.nii.gz         : left hemisphere pial mask for surface reconstruction
 # $subj_brain_mask.nii.gz     : mask generated with BET
-
+# posteriors/*/$subj.nii.gz   : posteriors of the different structures (where * the different structure directory)
 
 if [ "$template_name" != "non-rigid-v2" ];then 
   # Note:
@@ -84,12 +84,6 @@ if [ "$template_name" != "non-rigid-v2" ];then
   # the scripts/misc/pipeline.sh will then calculate the new dof
   mv dofs/$subj-template-$age-n.dof.gz dofs/$subj-drawem-template-$age-n.dof.gz
 fi
-
-# Note:
-# DrawEM computes the N4 bias-correction, we don't have to do it at the misc/pipeline.sh
-mkdir -p restore/T2
-fslmaths T2/$subj.nii.gz -div bias/$subj.nii.gz -thr 0 restore/T2/${subj}_restore.nii.gz
-cp bias/$subj.nii.gz restore/T2/${subj}_bias.nii.gz
 
 
 mkdir -p masks 
@@ -105,4 +99,5 @@ fi
 if [ ! -f masks/$subj-bet.nii.gz ];then 
   ln segmentations/${subj}_brain_mask.nii.gz masks/$subj-bet.nii.gz
 fi
+
 
