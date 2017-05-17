@@ -186,10 +186,10 @@ for package in ${packages};do
         cd $package_folder
     fi
 
-    # run mkdir -p $package_build
-    # run cd $package_build
-    # run cmake $package_folder $package_cmake_flags
-    # run make -j$num_cores $package_make_flags
+    run mkdir -p $package_build
+    run cd $package_build
+    run cmake $package_folder $package_cmake_flags
+    run make -j$num_cores $package_make_flags
     
 done
 
