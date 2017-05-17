@@ -167,7 +167,8 @@ for package in ${packages};do
     # install specific version of DrawEM
     if [ "$package" == "MIRTK" ];then 
         cd $DRAWEMDIR
-        git reset --hard b9d1a523596b1f2ae90ecb093318d83b384b7b62
+        # git reset --hard 411f44be1a032c3835ae3db02e8c732532e28c3c
+        git pull origin dhcp
         cd $package_folder
     fi
 
