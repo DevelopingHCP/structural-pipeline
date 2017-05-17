@@ -45,6 +45,20 @@ full_path_dir(){
     echo "$( cd $1 && pwd )"
 }
 
+# check if commands  exist
+download=wget
+if ! hash $download 2>/dev/null; then
+    download=curl2
+    if ! hash $download 2>/dev/null; then
+        echo_red "wget or curl need to be installed!"
+        exit 1
+    fi
+fi
+if ! hash unzip 2>/dev/null; then
+    echo_red "unzip need to be installed!"
+    exit 1
+fi
+
 code_dir=`full_path_dir $( dirname ${BASH_SOURCE[0]} )`
 num_cores=1
 verbose=0
@@ -172,10 +186,10 @@ for package in ${packages};do
         cd $package_folder
     fi
 
-    run mkdir -p $package_build
-    run cd $package_build
-    run cmake $package_folder $package_cmake_flags
-    run make -j$num_cores $package_make_flags
+    # run mkdir -p $package_build
+    # run cd $package_build
+    # run cmake $package_folder $package_cmake_flags
+    # run make -j$num_cores $package_make_flags
     
 done
 
@@ -189,8 +203,8 @@ run make -j$num_cores
 
 if [ ! -d $code_dir/atlases ];then 
     echo_green "Downloading atlases"
-    run curl "https://www.doc.ic.ac.uk/%7Eam411/atlases-dhcp-structural-pipeline-v1.zip" -o "$code_dir/atlases.zip"
-    run unzip $code_dir/atlases.zip -d $code_dir
+    run $download "https://www.doc.ic.ac.uk/%7Eam411/atlases-dhcp-structural-pipeline-v1.zip"
+    run unzip $code_dir/atlases-dhcp-structural-pipeline-v1.zip -d $code_dir
     run rm $code_dir/atlases.zip
 fi
 if [ ! -d $DRAWEMDIR/atlases ];then 
