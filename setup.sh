@@ -48,7 +48,7 @@ full_path_dir(){
 # check if commands  exist
 download=wget
 if ! hash $download 2>/dev/null; then
-    download=curl2
+    download=curl
     if ! hash $download 2>/dev/null; then
         echo_red "wget or curl need to be installed!"
         exit 1

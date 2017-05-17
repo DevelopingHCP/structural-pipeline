@@ -9,16 +9,27 @@ Prerequisites:
 
 Dependencies
 ------------
-gcc-c++ git
 
+
+Red Hat Enterprise Linux RHEL-7.3:
+sudo yum update
+sudo yum -y install gcc-c++ git cmake unzip
+sudo yum -y install qt-devel tbb-devel boost-devel
 
 openssl qt qt-devel
 cmake tbb tbb-devel boost boost-devel
 curl wget
 
 
-sudo apt-get install g++ git cmake unzip
-sudo apt-get install libtbb-dev libboost-dev qtdeclarative5-dev
+
+
+
+Ubuntu 16.04 or Debian GNU/Linux 8:
+sudo apt-get update
+
+sudo apt-get -y install g++ git cmake unzip
+sudo apt-get -y install libtbb-dev libboost-dev libqt4-dev zlib1g-dev
+qtdeclarative5-dev
 
 
 git clone https://gitlab.doc.ic.ac.uk/am411/structural-pipeline.git
