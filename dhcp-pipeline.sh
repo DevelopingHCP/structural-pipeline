@@ -34,8 +34,8 @@ runpipeline()
   echo "$@"
   "$@" >$log 2>$err
   if [ ! $? -eq 0 ]; then
-    echo "failed: see log files $log , $err for details"
-    echo "NO" > $infodir/$subj.failed
+    echo "Pipeline failed: see log files $log $err for details"
+    # echo "NO" > $infodir/$subj.failed
     exit 1
   fi
   echo "-----------------------"
@@ -106,10 +106,11 @@ echo "
 $BASH_SOURCE $command
 ----------------------------"
 
-infodir=$datadir/info 
+# infodir=$datadir/info 
 logdir=$datadir/logs
 workdir=$datadir/workdir/$subj
-mkdir -p $infodir $workdir $logdir
+# mkdir -p $infodir
+mkdir -p $workdir $logdir
 
 # copy files in the T1/T2 directory
 for modality in T1 T2;do 
@@ -128,7 +129,7 @@ for modality in T1 T2;do
 done
 
 
-if [ ! -f $infodir/$subj.completed -a ! -f $infodir/$subj.failed ];then
+# if [ ! -f $infodir/$subj.completed -a ! -f $infodir/$subj.failed ];then
 
   # segmentation
   runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $roundedAge -d $workdir -t $threads
@@ -145,5 +146,6 @@ if [ ! -f $infodir/$subj.completed -a ! -f $infodir/$subj.failed ];then
   # clean-up
   # runpipeline cleanup rm -r $workdir
 
-  echo "OK" > $infodir/$subj.completed
-fi
+  echo "dHCP pipeline completed!"
+#   echo "OK" > $infodir/$subj.completed
+# fi
