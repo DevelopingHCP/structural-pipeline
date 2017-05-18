@@ -47,8 +47,19 @@ outputDerivedDir=$releasedir/derivatives/$anat
 outputSurfDir=$outputDerivedDir/Native
 outputWarpDir=$outputDerivedDir/xfms
 
+if [ -f $outputDerivedDir/Native/${prefix}_wb.spec ];then exit; fi
+
 mkdir -p $outputSurfDir $outputWarpDir $outputRawDir
-# images
+
+# raw images
+run cp restore/T2/${subj}_defaced.nii.gz $outputRawDir/${prefix}_T2w.nii.gz
+if [ -f T1/$subj.nii.gz ];then
+  run mirtk transform-image masks/${subj}_mask_defaced.nii.gz masks/${subj}_mask_defaced_T1.nii.gz -target T1/$subj.nii.gz -dofin dofs/$subj-T2-T1-r.dof.gz -invert
+  run fslmaths T1/${subj}.nii.gz -thr 0 -mul masks/${subj}_mask_defaced_T1.nii.gz $outputRawDir/${prefix}_T1w.nii.gz
+  rm masks/${subj}_mask_defaced_T1.nii.gz
+fi
+
+# derived images
 ms=T2
 if [ -f T1/$subj.nii.gz ];then ms="T1 T2"; fi
 for m in ${ms};do
@@ -90,9 +101,6 @@ for f in corrThickness curvature drawem inflated pial roi sphere sulc thickness 
 done
 
 
-# original images
-run cp $outputDerivedDir/${prefix}_T2w.nii.gz $outputRawDir/${prefix}_T2w.nii.gz
-
 wbvols="T2w_restore"
 wbmetrics="sulc thickness curvature corr_thickness"
 wbsurfs="white pial midthickness inflated very_inflated sphere"
@@ -104,37 +112,7 @@ if [ -f T1/$subj.nii.gz ];then
   run $action $surfdir/$subj.ribbon.nii.gz $outputDerivedDir/${prefix}_ribbon.nii.gz
   run $action $surfdir/$subj.T1wDividedByT2w_defaced.nii.gz $outputDerivedDir/${prefix}_T1wdividedbyT2w.nii.gz
   run $action $surfdir/$subj.T1wDividedByT2w_ribbon.nii.gz $outputDerivedDir/${prefix}_T1wdividedbyT2w_ribbon.nii.gz
-
-  # original images
-  run mirtk transform-image masks/${subj}_mask_defaced.nii.gz masks/${subj}_mask_defaced_T1.nii.gz -target T1/$subj.nii.gz -dofin dofs/$subj-T2-T1-r.dof.gz -invert
-  run fslmaths T1/${subj}.nii.gz -thr 0 -mul masks/${subj}_mask_defaced_T1.nii.gz $outputRawDir/${prefix}_T1w.nii.gz
-  rm masks/${subj}_mask_defaced_T1.nii.gz
 fi
-
-
-# create spec file
-cd $outputDerivedDir/Native
-
-spec=${prefix}_wb.spec
-rm -f $spec
-
-for hi in {0..1}; do
-  h=${Hemi[$hi]}
-  C=${Cortex[$hi]}
-  for surf in ${wbsurfs};do
-    run wb_command -add-to-spec-file $spec $C ${prefix}_${h}_$surf.surf.gii
-  done
-done
-
-C=INVALID
-for metric in ${wbmetrics};do
-    run wb_command -add-to-spec-file $spec $C ${prefix}_$metric.dscalar.nii
-done
-run wb_command -add-to-spec-file $spec $C ${prefix}_drawem.dlabel.nii
-
-for file in ${wbvols};do
-  run wb_command -add-to-spec-file $spec $C ../${prefix}_$file.nii.gz
-done
 
 
 
@@ -177,5 +155,29 @@ if [ ! $minimal -eq 1 ];then
     run $action posteriors/$str/$subj.nii.gz $outputPostDir/${prefix}_drawem_${str}.nii.gz
   done
 
-
 fi
+
+
+# create spec file
+cd $outputDerivedDir/Native
+
+spec=${prefix}_wb.spec
+rm -f $spec
+
+for hi in {0..1}; do
+  h=${Hemi[$hi]}
+  C=${Cortex[$hi]}
+  for surf in ${wbsurfs};do
+    run wb_command -add-to-spec-file $spec $C ${prefix}_${h}_$surf.surf.gii
+  done
+done
+
+C=INVALID
+for metric in ${wbmetrics};do
+    run wb_command -add-to-spec-file $spec $C ${prefix}_$metric.dscalar.nii
+done
+run wb_command -add-to-spec-file $spec $C ${prefix}_drawem.dlabel.nii
+
+for file in ${wbvols};do
+  run wb_command -add-to-spec-file $spec $C ../${prefix}_$file.nii.gz
+done

@@ -16,10 +16,7 @@ sudo yum update
 sudo yum -y install gcc-c++ git cmake unzip
 sudo yum -y install qt-devel tbb-devel boost-devel
 
-openssl qt qt-devel
-cmake tbb tbb-devel boost boost-devel
-curl wget
-
+undefined reference to `vnl_vector<int>::operator=(vnl_vector
 
 
 
@@ -28,7 +25,7 @@ Ubuntu 16.04 or Debian GNU/Linux 8:
 sudo apt-get update
 
 sudo apt-get -y install g++ git cmake unzip
-sudo apt-get -y install libtbb-dev libboost-dev libqt4-dev zlib1g-dev
+sudo apt-get -y install libtbb-dev libboost-dev libqt4-dev zlib1g-dev libxt-dev
 qtdeclarative5-dev
 
 
