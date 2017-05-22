@@ -19,9 +19,9 @@ usage(){
 run(){
   echo_blue $@
   if [ $verbose -eq 0 ];then 
-    "$@" >> $logfile
+    $@ >> $logfile
   else
-    "$@"
+    $@
   fi
   if [ ! $? -eq 0 ]; then
     echo_red "$@ : command failed"
@@ -36,7 +36,8 @@ set_if_undef(){
     arg=$1
     name=`echo $arg|cut -d'=' -f1`
     val=`echo $arg|cut -d'=' -f2-`
-    if [[ ! -v $name ]];then
+    # if [[ ! -v $name ]];then
+    if [ -z ${!name} ];then
         eval "$name=\$val"
     fi
 }
@@ -47,8 +48,10 @@ full_path_dir(){
 
 # check if commands  exist
 download=wget
+download_option="-O"
 if ! hash $download 2>/dev/null; then
     download=curl
+    download_option="-o"
     if ! hash $download 2>/dev/null; then
         echo_red "wget or curl need to be installed!"
         exit 1
@@ -127,7 +130,7 @@ set_if_undef WORKBENCH_branch=master
 set_if_undef WORKBENCH_version=019ba364bf1b4f42793d43427848e3c77154c173
 set_if_undef WORKBENCH_folder="$pipeline_build/workbench"
 set_if_undef WORKBENCH_build="$pipeline_build/workbench/build"
-set_if_undef WORKBENCH_cmake_flags="-DCMAKE_CXX_FLAGS=-std=c++11 $WORKBENCH_folder/src"
+set_if_undef WORKBENCH_cmake_flags="-DCMAKE_CXX_STANDARD=11 -DCMAKE_CXX_FLAGS=-Wno-c++11-narrowing $WORKBENCH_folder/src"
 set_if_undef WORKBENCH_make_flags="wb_command"
 
 set_if_undef ITK_install=1
@@ -159,7 +162,7 @@ set_if_undef SPHERICALMESH_branch=dhcp
 set_if_undef SPHERICALMESH_version=826897dfc4ff7d74c503d5a22de3ea9fea9c332e
 set_if_undef SPHERICALMESH_folder="$pipeline_build/SphericalMesh"
 set_if_undef SPHERICALMESH_build="$pipeline_build/SphericalMesh/build"
-set_if_undef SPHERICALMESH_cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build"
+set_if_undef SPHERICALMESH_cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build -DCMAKE_CXX_FLAGS=-Dunix"
 
 
 set_if_undef cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build -DITK_DIR=$ITK_build"
@@ -169,6 +172,7 @@ for package in ${packages};do
     for var in ${vars};do 
         eval "package_$var=\${${package}_${var}}"
     done
+    echo $package_cmake_flags
 
     if [ ! $package_install -eq 1 ];then continue;fi
 
@@ -194,7 +198,6 @@ for package in ${packages};do
 done
 
 cmake_flags=`eval echo $cmake_flags`
-
 run cd $pipeline_build
 run cmake $code_dir $cmake_flags
 run make -j$num_cores
@@ -203,7 +206,7 @@ run make -j$num_cores
 
 if [ ! -d $code_dir/atlases ];then 
     echo_green "Downloading atlases"
-    run $download "https://www.doc.ic.ac.uk/%7Eam411/atlases-dhcp-structural-pipeline-v1.zip"
+    run $download $download_option $code_dir/atlases-dhcp-structural-pipeline-v1.zip "https://www.doc.ic.ac.uk/%7Eam411/atlases-dhcp-structural-pipeline-v1.zip"
     run unzip $code_dir/atlases-dhcp-structural-pipeline-v1.zip -d $code_dir
     run rm $code_dir/atlases.zip
 fi
