@@ -159,7 +159,7 @@ set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPE
 set_if_undef SPHERICALMESH_install=1
 set_if_undef SPHERICALMESH_git=https://gitlab.doc.ic.ac.uk/am411/SphericalMesh.git
 set_if_undef SPHERICALMESH_branch=dhcp
-set_if_undef SPHERICALMESH_version=826897dfc4ff7d74c503d5a22de3ea9fea9c332e
+set_if_undef SPHERICALMESH_version=a5e52e75bfa4fbe370f856cc94372a1a678b5396
 set_if_undef SPHERICALMESH_folder="$pipeline_build/SphericalMesh"
 set_if_undef SPHERICALMESH_build="$pipeline_build/SphericalMesh/build"
 set_if_undef SPHERICALMESH_cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build"
@@ -208,7 +208,7 @@ if [ ! -d $code_dir/atlases ];then
     echo_green "Downloading atlases"
     run $download $download_option $code_dir/atlases-dhcp-structural-pipeline-v1.zip "https://www.doc.ic.ac.uk/%7Eam411/atlases-dhcp-structural-pipeline-v1.zip"
     run unzip $code_dir/atlases-dhcp-structural-pipeline-v1.zip -d $code_dir
-    run rm $code_dir/atlases.zip
+    run rm $code_dir/atlases-dhcp-structural-pipeline-v1.zip
 fi
 if [ ! -d $DRAWEMDIR/atlases ];then 
     run ln -s $code_dir/atlases $DRAWEMDIR/atlases
