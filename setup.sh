@@ -1,52 +1,80 @@
 #!/bin/bash
 
+packages="WORKBENCH ITK VTK MIRTK SPHERICALMESH"
+vars="dir install git branch version folder build cmake_flags make_flags"
 
+
+usage()
+{
+  base=$(basename "$0")
+  echo "usage: $base [options]
+Setup of the dHCP structural pipeline.
+
+Options:
+  -j <number>                   Number of CPU cores to be used for the setup (default: 1)
+  -build <directory>            The directory used to setup the pipeline (default: build)
+  -D<package>_<var>=<value>     This allows to change the default setup values for the packages.
+                                The <package> can vary between: $packages
+                                The <var> can vary between: $vars
+                                where: 
+                                    <package>_dir         : use the pre-built directory specified by <value>, instead of downloading and building it
+                                    <package>_install     : whether to install (<value>=1) or not (<value>=0) the package (default <value>=1)
+                                    <package>_git         : use the git repository for the package specified by <value>
+                                    <package>_branch      : use the git branch for the package specified by <value>
+                                    <package>_version     : use the git commit/tag for the package specified by <value>
+                                    <package>_folder      : use the directory specified by <value> to run the cmake (must contain a CMakeLists.txt)
+                                    <package>_build       : use the directory specified by <value> to build the package
+                                    <package>_cmake_flags : use the flags specified by <value> to cmake the package
+                                    <package>_make_flags  : use the flags specified by <value> to make the package
+  -h / -help / --help           Print usage.
+"
+  exit;
+}
+
+
+
+# echo with color, prints in the terminal and the log file
+echo_color(){
+    msg='\033[0;'"$@"'\033[0m'
+    echo -e $msg >> $logfile
+    echo -e $msg 
+}
 echo_red(){
-    echo -e '\033[0;31m'"$@"'\033[0m'
+    echo_color '31m'"$@"
 }
 echo_green(){
-    echo -e '\033[0;32m'"$@"'\033[0m'
+    echo_color '32m'"$@"
 }
 echo_blue(){
-    echo -e '\033[0;34m'"$@"'\033[0m'
+    echo_color '34m'"$@"
 }
 
-usage(){
-    echo "usage"
-    exit 1
-}
-
+# run the command
 run(){
-  echo_blue $@
-  if [ $verbose -eq 0 ];then 
-    $@ >> $logfile
-  else
-    $@
-  fi
+  echo_blue "$@"
+  eval $@ >> $logfile 2>> $logfile
   if [ ! $? -eq 0 ]; then
-    echo_red "$@ : command failed"
-    if [ $verbose -eq 0 ];then 
-        echo_red "see log file: $logfile"; 
-    fi
+    echo_red "$@ : command failed, see log file: $logfile"
     exit 1
   fi
 }
 
+# set the variable if it is undefined
 set_if_undef(){
     arg=$1
     name=`echo $arg|cut -d'=' -f1`
     val=`echo $arg|cut -d'=' -f2-`
-    # if [[ ! -v $name ]];then
     if [ -z ${!name} ];then
         eval "$name=\$val"
     fi
 }
 
+# get the full path of the directory
 full_path_dir(){
     echo "$( cd $1 && pwd )"
 }
 
-# check if commands  exist
+# check if commands exist
 download=wget
 download_option="-O"
 if ! hash $download 2>/dev/null; then
@@ -57,61 +85,57 @@ if ! hash $download 2>/dev/null; then
         exit 1
     fi
 fi
-if ! hash unzip 2>/dev/null; then
-    echo_red "unzip need to be installed!"
-    exit 1
-fi
+for comm in unzip cmake git;do
+    if ! hash $comm 2>/dev/null; then
+        echo_red "$comm need to be installed!"
+        exit 1
+    fi
+done
 
 code_dir=`full_path_dir $( dirname ${BASH_SOURCE[0]} )`
 num_cores=1
-verbose=0
 logfile=$code_dir/setup.log
 rm -f $logfile
 
-packages="WORKBENCH ITK VTK MIRTK SPHERICALMESH"
-vars="install git branch version folder build cmake_flags make_flags"
-
 while [ $# -gt 0 ]; do
   case "$1" in
-    -v)   shift;
-          verbose=$1 ;;
     -j)
           shift;
           num_cores=$1 ;;
     -build)
           shift;
           pipeline_build=$1;;
-    -*_DIR=*)  
-          param=`echo $1|sed -e 's:^-::g'`;
-          pkg=`echo $param|cut -d'=' -f1|sed -e 's:_DIR::g'`
-          val=`echo $param|cut -d'=' -f2`
-          ok=0
-          for p in ${packages};do
-            if [ "$p" == "$pkg" ];then let ok++; break; fi
-          done
-          if [ ! $ok -eq 1 ];then usage;fi
-          val=`full_path_dir $val`
-          eval ${pkg}_install=0
-          eval ${pkg}_build=$val ;;
     -D*=*)   
           param=`echo $1|sed -e 's:^-D::g'`;
           name=`echo $param|cut -d'=' -f1`
-          pkg=`echo $name|cut -d'_' -f1`
-          var=`echo $name|cut -d'_' -f2-`
+          pkg=`echo $name|cut -d'_' -f1| awk '{print toupper($0)}'`
+          var=`echo $name|cut -d'_' -f2-| awk '{print tolower($0)}'`
           val=`echo $param|cut -d'=' -f2-`
           ok=0
           for p in ${packages};do
             if [ "$p" == "$pkg" ];then let ok++; break; fi
           done
-          for v in ${vars};do
-            if [ "$v" == "$var" ];then let ok++; break; fi
-          done
-          if [ "$v" == "build" -o "$v" == "folder" ];then
-            val=`full_path_dir $val`
-          fi
-          if [ ! $ok -eq 2 ];then usage;fi
-          echo "setting $name=$val"; 
-          eval "$name=$val";;
+          if [ ! $ok -eq 1 ];then usage;fi
+          if [ "$var" == "dir" ];then
+              val=`full_path_dir $val`
+              comm="${pkg}_install=0; ${pkg}_build=$val"
+          else
+              if [ "$var" == "build" -o "$var" == "folder" ];then
+                mkdir -p $val
+                val=`full_path_dir $val`
+              else
+                  ok=0
+                  for v in ${vars};do
+                    if [ "$v" == "$var" ];then let ok++; break; fi
+                  done
+                if [ ! $ok -eq 1 ];then usage;fi
+              fi
+              comm="$name=$val"
+          fi 
+          echo_green "setting $comm"; 
+          eval "$comm"
+          ;;
+    -h|-help|--help) usage; ;;
     -*) echo "$0: Unrecognized option $1" >&2; usage; ;;
     *) break ;;
   esac
@@ -124,13 +148,14 @@ mkdir -p $pipeline_build
 pipeline_build=`full_path_dir $pipeline_build`
 
 
+
 set_if_undef WORKBENCH_install=1
 set_if_undef WORKBENCH_git=https://github.com/Washington-University/workbench.git
 set_if_undef WORKBENCH_branch=master
 set_if_undef WORKBENCH_version=019ba364bf1b4f42793d43427848e3c77154c173
 set_if_undef WORKBENCH_folder="$pipeline_build/workbench"
 set_if_undef WORKBENCH_build="$pipeline_build/workbench/build"
-set_if_undef WORKBENCH_cmake_flags="-DCMAKE_CXX_STANDARD=11 -DCMAKE_CXX_FLAGS=-Wno-c++11-narrowing $WORKBENCH_folder/src"
+set_if_undef WORKBENCH_cmake_flags="-DCMAKE_CXX_STANDARD=11 -DCMAKE_CXX_STANDARD_REQUIRED=ON -DCMAKE_CXX_EXTENSIONS=OFF -DCMAKE_CXX_FLAGS=\"-std=c++11 -Wno-c++11-narrowing\" $WORKBENCH_folder/src"
 set_if_undef WORKBENCH_make_flags="wb_command"
 
 set_if_undef ITK_install=1
@@ -172,7 +197,6 @@ for package in ${packages};do
     for var in ${vars};do 
         eval "package_$var=\${${package}_${var}}"
     done
-    echo $package_cmake_flags
 
     if [ ! $package_install -eq 1 ];then continue;fi
 
@@ -185,7 +209,6 @@ for package in ${packages};do
     # install specific version of DrawEM
     if [ "$package" == "MIRTK" ];then 
         cd $DRAWEMDIR
-        # git reset --hard 411f44be1a032c3835ae3db02e8c732532e28c3c
         git pull origin dhcp
         cd $package_folder
     fi
