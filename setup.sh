@@ -164,7 +164,7 @@ set_if_undef ITK_branch=master
 set_if_undef ITK_version=v4.11.1
 set_if_undef ITK_folder="$pipeline_build/ITK"
 set_if_undef ITK_build="$pipeline_build/ITK/build"
-set_if_undef ITK_cmake_flags="-DBUILD_EXAMPLES=OFF"
+set_if_undef ITK_cmake_flags="-DBUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF"
 
 set_if_undef VTK_install=1
 set_if_undef VTK_git=https://github.com/Kitware/VTK.git
