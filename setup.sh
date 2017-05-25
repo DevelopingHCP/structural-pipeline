@@ -240,13 +240,15 @@ fi
 
 
 echo_green "Setting up environment"
-for package in WORKBENCH MIRTK SPHERICALMESH pipeline;do 
+wb_command=`find $WORKBENCH_build/CommandLine/ -name wb_command`
+pathext=`dirname $wb_command`
+for package in MIRTK SPHERICALMESH pipeline;do 
     eval "bin=\${${package}_build}/bin"
-    pathext="$pathext$bin:"
+    pathext="$pathext:$bin"
 done
 rm -f $code_dir/parameters/path.sh
 echo "export DRAWEMDIR=$DRAWEMDIR" >> $code_dir/parameters/path.sh
-echo "export PATH=$pathext"'${PATH}' >> $code_dir/parameters/path.sh
+echo "export PATH=$pathext:"'${PATH}' >> $code_dir/parameters/path.sh
 chmod +x $code_dir/parameters/path.sh
 
 # replace Draw-EM N4 pre-built binary with the built one from this setup
