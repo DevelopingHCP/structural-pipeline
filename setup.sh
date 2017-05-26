@@ -153,12 +153,10 @@ pipelinebinaries_build=$pipeline_build/pipeline/build
 set_if_undef WORKBENCH_install=1
 set_if_undef WORKBENCH_git=https://github.com/Washington-University/workbench.git
 set_if_undef WORKBENCH_branch=master
-#set_if_undef WORKBENCH_version=019ba364bf1b4f42793d43427848e3c77154c173
 set_if_undef WORKBENCH_version=v1.2.2
 set_if_undef WORKBENCH_folder="$pipeline_build/workbench"
 set_if_undef WORKBENCH_build="$pipeline_build/workbench/build"
 set_if_undef WORKBENCH_cmake_flags="-DCMAKE_CXX_STANDARD=11 -DCMAKE_CXX_STANDARD_REQUIRED=ON -DCMAKE_CXX_EXTENSIONS=OFF -DCMAKE_CXX_FLAGS=\"-std=c++11 -Wno-c++11-narrowing\" $WORKBENCH_folder/src"
-set_if_undef WORKBENCH_make_flags="wb_command"
 
 set_if_undef ITK_install=1
 set_if_undef ITK_git=https://github.com/InsightSoftwareConsortium/ITK.git
