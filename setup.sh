@@ -146,13 +146,15 @@ done
 set_if_undef pipeline_build=$code_dir/build
 mkdir -p $pipeline_build
 pipeline_build=`full_path_dir $pipeline_build`
+pipelinebinaries_build=$pipeline_build/pipeline/build
 
 
 
 set_if_undef WORKBENCH_install=1
 set_if_undef WORKBENCH_git=https://github.com/Washington-University/workbench.git
 set_if_undef WORKBENCH_branch=master
-set_if_undef WORKBENCH_version=019ba364bf1b4f42793d43427848e3c77154c173
+#set_if_undef WORKBENCH_version=019ba364bf1b4f42793d43427848e3c77154c173
+set_if_undef WORKBENCH_version=v1.2.2
 set_if_undef WORKBENCH_folder="$pipeline_build/workbench"
 set_if_undef WORKBENCH_build="$pipeline_build/workbench/build"
 set_if_undef WORKBENCH_cmake_flags="-DCMAKE_CXX_STANDARD=11 -DCMAKE_CXX_STANDARD_REQUIRED=ON -DCMAKE_CXX_EXTENSIONS=OFF -DCMAKE_CXX_FLAGS=\"-std=c++11 -Wno-c++11-narrowing\" $WORKBENCH_folder/src"
@@ -209,7 +211,7 @@ for package in ${packages};do
     # install specific version of DrawEM
     if [ "$package" == "MIRTK" ];then 
         cd $DRAWEMDIR
-        git pull origin dhcp
+        git pull origin dhcp >/dev/null
         cd $package_folder
     fi
 
@@ -221,7 +223,8 @@ for package in ${packages};do
 done
 
 cmake_flags=`eval echo $cmake_flags`
-run cd $pipeline_build
+run mkdir -p $pipelinebinaries_build
+run cd $pipelinebinaries_build
 run cmake $code_dir $cmake_flags
 run make -j$num_cores
 
@@ -240,9 +243,10 @@ fi
 
 
 echo_green "Setting up environment"
-wb_command=`find $WORKBENCH_build/CommandLine/ -name wb_command`
-pathext=`dirname $wb_command`
-for package in MIRTK SPHERICALMESH pipeline;do 
+wb_command=`find $WORKBENCH_build -name wb_command`
+wb_view=`find $WORKBENCH_build -name wb_view`
+pathext=`dirname $wb_command`:`dirname $wb_view`:
+for package in MIRTK SPHERICALMESH pipelinebinaries;do 
     eval "bin=\${${package}_build}/bin"
     pathext="$pathext:$bin"
 done
