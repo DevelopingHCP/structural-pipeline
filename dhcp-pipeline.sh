@@ -129,23 +129,19 @@ for modality in T1 T2;do
 done
 
 
-# if [ ! -f $infodir/$subj.completed -a ! -f $infodir/$subj.failed ];then
+# segmentation
+runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $roundedAge -d $workdir -t $threads
 
-  # segmentation
-  runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $roundedAge -d $workdir -t $threads
+# generate some additional files
+runpipeline additional $scriptdir/misc/pipeline.sh $subj $roundedAge -d $workdir -t $threads
 
-  # generate some additional files
-  runpipeline additional $scriptdir/misc/pipeline.sh $subj $roundedAge -d $workdir -t $threads
+# surface extraction
+runpipeline surface $scriptdir/surface/pipeline.sh $subj -d $workdir -t $threads
 
-  # surface extraction
-  runpipeline surface $scriptdir/surface/pipeline.sh $subj -d $workdir -t $threads
+# create data directory for subject
+runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $roundedAge $datadir $workdir 
 
-  # create data directory for subject
-  runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $roundedAge $datadir $workdir 
+# clean-up
+runpipeline cleanup rm -r $workdir
 
-  # clean-up
-  # runpipeline cleanup rm -r $workdir
-
-  echo "dHCP pipeline completed!"
-#   echo "OK" > $infodir/$subj.completed
-# fi
+echo "dHCP pipeline completed!"

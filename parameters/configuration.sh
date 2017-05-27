@@ -19,9 +19,6 @@ export CGM_label=2
 export WM_label=3
 export BG_label=4
 
-# N4 software
-#export N4=$code_dir/ThirdParty/ITK/N4
-
 # MNI T1, mask and warps
 export MNI_T1=$code_dir/atlases/MNI/MNI152_T1_1mm.nii.gz
 export MNI_mask=$code_dir/atlases/MNI/MNI152_T1_1mm_facemask.nii.gz
@@ -43,7 +40,7 @@ export surface_recon_config=$parameters_dir/recon-neonatal-cortex.cfg
 run()
 {
   echo "$@"
-  "$@"
+  "$@" >/dev/null
   if [ ! $? -eq 0 ]; then
     echo "$@ : failed"
     exit 1
