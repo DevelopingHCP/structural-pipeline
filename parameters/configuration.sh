@@ -40,7 +40,7 @@ export surface_recon_config=$parameters_dir/recon-neonatal-cortex.cfg
 run()
 {
   echo "$@"
-  "$@" >/dev/null
+  "$@"
   if [ ! $? -eq 0 ]; then
     echo "$@ : failed"
     exit 1
