@@ -255,7 +255,7 @@ chmod +x $code_dir/parameters/path.sh
 
 # replace Draw-EM N4 pre-built binary with the built one from this setup
 rm $DRAWEMDIR/ThirdParty/ITK/N4
-ln -s $pipeline_build/bin/N4 $DRAWEMDIR/ThirdParty/ITK/N4
+ln -s $pipelinebinaries_build/bin/N4 $DRAWEMDIR/ThirdParty/ITK/N4
 
 
 echo_green "Setup completed successfully!"
