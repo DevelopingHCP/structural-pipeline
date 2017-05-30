@@ -1,10 +1,12 @@
 # dHCP structural pipeline
 
-The dHCP structural pipeline is a software for the structural analysis of the neonatal brain MRI (T1 and T2) that consists of:
+The dHCP structural pipeline is a software for the structural analysis of the neonatal brain MRI (T1 and T2) that consists of:<br>
 cortical and sub-cortical volume segmentation, cortical surface extraction (white matter and pial surface), cortical surface inflation and projection to sphere.
 
 ![pipeline image](structural-pipeline.png)
 
+
+## Publication
 The pipeline is outlined in detail in:
 
 A. Makropoulos and E. C. Robinson et al. "The Developing Human Connectome Project: a Minimal Processing Pipeline for Neonatal Cortical Surface Reconstruction (<a href="http://biorxiv.org/content/early/2017/04/07/125526">link</a>)
@@ -20,9 +22,9 @@ After installing these dependencies, the pipeline is installed by running:
 * ./setup.sh -j <num_cores> 
 <br>
 where  <num_cores> the number of CPU cores used to compile the pipeline software 
+<br>
 
-
-The installation script installs the following software packages.
+The setup script installs the following software packages.
    
 | Software        | Version           
 | ------------- |:-------------:|
@@ -39,7 +41,7 @@ The dHCP structural pipeline uses the <b>FSL</b> software. This can be installed
 * Ubuntu (tested on version 16.04) / Debian GNU (tested on version 8): <br />
   http://neuro.debian.net/install_pkg.html?p=fsl-complete
 
-* Mac OS X, Red Hat Enterprise Linux, CENTOS (tested on version 7): <br />
+* Mac OS X / Red Hat Enterprise Linux / CENTOS (tested on version 7): <br />
   https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
 
 The FSL software needs to be configured for <b>shell usage</b>:
