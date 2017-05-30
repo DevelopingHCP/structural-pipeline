@@ -21,9 +21,9 @@ The dHCP structural pipeline is distributed under the license outlined in LICENS
 ## Installation
 The installation requires <b>FSL</b> and the <b>packages</b> specified in the <b>Dependencies</b> section.<br>
 After installing these dependencies, the pipeline is installed by running:
-* ./setup.sh -j <num_cores> 
+* ./setup.sh -j [num_cores] 
 <br>
-where  <num_cores> the number of CPU cores used to compile the pipeline software 
+where [num_cores] the number of CPU cores used to compile the pipeline software 
 <br>
 
 The setup script installs the following software packages.
@@ -37,7 +37,7 @@ The setup script installs the following software packages.
 | <a href="https://gitlab.doc.ic.ac.uk/am411/SphericalMesh/">SphericalMesh</a>  | 0fb416cf88ba33e99df5e57b90281171f0f34005  
 
 ## Dependencies
-#### FSL
+#### 1. FSL
 The dHCP structural pipeline uses the <b>FSL</b> software. This can be installed by following the instructions:
 
 * Ubuntu (tested on version 16.04) / Debian GNU (tested on version 8): <br />
@@ -49,7 +49,7 @@ The dHCP structural pipeline uses the <b>FSL</b> software. This can be installed
 The FSL software needs to be configured for <b>shell usage</b>:
 * https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation/ShellSetup
 
-#### Packages
+#### 2. Packages
 The dHCP structural requires installation of the following packages.
 #### Ubuntu (tested on version 16.04) / Debian GNU (tested on version 8):
 * sudo apt-get -y update
