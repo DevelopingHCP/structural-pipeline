@@ -3,12 +3,12 @@
 usage()
 {
   base=$(basename "$0")
-  echo "usage: $base subjectID sessionID scan_age -T2 <subject_T2.nii.gz> [-T1 <subject_T1.nii.gz>] [options]
+  echo "usage: $base <subject_ID> <session_ID> <scan_age> -T2 <subject_T2.nii.gz> [-T1 <subject_T1.nii.gz>] [options]
 This script runs the dHCP structural pipeline.
 
 Arguments:
-  subjectID                     subject ID
-  sessionID                     session ID
+  subject_ID                     subject ID
+  session_ID                     session ID
   scan_age                      Number: Subject age in weeks. This is used to select the appropriate template for the initial registration. 
                                 If the age is <28w or >44w, it will be set to 28w or 44w respectively.
   -T2 <subject_T2.nii.gz>       Nifti Image: The T2 image of the subject
@@ -16,7 +16,7 @@ Arguments:
 
 Options:
   -d / -data-dir  <directory>   The directory used to run the script and output the files. 
-  -t / -threads  <number>       Number of threads (CPU cores) allowed for the registration to run in parallel (default: 1)
+  -t / -threads  <number>       Number of threads (CPU cores) used (default: 1)
   -no-reorient                  The images will not be reoriented before processing (using the FSL fslreorient2std command) (default: False) 
   -h / -help / --help           Print usage.
 "
