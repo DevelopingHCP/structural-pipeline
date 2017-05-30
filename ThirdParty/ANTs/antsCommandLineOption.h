@@ -1,14 +1,10 @@
 /*=========================================================================
 
   Program:   Advanced Normalization Tools
-  Module:    $RCSfile: antsCommandLineOption.h,v $
-  Language:  C++
-  Date:      $Date: 2009/01/22 22:48:30 $
-  Version:   $Revision: 1.1 $
 
   Copyright (c) ConsortiumOfANTS. All rights reserved.
   See accompanying COPYING.txt or
- http://sourceforge.net/projects/advants/files/ANTS/ANTSCopyright.txt for details.
+ https://github.com/stnava/ANTs/blob/master/ANTSCopyright.txt for details.
 
      This software is distributed WITHOUT ANY WARRANTY; without even
      the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
@@ -47,132 +43,167 @@ namespace ants
       -m mutualinformation[parameter1] --optimization gradientdescent"
 */
 
-class ITK_EXPORT CommandLineOption
-: public DataObject
+class OptionFunction
+  : public       DataObject
 {
 public:
-    typedef CommandLineOption                        Self;
-    typedef DataObject                               Superclass;
-    typedef SmartPointer<Self>                       Pointer;
+  OptionFunction() :
+    m_Name( "" ),
+    m_ArgOrder( 0 ),
+    m_StageID( 0 )
+  {
+  };
+  ~OptionFunction()
+  {
+  };
 
-    itkNewMacro( Self );
+  typedef OptionFunction     Self;
+  typedef DataObject         Superclass;
+  typedef SmartPointer<Self> Pointer;
 
-    itkTypeMacro( Option, DataObject );
+  itkNewMacro( Self );
 
-    typedef std::string                              ValueType;
-    typedef std::deque<ValueType>                    ValueStackType;
-    typedef std::deque<ValueStackType>               ParameterStackType;
+  itkTypeMacro( Option, DataObject );
 
-    ValueStackType GetValues()
-      { return this->m_Values; }
+  typedef std::deque<std::string> ParameterStackType;
 
-    unsigned int GetNumberOfValues()
-      { return this->m_Values.size(); }
+  itkSetStringMacro( Name );
+  itkGetStringMacro( Name );
+  itkGetMacro( Name, std::string );
 
-    std::string GetValue( unsigned int i = 0 )
+  itkSetMacro( ArgOrder, unsigned int );
+  itkGetConstMacro( ArgOrder, unsigned int );
+
+  itkSetMacro( StageID, unsigned int );
+  itkGetConstMacro( StageID, unsigned int );
+
+  ParameterStackType GetParameters()
+  {
+    return this->m_Parameters;
+  }
+
+  void SetParameters( ParameterStackType parameters )
+  {
+    this->m_Parameters = parameters;
+    this->Modified();
+  }
+
+  std::string GetParameter( unsigned int i = 0 )
+  {
+    if( i < this->m_Parameters.size() )
       {
-      if( i < this->m_Values.size() )
-        {
-        return this->m_Values[i];
-        }
-      else
-        {
-        return std::string( "" );
-        }
+      return this->m_Parameters[i];
       }
-
-    ValueStackType GetUsageOptions()
-      { return this->m_UsageOptions; }
-
-    unsigned int GetNumberOfUsageOptions()
-      { return this->m_UsageOptions.size(); }
-
-    std::string GetUsageOption( unsigned int i = 0 )
+    else
       {
-      if( i < this->m_UsageOptions.size() )
-        {
-        return this->m_UsageOptions[i];
-        }
-      else
-        {
-        return std::string( "" );
-        }
+      std::string empty( "" );
+      return empty;
       }
+  }
 
-
-    ValueStackType GetParameters( unsigned int i = 0 )
-      {
-      if( i < this->m_Parameters.size() )
-        {
-        return this->m_Parameters[i];
-        }
-      else
-        {
-        ValueStackType empty;
-        return empty;
-        }
-      }
-
-    std::string GetParameter( unsigned int i, unsigned int j )
-      {
-      if( i < this->m_Parameters.size() && j < this->m_Parameters[i].size() )
-        {
-        return this->m_Parameters[i][j];
-        }
-      else
-        {
-        return std::string( "" );
-        }
-      }
-
-    std::string GetParameter( unsigned int j )
-      {
-      return this->GetParameter( 0, j );
-      }
-
-    unsigned int GetNumberOfParameters( unsigned int i = 0 )
-      {
-      if( i < this->m_Parameters.size() )
-        {
-        return this->m_Parameters[i].size();
-        }
-      else
-        {
-        return 0;
-        }
-      }
-
-    itkSetMacro( ShortName, char );
-    itkGetMacro( ShortName, char );
-
-    itkSetMacro( LongName, std::string );
-    itkGetMacro( LongName, std::string );
-
-    itkSetMacro( Description, std::string );
-    itkGetMacro( Description, std::string );
-
-    void AddValue( std::string, char, char );
-    void AddValue( std::string s )
-      {
-      this->AddValue( s, '[', ']' );
-      }
-    void SetValue( unsigned int, std::string );
-
-    void SetUsageOption( unsigned int, std::string );
-
-protected:
-    CommandLineOption();
-    virtual ~CommandLineOption() {};
+  unsigned int GetNumberOfParameters()
+  {
+    return this->m_Parameters.size();
+  }
 
 private:
-    char                                                     m_ShortName;
-    std::string                                              m_LongName;
-    std::string                                              m_Description;
-    ValueStackType                                           m_UsageOptions;
-    ValueStackType                                           m_Values;
-    ParameterStackType                                       m_Parameters;
+  std::string        m_Name;
+  unsigned int       m_ArgOrder;
+  unsigned int       m_StageID;
+  ParameterStackType m_Parameters;
 };
 
+class CommandLineOption
+  : public       DataObject
+{
+public:
+  typedef CommandLineOption  Self;
+  typedef DataObject         Superclass;
+  typedef SmartPointer<Self> Pointer;
+
+  itkNewMacro( Self );
+
+  itkTypeMacro( Option, DataObject );
+
+  typedef OptionFunction OptionFunctionType;
+
+  typedef std::deque<OptionFunctionType::Pointer> FunctionStackType;
+  typedef std::deque<std::string>                 UsageOptionStackType;
+
+  FunctionStackType GetFunctions()
+  {
+    return this->m_OptionFunctions;
+  }
+
+  unsigned int GetNumberOfFunctions()
+  {
+    return this->m_OptionFunctions.size();
+  }
+
+  OptionFunction::Pointer GetFunction( unsigned int i = 0 )
+  {
+    if( i < this->m_OptionFunctions.size() )
+      {
+      return this->m_OptionFunctions[i];
+      }
+    else
+      {
+      return ITK_NULLPTR;
+      }
+  }
+
+  UsageOptionStackType GetUsageOptions()
+  {
+    return this->m_UsageOptions;
+  }
+
+  unsigned int GetNumberOfUsageOptions()
+  {
+    return this->m_UsageOptions.size();
+  }
+
+  std::string GetUsageOption( unsigned int i = 0 )
+  {
+    if( i < this->m_UsageOptions.size() )
+      {
+      return this->m_UsageOptions[i];
+      }
+    else
+      {
+      return std::string( "" );
+      }
+  }
+
+  itkSetMacro( ShortName, char );
+  itkGetConstMacro( ShortName, char );
+
+  itkSetStringMacro( LongName );
+  itkGetConstMacro( LongName, std::string );
+
+  itkSetStringMacro( Description );
+  itkGetMacro( Description, std::string );
+
+  void AddFunction( std::string, char, char, unsigned int order = 0 );
+
+  void AddFunction( std::string s )
+  {
+    this->AddFunction( s, '[', ']' );
+  }
+
+  void SetUsageOption( unsigned int, std::string );
+
+protected:
+  CommandLineOption();
+  virtual ~CommandLineOption()
+  {
+  };
+private:
+  char                 m_ShortName;
+  std::string          m_LongName;
+  std::string          m_Description;
+  UsageOptionStackType m_UsageOptions;
+  FunctionStackType    m_OptionFunctions;
+};
 } // end namespace ants
 } // end namespace itk
 

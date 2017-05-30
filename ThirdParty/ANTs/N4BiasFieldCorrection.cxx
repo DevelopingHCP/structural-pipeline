@@ -1,20 +1,8 @@
-// This file is based on the N4BiasFieldCorrection.cxx provided by ANTs
-// Minor modifications have been applied to allow to build N4BiasFieldCorrection as an external package withouth the need to build all of ANTs
-// Modifications are noted in the following code with modification{ ... }modification
-
-//modification{
-/*
 #include "antsUtilities.h"
 #include "antsAllocImage.h"
-*/
-//}modification
 #include "antsCommandLineParser.h"
 
-//modification{
-//#include "ReadWriteData.h"
-#include "itkImageFileReader.h"
-#include "itkImageFileWriter.h"
-//}modification
+#include "ReadWriteData.h"
 
 #include "itkBinaryThresholdImageFilter.h"
 #include "itkBSplineControlPointImageFilter.h"
@@ -32,14 +20,10 @@
 #include <algorithm>
 #include <vector>
 
-//modification{
-/*
 #include "ANTsVersion.h"
 
 namespace ants
 {
-*/
-//}modification
 template <class TFilter>
 class CommandIterationUpdate : public itk::Command
 {
@@ -114,22 +98,10 @@ int N4( itk::ants::CommandLineParser *parser )
   typename CorrecterType::Pointer correcter = CorrecterType::New();
   typename itk::ants::CommandLineParser::OptionType::Pointer inputImageOption =
     parser->GetOption( "input-image" );
-
-//modification{
-  typedef itk::ImageFileReader<ImageType> ReaderType;
-  typename ReaderType::Pointer reader = ReaderType::New();
-//}modification
-
   if( inputImageOption && inputImageOption->GetNumberOfFunctions() )
     {
     std::string inputFile = inputImageOption->GetFunction( 0 )->GetName();
-//modification{
-    //ReadImage<ImageType>( inputImage, inputFile.c_str() );
-    reader->SetFileName( inputFile.c_str() );
-    inputImage = reader->GetOutput();
-    inputImage->Update();
-    inputImage->DisconnectPipeline();
-//}modification
+    ReadImage<ImageType>( inputImage, inputFile.c_str() );
     }
   else
     {
@@ -151,14 +123,7 @@ int N4( itk::ants::CommandLineParser *parser )
   if( maskImageOption && maskImageOption->GetNumberOfFunctions() )
     {
     std::string inputFile = maskImageOption->GetFunction( 0 )->GetName();
-//modification{
-    //ReadImage<MaskImageType>( maskImage, inputFile.c_str() );
-    typename ReaderType::Pointer maskreader = ReaderType::New();
-    maskreader->SetFileName( inputFile.c_str() );
-    maskImage = maskreader->GetOutput();
-    maskImage->Update();
-    maskImage->DisconnectPipeline();
-//}modification
+    ReadImage<MaskImageType>( maskImage, inputFile.c_str() );
 
     isMaskImageSpecified = true;
     }
@@ -182,14 +147,7 @@ int N4( itk::ants::CommandLineParser *parser )
   if( weightImageOption && weightImageOption->GetNumberOfFunctions() )
     {
     std::string inputFile = weightImageOption->GetFunction( 0 )->GetName();
-//modification{
-    //ReadImage<ImageType>( weightImage, inputFile.c_str() );
-    typename ReaderType::Pointer weightreader = ReaderType::New();
-    weightreader->SetFileName( inputFile.c_str() );
-    maskImage = weightreader->GetOutput();
-    maskImage->Update();
-    maskImage->DisconnectPipeline();
-//}modification
+    ReadImage<ImageType>( weightImage, inputFile.c_str() );
     }
 
   /**
@@ -472,15 +430,7 @@ int N4( itk::ants::CommandLineParser *parser )
     bspliner->SetSpacing( inputImage->GetSpacing() );
     bspliner->Update();
 
-//modification{
-//    typename ImageType::Pointer logField = AllocImage<ImageType>( inputImage );
-    typename ImageType::Pointer logField = ImageType::New();
-    logField->SetOrigin( inputImage->GetOrigin() );
-    logField->SetSpacing( inputImage->GetSpacing() );
-    logField->SetRegions( inputImage->GetLargestPossibleRegion() );
-    logField->SetDirection( inputImage->GetDirection() );
-    logField->Allocate();
-//}modification
+    typename ImageType::Pointer logField = AllocImage<ImageType>( inputImage );
 
     itk::ImageRegionIterator<typename CorrecterType::ScalarImageType> ItB(
       bspliner->GetOutput(),
@@ -594,8 +544,6 @@ int N4( itk::ants::CommandLineParser *parser )
     biasFieldCropper->SetDirectionCollapseToSubmatrix();
     biasFieldCropper->Update();
 
-//modification{
-/*
     if( outputOption->GetFunction( 0 )->GetNumberOfParameters() == 0 )
       {
       WriteImage<ImageType>( cropper->GetOutput(),  ( outputOption->GetFunction( 0 )->GetName() ).c_str() );
@@ -609,34 +557,6 @@ int N4( itk::ants::CommandLineParser *parser )
         }
       }
     }
-*/
-
-    if( outputOption->GetFunction( 0 )->GetNumberOfParameters() == 0 )
-      {
-      typedef  itk::ImageFileWriter<ImageType> WriterType;
-      typename WriterType::Pointer writer = WriterType::New();
-      writer->SetInput( cropper->GetOutput() );
-      writer->SetFileName( ( outputOption->GetFunction( 0 )->GetName() ).c_str() );
-      writer->Update();
-      }
-    if( outputOption->GetFunction( 0 )->GetNumberOfParameters() > 0 )
-      {
-      typedef  itk::ImageFileWriter<ImageType> WriterType;
-      typename WriterType::Pointer writer = WriterType::New();
-      writer->SetInput( cropper->GetOutput() );
-      writer->SetFileName( ( outputOption->GetFunction( 0 )->GetParameter( 0 ) ).c_str() );
-      writer->Update();
-      }
-    if( outputOption->GetFunction( 0 )->GetNumberOfParameters() > 1 )
-      {
-      typedef itk::ImageFileWriter<ImageType> WriterType;
-      typename WriterType::Pointer writer = WriterType::New();
-      writer->SetFileName( ( outputOption->GetFunction( 0 )->GetParameter( 1 ) ).c_str() );
-      writer->SetInput( biasFieldCropper->GetOutput() );
-      writer->Update();
-      }
-    }
-//}modification
 
   return EXIT_SUCCESS;
 }
@@ -860,15 +780,10 @@ void N4InitializeCommandLineOptions( itk::ants::CommandLineParser *parser )
   }
 }
 
-
-int main( int argc, char *argv[] )
-{
-
-//modification{
 // entry point for the library; parameter 'args' is equivalent to 'argv' in (argc,argv) of commandline parameters to
 // 'main()'
-//int N4BiasFieldCorrection( std::vector<std::string> args, std::ostream* /*out_stream = NULL */ )
-/*{
+int N4BiasFieldCorrection( std::vector<std::string> args, std::ostream* /*out_stream = NULL */ )
+{
   // put the arguments coming in as 'args' into standard (argc,argv) format;
   // 'args' doesn't have the command name as first, argument, so add it manually;
   // 'args' may have adjacent arguments concatenated into one argument,
@@ -910,9 +825,6 @@ private:
   Cleanup_argv cleanup_argv( argv, argc + 1 );
 
   // antscout->set_stream( out_stream );
-*/
-//}modification
-
 
   itk::ants::CommandLineParser::Pointer parser =
     itk::ants::CommandLineParser::New();
@@ -956,9 +868,6 @@ private:
     parser->PrintMenu( std::cout, 5, true );
     return EXIT_SUCCESS;
     }
-
-//modification{
-/*
   // Show automatic version
   itk::ants::CommandLineParser::OptionType::Pointer versionOption = parser->GetOption( "version" );
   if( versionOption && versionOption->GetNumberOfFunctions() )
@@ -972,9 +881,6 @@ private:
       return EXIT_SUCCESS;
       }
     }
-*/
-//}modification
-
   // Get dimensionality
   unsigned int dimension = 3;
 
@@ -1038,6 +944,4 @@ private:
     }
   return returnValue;
 }
-//modification{
-//} // namespace ants
-//}modification
+} // namespace ants
