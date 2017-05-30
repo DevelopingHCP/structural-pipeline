@@ -6,7 +6,7 @@ The dHCP structural pipeline is a software for the structural analysis of the ne
 * cortical and sub-cortical volume segmentation
 * cortical surface extraction (white matter and pial surface)
 * cortical surface inflation and 
-* projection to sphere.
+* projection to sphere
 
 ## Publication
 The pipeline is described in detail in:
@@ -21,7 +21,7 @@ A. Makropoulos and E. C. Robinson et al. "The Developing Human Connectome Projec
 <b>Robert Wright</b>: contributor, development of the spherical projection software
 
 ## License
-The dHCP structural pipeline is distributed under the license outlined in LICENSE.txt
+The dHCP structural pipeline is distributed under the terms outlined in LICENSE.txt
 
 
 ## Installation
