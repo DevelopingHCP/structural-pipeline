@@ -1,7 +1,10 @@
 # dHCP structural pipeline
 
 The dHCP structural pipeline is a software for the structural analysis of the neonatal brain MRI (T1 and T2) that consists of:<br>
-cortical and sub-cortical volume segmentation, cortical surface extraction (white matter and pial surface), cortical surface inflation and projection to sphere.
+* cortical and sub-cortical volume segmentation
+* cortical surface extraction (white matter and pial surface)
+* cortical surface inflation and 
+* projection to sphere.
 
 ![pipeline image](structural-pipeline.png)
 
