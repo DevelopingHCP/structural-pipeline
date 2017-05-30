@@ -1,4 +1,4 @@
-# dHCP structural pipeline
+# dHCP Structural Pipeline
 
 ![pipeline image](structural_pipeline.png)
 
@@ -9,7 +9,7 @@ The dHCP structural pipeline is a software for the structural analysis of the ne
 * projection to sphere.
 
 ## Publication
-The pipeline is outlined in detail in:
+The pipeline is described in detail in:
 
 A. Makropoulos and E. C. Robinson et al. "The Developing Human Connectome Project: a Minimal Processing Pipeline for Neonatal Cortical Surface Reconstruction (<a href="http://biorxiv.org/content/early/2017/04/07/125526">link</a>)
 
@@ -90,6 +90,7 @@ The pipeline can be run with the following command:
 ./dhcp-pipeline.sh [subject_ID] [session_ID] [scan_age] -T2 [T2_image] (-T1 [T1_image]) (-t [num_threads])
 
 where:
+
 | Argument        | Type      | Description     
 | ------------- |:-------------:| :-------------:|
 | subject_ID| string | Subject ID
