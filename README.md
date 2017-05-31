@@ -39,8 +39,8 @@ The setup script installs the following software packages.
 | <a href="https://github.com/InsightSoftwareConsortium/ITK">ITK</a>      | 4.11.1 
 | <a href="https://github.com/Kitware/VTK">VTK</a>      | 7.0.0     
 | <a href="https://github.com/Washington-University/workbench">Connectome Workbench</a>  | 1.2.2  
-| <a href="https://github.com/BioMedIA/MIRTK">MIRTK</a>  | 88c8266b016b465551d0bbafca9aed6340fdc1fb  
-| <a href="https://gitlab.doc.ic.ac.uk/am411/SphericalMesh/">SphericalMesh</a>  | 0fb416cf88ba33e99df5e57b90281171f0f34005  
+| <a href="https://github.com/BioMedIA/MIRTK">MIRTK</a>  | dhcp-v1.0
+| <a href="https://gitlab.doc.ic.ac.uk/am411/SphericalMesh/">SphericalMesh</a>  | dhcp-v1.0
 
 The '-h' argument can be specified to provide more setup options:
 * ./setup.sh -h

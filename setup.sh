@@ -176,7 +176,7 @@ set_if_undef VTK_build="$pipeline_build/VTK/build"
 set_if_undef MIRTK_install=1
 set_if_undef MIRTK_git=https://github.com/BioMedIA/MIRTK.git
 set_if_undef MIRTK_branch=master
-set_if_undef MIRTK_version=88c8266b016b465551d0bbafca9aed6340fdc1fb
+set_if_undef MIRTK_version=dhcp-v1.0
 set_if_undef MIRTK_folder="$pipeline_build/MIRTK"
 set_if_undef MIRTK_build="$pipeline_build/MIRTK/build"
 set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_TBB=ON"
@@ -184,7 +184,7 @@ set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPE
 set_if_undef SPHERICALMESH_install=1
 set_if_undef SPHERICALMESH_git=https://gitlab.doc.ic.ac.uk/am411/SphericalMesh.git
 set_if_undef SPHERICALMESH_branch=dhcp
-set_if_undef SPHERICALMESH_version=0fb416cf88ba33e99df5e57b90281171f0f34005
+set_if_undef SPHERICALMESH_version=dhcp-v1.0
 set_if_undef SPHERICALMESH_folder="$pipeline_build/SphericalMesh"
 set_if_undef SPHERICALMESH_build="$pipeline_build/SphericalMesh/build"
 set_if_undef SPHERICALMESH_cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build"
@@ -205,13 +205,6 @@ for package in ${packages};do
     run cd $package_folder
     run git reset --hard $package_version
     run git submodule update
-
-    # install specific version of DrawEM
-    if [ "$package" == "MIRTK" ];then 
-        cd $DRAWEMDIR
-        git pull origin dhcp >/dev/null
-        cd $package_folder
-    fi
 
     run mkdir -p $package_build
     run cd $package_build
