@@ -182,7 +182,7 @@ set_if_undef MIRTK_build="$pipeline_build/MIRTK/build"
 set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_TBB=ON"
 
 set_if_undef SPHERICALMESH_install=1
-set_if_undef SPHERICALMESH_git=https://gitlab.doc.ic.ac.uk/am411/SphericalMesh.git
+set_if_undef SPHERICALMESH_git=https://github.com/amakropoulos/SphericalMesh.git
 set_if_undef SPHERICALMESH_branch=dhcp
 set_if_undef SPHERICALMESH_version=dhcp-v1.0
 set_if_undef SPHERICALMESH_folder="$pipeline_build/SphericalMesh"
