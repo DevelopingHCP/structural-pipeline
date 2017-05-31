@@ -95,7 +95,7 @@ The dHCP structural requires installation of the following packages.
 
 The pipeline can be run with the following command:
 
-./dhcp-pipeline.sh [subject_ID] [session_ID] [scan_age] -T2 [T2_image] (-T1 [T1_image]) (-t [num_threads])
+./dhcp-pipeline.sh [subject_ID] [session_ID] [scan_age] -T2 [T2_image] ( -T1 [T1_image] ) ( -t [num_threads] )
 
 where:
 
