@@ -65,19 +65,19 @@ The FSL software needs to be configured for <b>shell usage</b>:
 The dHCP structural requires installation of the following packages.
 #### Ubuntu (tested on version 16.04) / Debian GNU (tested on version 8):
 * sudo apt-get -y update
-* sudo apt-get -y install g++ git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libgstreamer1.0-dev libqt4-dev
+* sudo apt-get -y install g++ git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev libqt4-dev
 
 #### Mac OS X (tested on version 10.9.5):
 * # install brew if needed with the following command
 * ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 * brew update
-* brew install gcc git cmake unzip tbb boost cartr/qt4/qt
+* brew install gcc git cmake unzip tbb boost expat cartr/qt4/qt
 * sudo easy_install pip
 * pip install contextlib2
 
 #### Red Hat Enterprise Linux (tested on version 7.3):
 * sudo yum -y update
-* sudo yum -y install gcc-c++ git cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel gstreamer1-devel
+* sudo yum -y install gcc-c++ git cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel expat-devel gstreamer1-devel
 * # the epel-release-latest-7.noarch.rpm is for version 7 of RHEL, this needs to be adjusted for the user's OS version
 * curl -o epel.rpm https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 * sudo yum -y install epel.rpm
@@ -85,7 +85,7 @@ The dHCP structural requires installation of the following packages.
 
 #### CENTOS (tested on version 7):
 * sudo yum -y update
-* sudo yum -y install gcc-c++ git cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel gstreamer1-devel 
+* sudo yum -y install gcc-c++ git cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel expat-devel gstreamer1-devel 
 * sudo yum -y install epel-release
 * sudo yum -y install python-contextlib2
 
