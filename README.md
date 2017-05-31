@@ -14,7 +14,7 @@ The pipeline is described in detail in:
 A. Makropoulos and E. C. Robinson et al. "The Developing Human Connectome Project: a Minimal Processing Pipeline for Neonatal Cortical Surface Reconstruction (<a href="http://biorxiv.org/content/early/2017/04/07/125526">link</a>)
 
 ## Authors
-<b>Antonios Makropoulos</b>: main author, development of the structural pipeline, and segmentation software <a href="https://amakropoulos.github.io/">more</a>
+<b>Antonios Makropoulos</b>: main author, development of the structural pipeline, and segmentation software <a href="http://antoniosmakropoulos.com">more</a>
 
 <b>Andreas Schuh</b>: contributor, development of the cortical surface extraction, and surface inflation software <a href="http://andreasschuh.com">more</a>
 
