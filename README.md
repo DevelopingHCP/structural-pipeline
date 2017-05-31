@@ -14,7 +14,7 @@ The pipeline is described in detail in:
 A. Makropoulos and E. C. Robinson et al. "The Developing Human Connectome Project: a Minimal Processing Pipeline for Neonatal Cortical Surface Reconstruction (<a href="http://biorxiv.org/content/early/2017/04/07/125526">link</a>)
 
 ## Authors
-<b>Antonios Makropoulos</b>: main author, development of the structural pipeline, and segmentation software <a href="http://antoniosmakropoulos.com/">more</a>
+<b>Antonios Makropoulos</b>: main author, development of the structural pipeline, and segmentation software <a href="https://amakropoulos.github.io/">more</a>
 
 <b>Andreas Schuh</b>: contributor, development of the cortical surface extraction, and surface inflation software <a href="http://andreasschuh.com">more</a>
 
@@ -52,10 +52,10 @@ Once the installation is successfully completed, if desired, the different pipel
 #### 1. FSL
 The dHCP structural pipeline uses the <b>FSL</b> software. This can be installed by following the instructions:
 
-* Ubuntu (tested on version 16.04) / Debian GNU (tested on version 8): <br />
+* Ubuntu / Debian GNU: <br />
   http://neuro.debian.net/install_pkg.html?p=fsl-complete
 
-* Mac OS X / Red Hat Enterprise Linux / CENTOS (tested on version 7): <br />
+* Mac OS X / Red Hat Enterprise Linux / CENTOS: <br />
   https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
 
 The FSL software needs to be configured for <b>shell usage</b>:
@@ -68,6 +68,7 @@ The dHCP structural requires installation of the following packages.
 * sudo apt-get -y install g++ git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libgstreamer1.0-dev libqt4-dev
 
 #### Mac OS X (tested on version 10.9.5):
+* # install brew if needed with the following command
 * ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 * brew update
 * brew install gcc git cmake unzip tbb boost cartr/qt4/qt
@@ -77,6 +78,7 @@ The dHCP structural requires installation of the following packages.
 #### Red Hat Enterprise Linux (tested on version 7.3):
 * sudo yum -y update
 * sudo yum -y install gcc-c++ git cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel gstreamer1-devel
+* # the epel-release-latest-7.noarch.rpm is for version 7 of RHEL, this needs to be adjusted for the user's OS version
 * curl -o epel.rpm https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 * sudo yum -y install epel.rpm
 * sudo yum -y install python-contextlib2
