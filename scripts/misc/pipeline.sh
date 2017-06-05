@@ -130,13 +130,13 @@ if [ $age != 40 ];then
   if [ ! -f dofs/$subj-template-40-n.dof.gz ];then
     run mirtk convert-dof dofs/$subj-template-$age-n.dof.gz dofs/$subj-template-$age-a.dof.gz -output-format affine
     run mirtk compose-dofs dofs/$subj-template-$age-a.dof.gz $template_dofs/$age-40-a.dof.gz  dofs/$subj-template-40-i.dof.gz -target $T2masked
-    run mirtk register $T2masked $template_T2/template-40.nii.gz -dofin dofs/$subj-template-40-i.dof.gz -dofout dofs/$subj-template-40-n.dof.gz -parin $registration_config_template -threads threads -v 0
+    run mirtk register $T2masked $template_T2/template-40.nii.gz -dofin dofs/$subj-template-40-i.dof.gz -dofout dofs/$subj-template-40-n.dof.gz -parin $registration_config_template -threads $threads -v 0
     run rm dofs/$subj-template-$age-a.dof.gz dofs/$subj-template-$age-i.dof.gz
   fi
   if [ ! -f dofs/template-40-$subj-n.dof.gz ];then
     run mirtk convert-dof dofs/template-$age-$subj-n.dof.gz dofs/template-$age-$subj-a.dof.gz -output-format affine
     run mirtk compose-dofs $template_dofs/40-$age-a.dof.gz dofs/template-$age-$subj-a.dof.gz dofs/template-40-$subj-i.dof.gz -target $template_T2/template-40.nii.gz
-    run mirtk register $template_T2/template-40.nii.gz $T2masked -dofin dofs/template-40-$subj-i.dof.gz -dofout dofs/template-40-$subj-n.dof.gz -parin $registration_config_template -threads threads -v 0
+    run mirtk register $template_T2/template-40.nii.gz $T2masked -dofin dofs/template-40-$subj-i.dof.gz -dofout dofs/template-40-$subj-n.dof.gz -parin $registration_config_template -threads $threads -v 0
     run rm dofs/template-$age-$subj-a.dof.gz dofs/template-$age-$subj-i.dof.gz
   fi
 fi
