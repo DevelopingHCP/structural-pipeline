@@ -35,18 +35,23 @@ Options:
 
 # echo with color, prints in the terminal and the log file
 echo_color(){
-    msg='\033[0;'"$@"'\033[0m'
-    echo -e $msg >> $logfile
-    echo -e $msg 
+  msg='\033[0;'"$@"'\033[0m'
+  echo -e $msg >> $logfile
+  echo -e $msg 
 }
 echo_red(){
-    echo_color '31m'"$@"
+  echo_color '31m'"$@"
 }
 echo_green(){
-    echo_color '32m'"$@"
+  echo_color '32m'"$@"
 }
 echo_blue(){
-    echo_color '34m'"$@"
+  echo_color '34m'"$@"
+}
+
+exit_error(){
+  echo_red "$@"
+  exit 1
 }
 
 # run the command
@@ -54,8 +59,7 @@ run(){
   echo_blue "$@"
   eval $@ >> $logfile 2>> $logfile
   if [ ! $? -eq 0 ]; then
-    echo_red "$@ : command failed, see log file: $logfile"
-    exit 1
+    exit_error "$@ : command failed, see log file: $logfile"
   fi
 }
 
@@ -81,17 +85,30 @@ if ! hash $download 2>/dev/null; then
     download=curl
     download_option="-o"
     if ! hash $download 2>/dev/null; then
-        echo_red "wget or curl need to be installed!"
-        exit 1
+        exit_error "wget or curl need to be installed! "
     fi
 fi
 for comm in unzip cmake git;do
     if ! hash $comm 2>/dev/null; then
-        echo_red "$comm need to be installed!"
-        exit 1
+        exit_error "$comm needs to be installed! "
     fi
 done
+# check if g++-5/gcc-5 exist or if g++/gcc are of version 5
+compiler_version_required=5
+cxx_compiler=g++
+c_compiler=gcc
+for compiler in cxx_compiler c_compiler;do
+  compiler_bin=${!compiler}
+  compiler_bin_version=${compiler_bin}-${compiler_version_required}
+  if hash $compiler_bin_version 2>/dev/null; then eval "$compiler=$compiler_bin_version"; continue;fi
+  if hash $compiler_bin 2>/dev/null; then 
+    compiler_version=`$compiler_bin -dumpversion|cut -d'.' -f1`
+    if [ $compiler_version -eq $compiler_version_required ];then continue; fi
+  fi
+  exit_error "$compiler_bin version 5 needs to be installed! "
+done
 
+# arguments
 code_dir=`full_path_dir $( dirname ${BASH_SOURCE[0]} )`
 num_cores=1
 logfile=$code_dir/setup.log
@@ -149,6 +166,7 @@ pipeline_build=`full_path_dir $pipeline_build`
 pipelinebinaries_build=$pipeline_build/pipeline/build
 
 
+cxx_flags="-DCMAKE_CXX_COMPILER=`which $cxx_compiler` -DCMAKE_C_COMPILER=`which $c_compiler`"
 
 set_if_undef WORKBENCH_install=1
 set_if_undef WORKBENCH_git=https://github.com/Washington-University/workbench.git
@@ -208,11 +226,12 @@ for package in ${packages};do
 
     run mkdir -p $package_build
     run cd $package_build
-    run cmake $package_folder $package_cmake_flags
+    run cmake $package_folder $package_cmake_flags $cxx_flags
     run make -j$num_cores $package_make_flags
     
 done
 
+echo_green "Installing pipeline"
 cmake_flags=`eval echo $cmake_flags`
 run mkdir -p $pipelinebinaries_build
 run cd $pipelinebinaries_build
@@ -247,4 +266,4 @@ echo "export PATH=$pathext:"'${PATH}' >> $code_dir/parameters/path.sh
 chmod +x $code_dir/parameters/path.sh
 
 
-echo_green "Setup completed successfully!"
+echo_green "Setup completed successfully! "
