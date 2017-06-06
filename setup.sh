@@ -235,7 +235,7 @@ echo_green "Installing pipeline"
 cmake_flags=`eval echo $cmake_flags`
 run mkdir -p $pipelinebinaries_build
 run cd $pipelinebinaries_build
-run cmake $code_dir $cmake_flags
+run cmake $code_dir $cmake_flags $cxx_flags
 run make -j$num_cores
 
 
