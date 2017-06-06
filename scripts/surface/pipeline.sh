@@ -125,6 +125,13 @@ if  [ ! -f $outwb/$subj.thickness.native.dscalar.nii ];then
   run mv $outwb/temp.$subj.thickness.native.dscalar.nii $outwb/$subj.thickness.native.dscalar.nii
 fi
 
+if  [ ! -f $outwb/$subj.corr_thickness.native.dscalar.nii ];then
+  run wb_command -cifti-create-dense-scalar $outwb/temp.$subj.corrThickness.native.dscalar.nii -left-metric $outwb/$subj.L.corrThickness.native.shape.gii -roi-left $outwb/$subj.L.roi.native.shape.gii -right-metric $outwb/$subj.R.corrThickness.native.shape.gii -roi-right $outwb/$subj.R.roi.native.shape.gii
+  run wb_command -set-map-names $outwb/temp.$subj.corrThickness.native.dscalar.nii -map 1 "${subj}_corrThickness"
+  run wb_command -cifti-palette $outwb/temp.$subj.corrThickness.native.dscalar.nii MODE_AUTO_SCALE_PERCENTAGE $outwb/temp.$subj.corrThickness.native.dscalar.nii -pos-percent 4 96 -interpolate true -palette-name videen_style -disp-pos true -disp-neg false -disp-zero false
+  run mv $outwb/temp.$subj.corrThickness.native.dscalar.nii $outwb/$subj.corrThickness.native.dscalar.nii
+fi
+
 if [ ! -f $outwb/$subj.drawem.native.dlabel.nii ];then
   run wb_command -cifti-create-label $outwb/temp.$subj.drawem.native.dlabel.nii -left-label $outwb/$subj.L.drawem.native.label.gii -roi-left $outwb/$subj.L.roi.native.shape.gii -right-label $outwb/$subj.R.drawem.native.label.gii -roi-right $outwb/$subj.R.roi.native.shape.gii
   run wb_command -set-map-names $outwb/temp.$subj.drawem.native.dlabel.nii -map 1 ${subj}_drawem
@@ -135,7 +142,7 @@ fi
 if [ -f restore/T1/$subj.nii.gz ];then 
   run $scriptdir/create-myelin-map.sh $subj
 
-  for STRINGII in MyelinMap@func SmoothedMyelinMap@func corrThickness@shape ; do
+  for STRINGII in MyelinMap@func SmoothedMyelinMap@func; do
     Map=`echo $STRINGII | cut -d "@" -f 1`
     Ext=`echo $STRINGII | cut -d "@" -f 2`    
     if  [ ! -f $outwb/$subj.$Map.native.dscalar.nii ];then
@@ -173,6 +180,7 @@ C=INVALID
 run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.sulc.native.dscalar.nii
 run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.curvature.native.dscalar.nii
 run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.thickness.native.dscalar.nii
+run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.corrThickness.native.dscalar.nii
 run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.drawem.native.dlabel.nii
 run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.T2.nii.gz
 
@@ -183,6 +191,5 @@ if [ -f restore/T1/$subj.nii.gz ];then
   run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.T1wDividedByT2w_ribbon.nii.gz
   run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.MyelinMap.native.dscalar.nii
   run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.SmoothedMyelinMap.native.dscalar.nii
-  run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.corrThickness.native.dscalar.nii
 fi
   
