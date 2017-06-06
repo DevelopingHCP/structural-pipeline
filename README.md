@@ -30,14 +30,18 @@ The dHCP structural pipeline uses the <b>FSL</b> software. This can be installed
 
 <details>
 <summary> <b>Ubuntu / Debian GNU</b></summary>
-  http://neuro.debian.net/install_pkg.html?p=fsl-complete
+
+http://neuro.debian.net/install_pkg.html?p=fsl-complete
+  
 </details>
 
 <details>
 <summary> <b>Mac OS X / Red Hat Enterprise Linux / CENTOS</b></summary>
-  https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
-</details>
 
+https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
+  
+</details>
+<br>
 The FSL software needs to be configured for <b>shell usage</b>:
 * https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation/ShellSetup
 
@@ -46,33 +50,40 @@ The dHCP structural requires installation of the following packages.
 
 <details>
 <summary> <b>Mac OS X (tested on version 10.9.5)</b></summary>
+
 * \# install brew if needed with the following command:
 * ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 * brew update
 * brew install gcc5 git cmake unzip tbb boost expat cartr/qt4/qt
 * sudo easy_install pip
 * pip install contextlib2
+
 </details>
 
 
 <details>
 <summary> <b>Ubuntu (tested on version 16.04)</b></summary>
+
 * sudo apt-get -y update
 * sudo apt-get -y install g++-5 git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev libqt4-dev
+
 </details>
 
 <details>
 <summary> <b>Debian GNU (tested on version 8)</b></summary>
+
 * sudo apt-get -y update
 * sudo apt-get -y install git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev libqt4-d
 * \# g++-5 is not in the default packages of Debian, install with the following commands:
 * echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" | sudo tee -a /etc/apt/sources.list
 * sudo apt-get -y update
 * sudo apt-get -y install g++-5
+
 </details>
 
 <details>
 <summary> <b>CENTOS (tested on version 7)</b></summary>
+
 * sudo yum -y update
 * sudo yum -y install git cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel expat-devel gstreamer1-devel 
 * sudo yum -y install epel-release
@@ -82,10 +93,12 @@ The dHCP structural requires installation of the following packages.
 * sudo yum -y install devtoolset-4-gcc*
 * \# then activate it at the terminal before running the installation script
 * scl enable devtoolset-4 bash
+
 </details>
 
 <details>
 <summary> <b>Red Hat Enterprise Linux (tested on version 7.3)</b></summary>
+
 * sudo yum -y update
 * sudo yum -y install it cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel expat-devel gstreamer1-devel
 * \# the epel-release-latest-7.noarch.rpm is for version 7 of RHEL, this needs to be adjusted for the user's OS version
@@ -97,6 +110,7 @@ The dHCP structural requires installation of the following packages.
 * sudo yum -y install devtoolset-4-gcc*
 * \# then activate it at the terminal before running the installation script
 * scl enable devtoolset-4 bash
+
 </details>
 
 ## Installation
