@@ -27,6 +27,7 @@ The dHCP structural pipeline is distributed under the terms outlined in LICENSE.
 ## Dependencies
 #### 1. FSL
 The dHCP structural pipeline uses the <b>FSL</b> software. This can be installed by following the instructions:
+
 <details>
 <summary> <b>Ubuntu / Debian GNU</b></summary>
   http://neuro.debian.net/install_pkg.html?p=fsl-complete
