@@ -76,10 +76,9 @@ if [ -f $T1 ] ; then
             run wb_command -metric-dilate $outwb/$subj.$h.MyelinMap.native.func.gii $outwb/$subj.$h.midthickness.native.surf.gii 10 $outwb/$subj.$h.MyelinMap.native.func.gii -nearest -data-roi $outwb/$subj.$h.roi.native.shape.gii
             rm $outtmp/temp_ribbon.nii.gz
 
-            run wb_command -metric-regression $outwb/$subj.$h.thickness.native.shape.gii $outwb/$subj.$h.corrThickness.native.shape.gii -roi $outwb/$subj.$h.roi.native.shape.gii -remove $outwb/$subj.$h.curvature.native.shape.gii
             run wb_command -metric-smoothing $outwb/$subj.$h.midthickness.native.surf.gii $outwb/$subj.$h.MyelinMap.native.func.gii "$SurfaceSmoothingSigma" $outwb/$subj.$h.SmoothedMyelinMap.native.func.gii -roi $outwb/$subj.$h.roi.native.shape.gii 
         
-            for STRING in MyelinMap@func SmoothedMyelinMap@func corrThickness@shape ; do
+            for STRING in MyelinMap@func SmoothedMyelinMap@func ; do
                 Map=`echo $STRING | cut -d "@" -f 1`
                 Ext=`echo $STRING | cut -d "@" -f 2`
                 run wb_command -set-map-name $outwb/$subj.$h.${Map}.native.$Ext.gii 1 ${subj}_${h}_${Map}

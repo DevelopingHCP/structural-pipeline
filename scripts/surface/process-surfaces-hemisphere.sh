@@ -148,7 +148,7 @@ if  [ ! -f $outwb/$subj.$h.$surf.native.surf.gii ];then
   echo
   echo "-------------------------------------------------------------------------------------"
   echo "Extract $h spherical surface"
-  mesh-to-sphere $outvtk/$subj.$h.$insurf.native.surf.vtk $outvtk/$subj.$h.$surf.native.surf.vtk -parin $parameters_dir/spherical-mesh.cfg
+  run mesh-to-sphere $outvtk/$subj.$h.$insurf.native.surf.vtk $outvtk/$subj.$h.$surf.native.surf.vtk -parin $parameters_dir/spherical-mesh.cfg
   vtktogii $outvtk/$subj.$h.$surf.native.surf.vtk $outwb/$subj.$h.$surf.native.surf.gii SPHERICAL GRAY_WHITE
 fi
 
@@ -158,6 +158,9 @@ fi
 
 insurf1='midthickness'; insurf2='white'; surf='drawem'
 if  [ ! -f $outwb/$subj.$h.$surf.native.label.gii ];then
+  echo
+  echo "-------------------------------------------------------------------------------------"
+  echo "Project $h Draw-EM labels"
   # exclude csf,out and dilate tissues to cover space
   run mirtk padding $segdir/${subj}_tissue_labels.nii.gz $segdir/${subj}_tissue_labels.nii.gz $outvtk/$hs.mask.nii.gz 2 $CSF_label $BG_label 0 
   run dilate-labels $outvtk/$hs.mask.nii.gz $outvtk/$hs.mask.nii.gz -blur 1
@@ -189,11 +192,23 @@ fi
 
 insurf2=drawem
 if  [ ! -f $outwb/$subj.$h.roi.native.shape.gii ];then
-  wb_command -metric-math "(Labels > 0) * (thickness>0)" $outwb/temp.$subj.$h.roi.native.shape.gii -var Labels  $outwb/$subj.$h.$insurf2.native.label.gii -var thickness $outwb/$subj.$h.thickness.native.shape.gii
-  wb_command -metric-fill-holes $outwb/$subj.$h.$insurf1.native.surf.gii $outwb/temp.$subj.$h.roi.native.shape.gii $outwb/temp.$subj.$h.roi.native.shape.gii
-  wb_command -metric-remove-islands $outwb/$subj.$h.$insurf1.native.surf.gii $outwb/temp.$subj.$h.roi.native.shape.gii $outwb/temp.$subj.$h.roi.native.shape.gii
-  wb_command -set-map-names $outwb/temp.$subj.$h.roi.native.shape.gii -map 1 ${subj}_${h}_ROI
+  echo
+  echo "-------------------------------------------------------------------------------------"
+  echo "Process $h roi"
+  run wb_command -metric-math "(Labels > 0) * (thickness>0)" $outwb/temp.$subj.$h.roi.native.shape.gii -var Labels  $outwb/$subj.$h.$insurf2.native.label.gii -var thickness $outwb/$subj.$h.thickness.native.shape.gii
+  run wb_command -metric-fill-holes $outwb/$subj.$h.$insurf1.native.surf.gii $outwb/temp.$subj.$h.roi.native.shape.gii $outwb/temp.$subj.$h.roi.native.shape.gii
+  run wb_command -metric-remove-islands $outwb/$subj.$h.$insurf1.native.surf.gii $outwb/temp.$subj.$h.roi.native.shape.gii $outwb/temp.$subj.$h.roi.native.shape.gii
+  run wb_command -set-map-names $outwb/temp.$subj.$h.roi.native.shape.gii -map 1 ${subj}_${h}_ROI
   mv $outwb/temp.$subj.$h.roi.native.shape.gii $outwb/$subj.$h.roi.native.shape.gii
+fi
+
+if  [ ! -f $outwb/$subj.$h.corrThickness.native.shape.gii ];then
+  echo
+  echo "-------------------------------------------------------------------------------------"
+  echo "Process $h corr thickness"
+  run wb_command -metric-regression $outwb/$subj.$h.thickness.native.shape.gii $outwb/$subj.$h.corrThickness.native.shape.gii -roi $outwb/$subj.$h.roi.native.shape.gii -remove $outwb/$subj.$h.curvature.native.shape.gii
+  run wb_command -set-map-name $outwb/$subj.$h.corrThickness.native.shape.gii 1 ${subj}_${h}_corrThickness
+  run wb_command -metric-palette $outwb/$subj.$h.corrThickness.native.shape.gii MODE_USER_SCALE -pos-user 1 1.7 -neg-user 0 0 -interpolate true -palette-name videen_style -disp-pos true -disp-neg false -disp-zero false
 fi
 
 cleanup
