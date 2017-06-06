@@ -106,6 +106,10 @@ echo "
 $BASH_SOURCE $command
 ----------------------------"
 
+last_file=$datadir/derivatives/sub-$subjectID/ses-$sessionID/anat/Native/sub-${subjectID}_ses-${sessionID}_wb.spec
+if [ -f $last_file ];then echo "dHCP pipeline already completed!";exit; fi
+
+
 # infodir=$datadir/info 
 logdir=$datadir/logs
 workdir=$datadir/workdir/$subj
