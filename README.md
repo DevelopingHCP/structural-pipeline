@@ -43,6 +43,7 @@ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation
 </details>
 <br>
 The FSL software needs to be configured for <b>shell usage</b>:
+
 * https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation/ShellSetup
 
 #### 2. Packages
