@@ -39,40 +39,51 @@ The FSL software needs to be configured for <b>shell usage</b>:
 
 #### 2. Packages
 The dHCP structural requires installation of the following packages.
-#### Ubuntu (tested on version 16.04):
-* sudo apt-get -y update
-* sudo apt-get -y install g++-5 git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev libqt4-dev
-
-#### Debian GNU (tested on version 8):
-* sudo apt-get -y update
-* sudo apt-get -y install git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev libqt4-dev
-# g++-5 is not in the default packages of Debian, build with the following commands
-# alternatively the user can compile from source and add g++-5, gcc-5 to the PATH
-* echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" | sudo tee -a /etc/apt/sources.list
-* sudo apt-get -y update
-* sudo apt-get -y install g++-5
 
 #### Mac OS X (tested on version 10.9.5):
-* # install brew if needed with the following command
+* \# install brew if needed with the following command:
 * ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 * brew update
 * brew install gcc5 git cmake unzip tbb boost expat cartr/qt4/qt
 * sudo easy_install pip
 * pip install contextlib2
 
-#### Red Hat Enterprise Linux (tested on version 7.3):
-* sudo yum -y update
-* sudo yum -y install gcc-c++ git cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel expat-devel gstreamer1-devel
-* # the epel-release-latest-7.noarch.rpm is for version 7 of RHEL, this needs to be adjusted for the user's OS version
-* curl -o epel.rpm https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-* sudo yum -y install epel.rpm
-* sudo yum -y install python-contextlib2
+#### Ubuntu (tested on version 16.04):
+* sudo apt-get -y update
+* sudo apt-get -y install g++-5 git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev libqt4-dev
+
+#### Debian GNU (tested on version 8):
+* sudo apt-get -y update
+* sudo apt-get -y install git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev libqt4-d
+* \# g++-5 is not in the default packages of Debian, install with the following commands:
+* echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" | sudo tee -a /etc/apt/sources.list
+* sudo apt-get -y update
+* sudo apt-get -y install g++-5
 
 #### CENTOS (tested on version 7):
 * sudo yum -y update
-* sudo yum -y install gcc-c++ git cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel expat-devel gstreamer1-devel 
+* sudo yum -y install git cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel expat-devel gstreamer1-devel 
 * sudo yum -y install epel-release
 * sudo yum -y install python-contextlib2
+* \# g++-5 is not in the default packages of CENTOS, install with the following commands:
+* sudo yum -y install centos-release-scl
+* sudo yum -y install devtoolset-4-gcc*
+* \# then activate it at the terminal before running the installation script
+* scl enable devtoolset-4 bash
+
+#### Red Hat Enterprise Linux (tested on version 7.3):
+* sudo yum -y update
+* sudo yum -y install it cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel expat-devel gstreamer1-devel
+* \# the epel-release-latest-7.noarch.rpm is for version 7 of RHEL, this needs to be adjusted for the user's OS version
+* curl -o epel.rpm https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+* sudo yum -y install epel.rpm
+* sudo yum -y install python-contextlib2
+* \# g++-5 is not in the default packages of RHEL, install with the following commands:
+* sudo yum-config-manager --enable rhel-server-rhscl-7-rpms
+* sudo yum -y install devtoolset-4-gcc*
+* \# then activate it at the terminal before running the installation script
+* scl enable devtoolset-4 bash
+
 
 ## Installation
 The installation requires <b>FSL</b> and the <b>packages</b> specified in the <b>Dependencies</b> section.<br>
@@ -95,7 +106,7 @@ The setup script installs the following software packages.
 The '-h' argument can be specified to provide more setup options:
 * ./setup.sh -h
 
-Once the installation is successfully completed, if desired, the different pipeline commands can be included in the shell PATH by running:
+Once the installation is successfully completed, if desired, the different commands/tools built (workbench, MIRTK and pipeline commands) can be included in the shell PATH by running:
 * . parameters/path.sh
 
 
