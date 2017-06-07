@@ -88,7 +88,7 @@ done
 . $codedir/parameters/configuration.sh
 
 ################ Run ################
-version=`cat version`
+version=`cat $codedir/version`
 echo "dHCP pipeline $version
 Subject:     $subjectID
 Session:     $sessionID 
