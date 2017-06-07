@@ -224,13 +224,6 @@ for package in ${packages};do
     run git reset --hard $package_version
     run git submodule update
 
-    # temporary fix
-    if [ "$package" == "MIRTK" ];then 
-      cd $DRAWEMDIR
-      git pull origin dhcp >/dev/null
-      cd $package_folder
-    fi
-
     run mkdir -p $package_build
     run cd $package_build
     run cmake $package_folder $package_cmake_flags $cxx_flags
