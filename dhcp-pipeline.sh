@@ -22,7 +22,7 @@ Options:
   -no-cleanup                   The intermediate files produced (workdir directory) will not be deleted (default: False) 
   -h / -help / --help           Print usage.
 "
-  exit;
+  exit 1
 }
 
 # log function for completion
