@@ -7,8 +7,8 @@ usage()
 This script runs the dHCP structural pipeline.
 
 Arguments:
-  subject_ID                     subject ID
-  session_ID                     session ID
+  subject_ID                    subject ID
+  session_ID                    session ID
   scan_age                      Number: Subject age in weeks. This is used to select the appropriate template for the initial registration. 
                                 If the age is <28w or >44w, it will be set to 28w or 44w respectively.
   -T2 <subject_T2.nii.gz>       Nifti Image: The T2 image of the subject
@@ -16,6 +16,7 @@ Arguments:
 
 Options:
   -d / -data-dir  <directory>   The directory used to run the script and output the files. 
+  -additional                   If specified, the pipeline will produce some additional files not included in release v1.0 (such as segmentation prob.maps, warps to MNI space, ..)
   -t / -threads  <number>       Number of threads (CPU cores) used (default: 1)
   -no-reorient                  The images will not be reoriented before processing (using the FSL fslreorient2std command) (default: False) 
   -h / -help / --help           Print usage.
@@ -62,6 +63,7 @@ T2="-"
 datadir=`pwd`
 threads=1
 noreorient=0
+minimal=1
 codedir=$(dirname "$BASH_SOURCE")
 scriptdir=$codedir/scripts
 
@@ -71,7 +73,8 @@ while [ $# -gt 0 ]; do
     -T2)  shift; T2=$1; ;;
     -T1)  shift; T1=$1; ;;
     -d|-data-dir)  shift; datadir=$1; ;;
-    -t|-threads)  shift; threads=$1; ;; 
+    -t|-threads)  shift; threads=$1; ;;
+    -additional)  minimal=0; ;;
     -no-reorient) noreorient=1; ;;
     -h|-help|--help) usage; ;;
     -*) echo "$0: Unrecognized option $1" >&2; usage; ;;
@@ -96,7 +99,8 @@ Age:         $age
 T1:          $T1
 T2:          $T2
 Directory:   $datadir 
-Threads:     $threads"
+Threads:     $threads
+Minimal:     $minimal"
 [ $threads -eq 1 ] || { echo "Warning: Number of threads>1: This may result in minor reproducibility differences"; }
 echo "
 
@@ -140,7 +144,7 @@ runpipeline additional $scriptdir/misc/pipeline.sh $subj $roundedAge -d $workdir
 runpipeline surface $scriptdir/surface/pipeline.sh $subj -d $workdir -t $threads
 
 # create data directory for subject
-runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $roundedAge $datadir $workdir 
+runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $roundedAge $datadir $workdir $minimal
 
 # clean-up
 runpipeline cleanup rm -r $workdir
