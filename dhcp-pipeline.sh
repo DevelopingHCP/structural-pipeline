@@ -16,9 +16,10 @@ Arguments:
 
 Options:
   -d / -data-dir  <directory>   The directory used to run the script and output the files. 
-  -additional                   If specified, the pipeline will produce some additional files not included in release v1.0 (such as segmentation prob.maps, warps to MNI space, ..)
+  -additional                   If specified, the pipeline will produce some additional files not included in release v1.0 (such as segmentation prob.maps, warps to MNI space, ..) (default: False) 
   -t / -threads  <number>       Number of threads (CPU cores) used (default: 1)
   -no-reorient                  The images will not be reoriented before processing (using the FSL fslreorient2std command) (default: False) 
+  -no-cleanup                   The intermediate files produced (workdir directory) will not be deleted (default: False) 
   -h / -help / --help           Print usage.
 "
   exit;
@@ -36,7 +37,6 @@ runpipeline()
   "$@" >$log 2>$err
   if [ ! $? -eq 0 ]; then
     echo "Pipeline failed: see log files $log $err for details"
-    # echo "NO" > $infodir/$subj.failed
     exit 1
   fi
   echo "-----------------------"
@@ -62,8 +62,9 @@ T1="-"
 T2="-"
 datadir=`pwd`
 threads=1
-noreorient=0
 minimal=1
+noreorient=0
+cleanup=1
 codedir=$(dirname "$BASH_SOURCE")
 scriptdir=$codedir/scripts
 
@@ -76,6 +77,7 @@ while [ $# -gt 0 ]; do
     -t|-threads)  shift; threads=$1; ;;
     -additional)  minimal=0; ;;
     -no-reorient) noreorient=1; ;;
+    -no-cleanup) cleanup=0; ;;
     -h|-help|--help) usage; ;;
     -*) echo "$0: Unrecognized option $1" >&2; usage; ;;
      *) break ;;
@@ -147,6 +149,8 @@ runpipeline surface $scriptdir/surface/pipeline.sh $subj -d $workdir -t $threads
 runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $roundedAge $datadir $workdir $minimal
 
 # clean-up
-runpipeline cleanup rm -r $workdir
+if [ $cleanup -eq 1 ];then
+  runpipeline cleanup rm -r $workdir
+fi
 
 echo "dHCP pipeline completed!"
