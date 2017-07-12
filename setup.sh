@@ -194,15 +194,15 @@ set_if_undef VTK_build="$pipeline_build/VTK/build"
 set_if_undef MIRTK_install=1
 set_if_undef MIRTK_git=https://github.com/BioMedIA/MIRTK.git
 set_if_undef MIRTK_branch=master
-set_if_undef MIRTK_version=dhcp-v1.0
+set_if_undef MIRTK_version=dhcp-v1
 set_if_undef MIRTK_folder="$pipeline_build/MIRTK"
 set_if_undef MIRTK_build="$pipeline_build/MIRTK/build"
 set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_TBB=ON"
 
 set_if_undef SPHERICALMESH_install=1
-set_if_undef SPHERICALMESH_git=https://github.com/amakropoulos/SphericalMesh.git
+set_if_undef SPHERICALMESH_git=https://github.com/rob-wright/SphericalMesh.git
 set_if_undef SPHERICALMESH_branch=dhcp
-set_if_undef SPHERICALMESH_version=dhcp-v1.0
+set_if_undef SPHERICALMESH_version=9b73f43d85206ee7f15aee9b17f7fe07813bca14
 set_if_undef SPHERICALMESH_folder="$pipeline_build/SphericalMesh"
 set_if_undef SPHERICALMESH_build="$pipeline_build/SphericalMesh/build"
 set_if_undef SPHERICALMESH_cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build"

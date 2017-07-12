@@ -111,7 +111,9 @@ if  [ ! -f $outwb/$subj.$h.thickness.native.shape.gii ];then
   echo
   echo "-------------------------------------------------------------------------------------"
   echo "Process $h thickness"
-  run mirtk evaluate-distance $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$subj.$h.$insurf2.native.surf.vtk $outvtk/$hs.thickness.vtk -name Thickness -index
+  run mirtk evaluate-distance $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$subj.$h.$insurf2.native.surf.vtk $outvtk/$hs.dist1.vtk -name Thickness
+  run mirtk evaluate-distance $outvtk/$subj.$h.$insurf2.native.surf.vtk $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$hs.dist2.vtk -name Thickness
+  run mirtk calculate $outvtk/$hs.dist1.vtk -scalars Thickness -add $outvtk/$hs.dist2.vtk Thickness -div 2 -o $outvtk/$hs.thickness.vtk
   giimap $outvtk/$hs.thickness.vtk $outwb/$subj.$h.thickness.native.shape.gii Thickness Thickness
   run wb_command -metric-dilate $outwb/$subj.$h.thickness.native.shape.gii $outwb/$subj.$h.$insurf1.native.surf.gii 10 $outwb/$subj.$h.thickness.native.shape.gii -nearest
 fi
@@ -143,13 +145,13 @@ fi
 
 ###################### SPHERICAL SURFACE ###################################################################
 
-insurf='inflated_for_sphere'; surf='sphere'
+insurf1='white'; insurf2='inflated_for_sphere'; surf='sphere'
 if  [ ! -f $outwb/$subj.$h.$surf.native.surf.gii ];then
   echo
   echo "-------------------------------------------------------------------------------------"
   echo "Extract $h spherical surface"
   # need to replace the following with run
-  comm="mesh-to-sphere $outvtk/$subj.$h.$insurf.native.surf.vtk $outvtk/$subj.$h.$surf.native.surf.vtk -parin $parameters_dir/spherical-mesh.cfg"
+  comm="mesh-to-sphere $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$subj.$h.$surf.native.surf.vtk -inflated $outvtk/$subj.$h.$insurf2.native.surf.vtk -parin $parameters_dir/spherical-mesh.cfg"
   echo $comm
   $comm
   vtktogii $outvtk/$subj.$h.$surf.native.surf.vtk $outwb/$subj.$h.$surf.native.surf.gii SPHERICAL GRAY_WHITE
