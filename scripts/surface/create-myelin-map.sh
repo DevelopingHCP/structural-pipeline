@@ -11,8 +11,8 @@ run(){
   fi
 }
 
-T1=restore/T1/${subj}_restore.nii.gz
-T2=restore/T2/${subj}_restore.nii.gz
+T1=restore/T1/${subj}.nii.gz
+T2=restore/T2/${subj}.nii.gz
 outwb=surfaces/$subj/workbench
 outtmp=surfaces/$subj/temp
 
