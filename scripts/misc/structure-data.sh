@@ -143,7 +143,7 @@ if [ ! $minimal -eq 1 ];then
   run $action dofs/$subj-MNI-r.dof.gz $outputWarpDir/${prefix}_MNI2anat-r.dof.gz
 
   if [ -f T1/$subj.nii.gz ];then
-    run mirtk convert-dof dofs/$subj-T2-T1-r.dof.gz $outputWarpDir/${prefix}_T1w2anat.mat -input-format mirtk -output-format fsl -target $outputRawDir/${prefix}_T2w.nii.gz -source $outputRawDir/${prefix}_T1w.nii.gz
+    run $action dofs/$subj-T2-T1-r.mat $outputWarpDir/${prefix}_T1w2anat.mat
     run $action dofs/$subj-T2-T1-r.dof.gz $outputWarpDir/${prefix}_T1w2anat-r.dof.gz
   fi
 

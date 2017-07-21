@@ -31,6 +31,17 @@ deface_image(){
   run fslmaths restore/$m/${subj}_restore.nii.gz -mul masks/${subj}_mask_defaced.nii.gz restore/$m/${subj}_restore_defaced.nii.gz
 }
 
+hex2dec(){
+  infile="${1:-/dev/stdin}"
+  outfile=$2
+  while read line; do
+      for number in $line; do
+          printf "%f " "$number"
+      done
+      echo
+  done < $infile > $outfile
+}
+
 ################ ARGUMENTS ################
 
 [ $# -ge 2 ] || { usage; }
@@ -83,9 +94,16 @@ if [ -f T1/$subj.nii.gz -a ! -f $T1masked ];then
   mkdir -p restore/T1
 
   if [ ! -f dofs/$subj-T2-T1-r.dof.gz ];then 
+    # initial rigid registration
     run mirtk padding $T2masked segmentations/${subj}_tissue_labels.nii.gz restore/T1/$subj-T2-brain.nii.gz 3 $CSF_label $CGM_label $BG_label 0
-    run mirtk register restore/T1/$subj-T2-brain.nii.gz T1/$subj.nii.gz -model Rigid -dofout dofs/$subj-T2-T1-r.dof.gz -threads $threads -v 0
-    rm restore/T1/$subj-T2-brain.nii.gz
+    run mirtk register restore/T1/$subj-T2-brain.nii.gz T1/$subj.nii.gz -model Rigid -dofout dofs/$subj-T2-T1-init-r.dof.gz -threads $threads -v 0
+    run mirtk convert-dof dofs/$subj-T2-T1-init-r.dof.gz dofs/$subj-T2-T1-init-r.mat  -input-format mirtk -output-format fsl -target T2/$subj.nii.gz -source T1/$subj.nii.gz
+    # BBR registration
+    run fslmaths segmentations/${subj}_tissue_labels.nii.gz -thr 3 -uthr 3 -bin dofs/${subj}_wmseg.nii.gz
+    run flirt -in T1/$subj.nii.gz -ref T2/$subj.nii.gz -omat dofs/$subj-T2-T1-r.mat -dof 6 -cost bbr -wmseg dofs/${subj}_wmseg.nii.gz -init dofs/$subj-T2-T1-init-r.mat -schedule $FSLDIR/src/flirt/flirtsch/bbr.sch -bbrslope -0.5 -bbrtype signed -verbose 0 -usesqform
+    hex2dec dofs/$subj-T2-T1-r.mat dofs/$subj-T2-T1-r-dec.mat
+    mirtk convert-dof dofs/$subj-T2-T1-r-dec.mat dofs/$subj-T2-T1-r.dof.gz -input-format flirt -output-format mirtk -target T2/$subj.nii.gz -source T1/$subj.nii.gz
+    rm restore/T1/$subj-T2-brain.nii.gz dofs/${subj}_wmseg.nii.gz dofs/$subj-T2-T1-init-r.dof.gz dofs/$subj-T2-T1-init-r.mat dofs/$subj-T2-T1-r-dec.mat
   fi
   run mirtk transform-image T1/$subj.nii.gz restore/T1/$subj.nii.gz -target T2/$subj.nii.gz -dofin dofs/$subj-T2-T1-r.dof.gz -bspline
 
