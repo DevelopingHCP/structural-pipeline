@@ -53,8 +53,8 @@ age=$3
 
 
 roundedAge=`printf "%.*f\n" 0 $age` #round
-[ $roundedAge -lt 44 ] || { roundedAge=44; }
-[ $roundedAge -gt 28 ] || { roundedAge=28; }
+[ $roundedAge -lt $template_max_age ] || { roundedAge=$template_max_age; }
+[ $roundedAge -gt $template_min_age ] || { roundedAge=$template_min_age; }
 
 # alias for the specific session
 subj=$subjectID-$sessionID

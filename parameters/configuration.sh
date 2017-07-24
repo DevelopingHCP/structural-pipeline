@@ -28,6 +28,8 @@ export MNI_dofs=$code_dir/atlases/non-rigid-v2/dofs-MNI
 export template_name="non-rigid-v2"
 export template_T2=$code_dir/atlases/non-rigid-v2/T2
 export template_dofs=$code_dir/atlases/non-rigid-v2/dofs
+export template_min_age=28
+export template_max_age=44
 
 # registration parameters
 export registration_config=$parameters_dir/ireg-structural.cfg
