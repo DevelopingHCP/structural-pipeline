@@ -51,11 +51,6 @@ subjectID=$1
 sessionID=$2
 age=$3
 
-
-roundedAge=`printf "%.*f\n" 0 $age` #round
-[ $roundedAge -lt $template_max_age ] || { roundedAge=$template_max_age; }
-[ $roundedAge -gt $template_min_age ] || { roundedAge=$template_min_age; }
-
 # alias for the specific session
 subj=$subjectID-$sessionID
 T1="-"
@@ -91,6 +86,10 @@ done
 
 # check whether the different tools are set and load parameters
 . $codedir/parameters/configuration.sh
+
+roundedAge=`printf "%.*f\n" 0 $age` #round
+[ $roundedAge -lt $template_max_age ] || { roundedAge=$template_max_age; }
+[ $roundedAge -gt $template_min_age ] || { roundedAge=$template_min_age; }
 
 ################ Run ################
 version=`cat $codedir/version`
