@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # local directories
-export parameters_dir=$(dirname "$BASH_SOURCE")
+export parameters_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export code_dir=$parameters_dir/..
 
 # setup path from installation

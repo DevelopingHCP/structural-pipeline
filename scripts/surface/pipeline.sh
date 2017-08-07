@@ -38,7 +38,10 @@ subj=$1
 
 datadir=`pwd`
 threads=1
-scriptdir=$(dirname "$BASH_SOURCE")
+
+# check whether the different tools are set and load parameters
+codedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+. $codedir/parameters/configuration.sh
 
 shift
 while [ $# -gt 0 ]; do
@@ -97,7 +100,7 @@ fi
 # create files of each hemisphere
 for hi in {0..1}; do
     h=${Hemi[$hi]}
-    runhemisphere $scriptdir/process-surfaces-hemisphere.sh $subj $h $segdir $outvtk $outwb $outtmp &
+    runhemisphere $codedir/process-surfaces-hemisphere.sh $subj $h $segdir $outvtk $outwb $outtmp &
     if [ $threads -eq 1 ];then wait;fi
 done
 if [ $threads -gt 1 ];then wait;fi
@@ -140,7 +143,7 @@ fi
 
 # create myelin map etc.
 if [ -f restore/T1/$subj.nii.gz ];then 
-  run $scriptdir/create-myelin-map.sh $subj
+  run $codedir/create-myelin-map.sh $subj
 
   for STRINGII in MyelinMap@func SmoothedMyelinMap@func; do
     Map=`echo $STRINGII | cut -d "@" -f 1`

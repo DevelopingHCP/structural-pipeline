@@ -60,8 +60,6 @@ threads=1
 minimal=1
 noreorient=0
 cleanup=1
-codedir=$(dirname "$BASH_SOURCE")
-scriptdir=$codedir/scripts
 
 shift; shift; shift;
 while [ $# -gt 0 ]; do
@@ -85,7 +83,10 @@ done
 [ "$T2" != "-" -a "$T2" != "" ] || { echo "T2 image not provided!" >&2; exit 1; }
 
 # check whether the different tools are set and load parameters
+codedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 . $codedir/parameters/configuration.sh
+
+scriptdir=$codedir/scripts
 
 roundedAge=`printf "%.*f\n" 0 $age` #round
 [ $roundedAge -lt $template_max_age ] || { roundedAge=$template_max_age; }
