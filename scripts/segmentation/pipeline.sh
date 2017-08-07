@@ -31,7 +31,7 @@ threads=1
 
 # check whether the different tools are set and load parameters
 codedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-. $codedir/parameters/configuration.sh
+. $codedir/../../parameters/configuration.sh
 
 shift; shift; shift
 while [ $# -gt 0 ]; do
