@@ -242,7 +242,7 @@ run make -j$num_cores
 
 if [ ! -d $code_dir/atlases ];then 
     echo_green "Downloading atlases"
-    run $download $download_option $code_dir/atlases-dhcp-structural-pipeline-v1.zip "https://www.doc.ic.ac.uk/%7Eam411/atlases-dhcp-structural-pipeline-v1.zip"
+    run $download $download_option $code_dir/atlases-dhcp-structural-pipeline-v1.zip "https://biomedic.doc.ic.ac.uk/brain-development/downloads/dHCP/atlases-dhcp-structural-pipeline-v1.zip"
     run unzip $code_dir/atlases-dhcp-structural-pipeline-v1.zip -d $code_dir
     run rm $code_dir/atlases-dhcp-structural-pipeline-v1.zip
 fi
