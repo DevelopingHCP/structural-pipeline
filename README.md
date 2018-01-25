@@ -23,6 +23,39 @@ A. Makropoulos and E. C. Robinson et al. "The Developing Human Connectome Projec
 ## License
 The dHCP structural pipeline is distributed under the terms outlined in LICENSE.txt
 
+## Install and run with docker
+You can build the pipeline in a docker container. This will work on any
+version of any platform, is automated, and fairly simple. First, install
+docker:
+
+https://docs.docker.com/engine/installation/
+
+Then in the top directory of `structural-pipeline`, use git to switch to the
+branch you want to build and enter:
+
+```
+# docker build -t <user>/structural-pipeline:latest .
+```
+
+Substituting `<user>` for your username. This command must be run as root. 
+
+This will create a single docker image containing all the required files 
+and all required dependencies. 
+
+You can then execute the pipeline like this (for example):
+
+```
+# docker run --rm \
+    -t <user>/structural-pipeline:latest \
+    sh -c "cd /usr/src/structural-pipeline; ./dhcp-pipeline.sh \
+	subject1 session1 44 \
+	-T2 subject1-T2.nii.gz -T1 subject1-T1.nii.gz -t 8"
+```
+
+## Install locally
+If you want to work on the code of the pipeline, it can be more convenient to
+install locally to your machine. Only read on if you need to do a local
+install. 
 
 ## Dependencies
 #### 1. FSL
