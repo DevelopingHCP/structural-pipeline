@@ -31,7 +31,7 @@ docker:
 https://docs.docker.com/engine/installation/
 
 Then in the top directory of `structural-pipeline`, use git to switch to the
-branch you want to build and enter:
+branch you want to build, and enter:
 
 ```
 # docker build -t <user>/structural-pipeline:latest .
@@ -39,7 +39,8 @@ branch you want to build and enter:
 
 Substituting `<user>` for your username. This command must be run as root. 
 
-This will create a single docker image containing all the required files 
+This will create a single docker image called
+`<user>/structural-pipeline:latest` containing all the required files 
 and all required dependencies. 
 
 You can then execute the pipeline like this (for example):
@@ -47,10 +48,12 @@ You can then execute the pipeline like this (for example):
 ```
 # docker run --rm \
     -t <user>/structural-pipeline:latest \
-    sh -c "cd /usr/src/structural-pipeline; ./dhcp-pipeline.sh \
-	subject1 session1 44 \
-	-T2 subject1-T2.nii.gz -T1 subject1-T1.nii.gz -t 8"
+    sh -c "cd /usr/src/structural-pipeline; \
+	./dhcp-pipeline.sh subject1 session1 44 \
+	    -T2 subject1-T2.nii.gz -T1 subject1-T1.nii.gz -t 8"
 ```
+
+Again, this must be run as root. 
 
 ## Install locally
 If you want to work on the code of the pipeline, it can be more convenient to
