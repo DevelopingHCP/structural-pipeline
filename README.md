@@ -46,14 +46,16 @@ and all required dependencies.
 You can then execute the pipeline like this (for example):
 
 ```
-# docker run --rm \
-    -t <user>/structural-pipeline:latest \
+# docker run --rm -t -v $PWD/data:/data \
+    <user>/structural-pipeline:latest \
     sh -c "cd /usr/src/structural-pipeline; \
-	./dhcp-pipeline.sh subject1 session1 44 \
-	    -T2 subject1-T2.nii.gz -T1 subject1-T1.nii.gz -t 8"
+        ./dhcp-pipeline.sh subject1 session1 44 \
+            -T2 /data/sub-CC00183XX11_ses-60300_T2w.nii.gz -t 8"
 ```
 
-Again, this must be run as root. 
+Again, this must be run as root. This will mount the subdirectory `data` of
+your current directory as `/data` in the container, then execute the pipeline
+on the file `sub-CC00183XX11_ses-60300_T2w.nii.gz`.
 
 ## Install locally
 If you want to work on the code of the pipeline, it can be more convenient to
