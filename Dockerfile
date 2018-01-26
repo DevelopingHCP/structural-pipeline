@@ -39,6 +39,7 @@ RUN apt-get install -y \
 	g++-5 git cmake unzip bc python python-contextlib2 \
 	libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev \
 	libgstreamer1.0-dev libqt4-dev
+RUN echo . /etc/fsl/fsl.sh >> /root/.bashrc
 
 COPY . /usr/src/structural-pipeline
 RUN ls /usr/src/structural-pipeline \
