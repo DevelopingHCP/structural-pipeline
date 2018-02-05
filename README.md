@@ -58,7 +58,7 @@ You can then execute the pipeline like this (for example):
 Again, this must be run as root. This will mount the subdirectory `data` of
 your current directory as `/data` in the container, then execute the pipeline
 on the file `sub-CC00183XX11_ses-60300_T2w.nii.gz`. The output files will be
-written to your `data` subdirectory. 
+written to the `data` subdirectory. 
 
 ## Run interactively
 Handy for debugging:
