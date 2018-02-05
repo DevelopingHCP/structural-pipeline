@@ -47,6 +47,7 @@ You can then execute the pipeline like this (for example):
 
 ```
 # docker run --rm -t -v $PWD/data:/data \
+    -u $(id -u <user>):$(id -g <user>) \
     <user>/structural-pipeline:latest \
     bash -c ". /etc/fsl/fsl.sh; \
         cd /usr/src/structural-pipeline; \
