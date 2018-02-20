@@ -103,7 +103,7 @@ if [ -f T1/$subj.nii.gz -a ! -f $T1masked ];then
     run mirtk convert-dof dofs/$subj-T2-T1-init-r.dof.gz dofs/$subj-T2-T1-init-r.mat  -input-format mirtk -output-format fsl -target T2/$subj.nii.gz -source T1/$subj.nii.gz
     # BBR registration
     run fslmaths segmentations/${subj}_tissue_labels.nii.gz -thr 3 -uthr 3 -bin dofs/${subj}_wmseg.nii.gz
-    run flirt -in T1/$subj.nii.gz -ref T2/$subj.nii.gz -omat dofs/$subj-T2-T1-r.mat -dof 6 -cost bbr -wmseg dofs/${subj}_wmseg.nii.gz -init dofs/$subj-T2-T1-init-r.mat -schedule $FSLDIR/src/flirt/flirtsch/bbr.sch -bbrslope -0.5 -bbrtype signed -verbose 0 -usesqform
+    run flirt -in T1/$subj.nii.gz -ref T2/$subj.nii.gz -omat dofs/$subj-T2-T1-r.mat -dof 6 -cost bbr -wmseg dofs/${subj}_wmseg.nii.gz -init dofs/$subj-T2-T1-init-r.mat -schedule $FSLDIR/etc/flirt/flirtsch/bbr.sch -bbrslope -0.5 -bbrtype signed -verbose 0 -usesqform
     hex2dec dofs/$subj-T2-T1-r.mat dofs/$subj-T2-T1-r-dec.mat
     mirtk convert-dof dofs/$subj-T2-T1-r-dec.mat dofs/$subj-T2-T1-r.dof.gz -input-format flirt -output-format mirtk -target T2/$subj.nii.gz -source T1/$subj.nii.gz
     rm restore/T1/$subj-T2-brain.nii.gz dofs/${subj}_wmseg.nii.gz dofs/$subj-T2-T1-init-r.dof.gz dofs/$subj-T2-T1-init-r.mat dofs/$subj-T2-T1-r-dec.mat
