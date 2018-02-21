@@ -4,6 +4,16 @@
 # prefix
 fslprefix=fsl5.0-
 
+# if FSLDIR is not defined, assume we need to read the FSL startup
+if [ -z ${FSLDIR+x} ]; then
+  if [ ! -f /etc/fsl/fsl.sh ]; then
+    echo FSLDIR is not set and there is no system-wide FSL startup
+    exit 1
+  fi
+
+  . /etc/fsl/fsl.sh
+fi
+
 usage()
 {
   base=$(basename "$0")

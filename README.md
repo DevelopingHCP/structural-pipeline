@@ -49,8 +49,7 @@ You can then execute the pipeline like this (for example):
 # docker run --rm -t -v $PWD/data:/data \
     -u $(id -u <user>):$(id -g <user>) \
     <user>/structural-pipeline:latest \
-    bash -c ". /etc/fsl/fsl.sh; \
-        cd /usr/src/structural-pipeline; \
+    bash -c "cd /usr/src/structural-pipeline; \
         ./dhcp-pipeline.sh subject1 session1 44 \
             -d /data -T2 /data/sub-CC00183XX11_ses-60300_T2w.nii.gz -t 8"
 ```
