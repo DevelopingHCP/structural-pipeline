@@ -16,7 +16,7 @@ A. Makropoulos and E. C. Robinson et al. "The Developing Human Connectome
 Project: a Minimal Processing Pipeline for Neonatal Cortical Surface
 Reconstruction" [link](http://biorxiv.org/content/early/2017/04/07/125526).
 
-## Developers
+### Developers
 
 **Antonios Makropoulos**: main author, developer of the structural pipeline,
 and segmentation software. [more](http://antoniosmakropoulos.com)
@@ -27,7 +27,7 @@ and surface inflation software. [more](http://andreasschuh.com)
 **Robert Wright**: contributor, development of the spherical projection
 software.
 
-## License
+### License
 
 The dHCP structural pipeline is distributed under the terms outlined in
 [LICENSE.txt](LICENSE.txt).
@@ -62,13 +62,11 @@ $ docker run --rm -t -v data:/data \
             -d /data -T1 /data/T1w.nii.gz -T2 /data/T2w.nii.gz -t 8"
 ```
 
-It'll download the binary the first time you run the command -- subsequent runs
+It'll download the binary the first time you run the command --- subsequent runs
 will be much faster. 
 
 Once the command completes, you should find the output images in the `data`
 folder. 
-
-## Pipeline arguments
 
 The `dhcp-pipeline.sh` script has the following arguments:
 
@@ -79,14 +77,14 @@ The `dhcp-pipeline.sh` script has the following arguments:
 
 where:
 
-| Argument        | Type      | Description     
-| ------------- |:-------------:| :-------------:|
-| `subject_ID` | string | Subject ID
-| `session_ID` | string | Session ID
-| `scan_age` | double | Subject post-menstrual age (PMA) in weeks (number between 28-44). <br>If the age is <28w or >44w, it will be set to 28w or 44w respectively.
-| `T2_image` | nifti image | The T2 image of the subject
-| `T1_image` | nifti image | The T1 image of the subject (Optional)
-| `num_threads` | integer | Number of threads (CPU cores) used (default: 1) (Optional)
+Argument        | Type      | Description     
+------------- | ------------- | ------------- 
+`subject_ID` | string | Subject ID
+`session_ID` | string | Session ID
+`scan_age` | double | Subject post-menstrual age (PMA) in weeks (number between 28 -- 44). If the age is less than 28w or more than 44w, it will be set to 28w or 44w respectively.
+`T2_image` | nifti image | The T2 image of the subject
+`T1_image` | nifti image | The T1 image of the subject (Optional)
+`num_threads` | integer | Number of threads (CPU cores) used (default: 1) (Optional)
 
 Examples:
 
@@ -98,15 +96,14 @@ Examples:
 
 The output of the pipeline is the following directories:
 
-
-* sourcedata   : folder containing the source images (T1,T2) of the processed subjects
-* derivatives  : folder containing the output of the pipeline processing
+* `sourcedata`: folder containing the source images (T1,T2) of the processed subjects
+* `derivatives`: folder containing the output of the pipeline processing
 
 Measurements and reporting for the dHCP Structural
 Pipeline can be additionally computed using 
 https://github.com/amakropoulos/structural-pipeline-measures
 
-## Rebuild the docker image
+### Rebuild the docker image
 
 In the top directory of `structural-pipeline`, use git to switch to the
 branch you want to build, and enter:
@@ -116,7 +113,7 @@ $ docker build -t biomedia/dhcp-structural-pipeline:latest .
 $ docker push biomedia/dhcp-structural-pipeline:latest
 ```
 
-## Run interactively
+### Run interactively
 
 Handy for debugging:
 
@@ -144,9 +141,9 @@ The dHCP structural requires installation of the following packages.
 
 #### macOS (tested on version 10.9.5)
 
+This is easiest with [homebrew](https://brew.sh/). Install that first, then:
+
 ```
-$ \# install brew if needed with the following command:
-$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 $ brew update
 $ brew install gcc5 git cmake unzip tbb boost expat cartr/qt4/qt
 $ sudo easy_install pip
@@ -168,12 +165,9 @@ $ sudo apt -y libexpat1-dev libgstreamer1.0-dev libqt4-dev
 $ sudo apt -y update
 $ sudo apt -y install git cmake unzip bc python python-contextlib2 
 $ sudo apt -y libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev 
-$ sudo apt -y 
-$ sudo apt -y 
-$ sudo apt -y 
 $ sudo apt -y libgstreamer1.0-dev libqt4-d
-$ \# g++-5 is not in the default packages of Debian
-$ \# install with the following commands:
+$ # g++-5 is not in the default packages of Debian
+$ # install with the following commands:
 $ echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" | sudo tee -a /etc/apt/sources.list
 $ sudo apt-get -y update
 $ sudo apt-get -y install g++-5
@@ -186,10 +180,10 @@ $ sudo yum -y update
 $ sudo yum -y install git cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel expat-devel gstreamer1-devel 
 $ sudo yum -y install epel-release
 $ sudo yum -y install python-contextlib2
-$ \# g++-5 is not in the default packages of CENTOS, install with the following commands:
+$ # g++-5 is not in the default packages of CENTOS, install with the following commands:
 $ sudo yum -y install centos-release-scl
-$ sudo yum -y install devtoolset-4-gcc*
-$ \# then activate it at the terminal before running the installation script
+$ sudo yum -y install "devtoolset-4-gcc*"
+$ # then activate it at the terminal before running the installation script
 $ scl enable devtoolset-4 bash
 ```
 
@@ -198,41 +192,41 @@ $ scl enable devtoolset-4 bash
 ```
 $ sudo yum -y update
 $ sudo yum -y install it cmake unzip bc python tbb-devel boost-devel qt-devel zlib-devel libXt-devel expat-devel gstreamer1-devel
-$ \# the epel-release-latest-7.noarch.rpm is for version 7 of RHEL, this needs to be adjusted for the user's OS version
+$ # the epel-release-latest-7.noarch.rpm is for version 7 of RHEL, this needs to be adjusted for the user's OS version
 $ curl -o epel.rpm https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 $ sudo yum -y install epel.rpm
 $ sudo yum -y install python-contextlib2
-$ \# g++-5 is not in the default packages of RHEL, install with the following commands:
+$ # g++-5 is not in the default packages of RHEL, install with the following commands:
 $ sudo yum-config-manager --enable rhel-server-rhscl-7-rpms
 $ sudo yum -y install devtoolset-4-gcc*
-$ \# then activate it at the terminal before running the installation script
+$ # then activate it at the terminal before running the installation script
 $ scl enable devtoolset-4 bash
 ```
 
 ### Installation
 
 ```
-$ ./setup.sh -j [num_cores] 
+$ ./setup.sh [-j <num_cores>] 
 ```
 
-where `[num_cores]` the number of CPU cores used to compile the pipeline 
+where `num_cores` the number of CPU cores used to compile the pipeline 
 software.
 
 The setup script installs the following software packages.
    
-| Software        | Version           
-| ------------- |:-------------:|
-| <a href="https://github.com/InsightSoftwareConsortium/ITK">ITK</a>      | 4.11.1 
-| <a href="https://github.com/Kitware/VTK">VTK</a>      | 7.0.0     
-| <a href="https://github.com/Washington-University/workbench">Connectome Workbench</a>  | 1.2.2  
-| <a href="https://github.com/BioMedIA/MIRTK">MIRTK</a>  | dhcp-v1
-| <a href="https://github.com/amakropoulos/SphericalMesh">SphericalMesh</a>  | dhcp-v1.1
+Software        | Version           
+------------- | ------------- 
+[ITK](https://github.com/InsightSoftwareConsortium/ITK) | 4.11.1 
+[VTK](https://github.com/Kitware/VTK) | 7.0.0     
+[Connectome Workbench](https://github.com/Washington-University/workbench) | 1.2.2  
+[MIRTK](https://github.com/BioMedIA/MIRTK) | dhcp-v1.1
+[SphericalMesh](https://github.com/amakropoulos/SphericalMesh) | dhcp-v1.1
 
 The '-h' argument can be specified to provide more setup options:
 
 ```
 $ ./setup.sh -h
-$
+```
 
 Once the installation is successfully completed, if desired, the different
 commands/tools built (workbench, MIRTK and pipeline commands) can be included
@@ -241,4 +235,3 @@ in the shell PATH by running:
 ```
 $ . parameters/path.sh
 ```
-
