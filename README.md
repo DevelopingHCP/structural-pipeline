@@ -35,8 +35,7 @@ The dHCP structural pipeline is distributed under the terms outlined in
 ## Running the pipeline from dockerhub
 
 You can run the pipeline in a docker container. This will work on any
-version of any platform and is pretty simple to set up. First, install
-docker:
+version of any platform and is simple to set up. First, install docker:
 
 https://docs.docker.com/engine/installation/
 
