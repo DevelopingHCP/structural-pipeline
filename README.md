@@ -12,9 +12,9 @@ neonatal brain MRI images (T1 and T2) and consists of:
 
 It is described in detail in:
 
-A. Makropoulos and E. C. Robinson et al. "The Developing Human Connectome
+A. Makropoulos, E. C. Robinson et al. *"The Developing Human Connectome
 Project: a Minimal Processing Pipeline for Neonatal Cortical Surface
-Reconstruction" [link](http://biorxiv.org/content/early/2017/04/07/125526).
+Reconstruction"* [link](http://biorxiv.org/content/early/2017/04/07/125526)
 
 ### Developers
 
@@ -55,8 +55,7 @@ directory, though you'll obviously have to modify the next command slightly.
 Finally, execute the pipeline like this:
 
 ```
-$ docker run --rm -t -v data:/data \
-    biomedia/dhcp-structural-pipeline:latest \
+$ docker run --rm -t -v data:/data biomedia/dhcp-structural-pipeline:latest \
     bash -c "cd /usr/src/structural-pipeline; \
         ./dhcp-pipeline.sh subject1 session1 44 \
             -d /data -T1 /data/T1w.nii.gz -T2 /data/T2w.nii.gz -t 8"
@@ -83,8 +82,8 @@ Argument        | Type      | Description
 `session_ID` | string | Session ID
 `scan_age` | double | Subject post-menstrual age (PMA) in weeks (number between 28 -- 44). If the age is less than 28w or more than 44w, it will be set to 28w or 44w respectively.
 `T2_image` | nifti image | The T2 image of the subject
-`T1_image` | nifti image | The T1 image of the subject (Optional)
-`num_threads` | integer | Number of threads (CPU cores) used (default: 1) (Optional)
+`T1_image` | nifti image | Optional, the T1 image of the subject
+`num_threads` | integer | Optional, the number of threads (CPU cores) used (default: 1)
 
 Examples:
 
@@ -99,8 +98,9 @@ The output of the pipeline is the following directories:
 * `sourcedata`: folder containing the source images (T1,T2) of the processed subjects
 * `derivatives`: folder containing the output of the pipeline processing
 
-Measurements and reporting for the dHCP Structural
-Pipeline can be additionally computed using 
+Measurements and reporting for the dHCP Structural Pipeline can be computed
+using:
+
 https://github.com/amakropoulos/structural-pipeline-measures
 
 ### Rebuild the docker image
