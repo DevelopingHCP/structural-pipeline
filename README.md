@@ -12,22 +12,20 @@ neonatal brain MRI images (T1 and T2) and consists of:
 
 It is described in detail in:
 
-> A. Makropoulos, E. C. Robinson et al. *"The Developing Human Connectome
-> Project: a Minimal Processing Pipeline for Neonatal Cortical Surface 
-> Reconstruction"* [link](http://biorxiv.org/content/early/2017/04/07/125526)
+A. Makropoulos, E. C. Robinson et al. *"The Developing Human Connectome
+Project: a Minimal Processing Pipeline for Neonatal Cortical Surface
+Reconstruction"* [link](http://biorxiv.org/content/early/2017/04/07/125526)
 
 ### Developers
 
-Antonios Makropoulos
-:  main author, developer of the structural pipeline, and segmentation
-software. [more](http://antoniosmakropoulos.com)
+**Antonios Makropoulos**: main author, developer of the structural pipeline,
+and segmentation software. [more](http://antoniosmakropoulos.com)
 
-Andreas Schuh
-: contributor, developer of the cortical surface extraction, and surface
-inflation software. [more](http://andreasschuh.com)
+**Andreas Schuh**: contributor, developer of the cortical surface extraction,
+and surface inflation software. [more](http://andreasschuh.com)
 
-Robert Wright
-: contributor, development of the spherical projection software.
+**Robert Wright**: contributor, development of the spherical projection
+software.
 
 ### License
 
@@ -97,11 +95,8 @@ Examples:
 
 The output of the pipeline is the following directories:
 
-`sourcedata`
-: folder containing the source images (T1,T2) of the processed subjects
-
-`derivatives`
-: folder containing the output of the pipeline processing
+* `sourcedata`: folder containing the source images (T1,T2) of the processed subjects
+* `derivatives`: folder containing the output of the pipeline processing
 
 Measurements and reporting for the dHCP Structural Pipeline can be computed
 using:
