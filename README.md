@@ -1,9 +1,9 @@
-# dHCP Structural Pipeline v1.1
+# dHCP Structural Pipeline 
 
 ![pipeline image](structural_pipeline.png)
 
-The dHCP structural pipeline performs structural analysis of
-neonatal brain MRI images (T1 and T2) and consists of:
+The dHCP structural pipeline performs structural analysis of neonatal brain
+MRI images (T1 and T2) and consists of:
 
 * cortical and sub-cortical volume segmentation
 * cortical surface extraction (white matter and pial surface)
@@ -54,14 +54,16 @@ directory, though you'll obviously have to modify the next command slightly.
 Finally, execute the pipeline like this:
 
 ```
-$ docker run --rm -t -v data:/data biomedia/dhcp-structural-pipeline:latest \
+$ docker run --rm -t -v $PWD/data:/data \
+    biomedia/dhcp-structural-pipeline:latest \
     bash -c "cd /usr/src/structural-pipeline; \
         ./dhcp-pipeline.sh subject1 session1 44 \
             -d /data -T1 /data/T1w.nii.gz -T2 /data/T2w.nii.gz -t 8"
 ```
 
-It'll download the binary the first time you run the command --- subsequent runs
-will be much faster. 
+Substituting subject and session codes, and the post-menstrual age at
+scan, see below. It'll download the binary the first time you run the
+command --- subsequent runs will be much faster.
 
 Once the command completes, you should find the output images in the `data`
 folder. 
@@ -104,8 +106,8 @@ https://github.com/amakropoulos/structural-pipeline-measures
 
 ### Rebuild the docker image
 
-In the top directory of `structural-pipeline`, use git to switch to the
-branch you want to build, and enter:
+In the top directory of `dhcp-structural-pipeline`, use git to switch to
+the branch you want to build, and enter:
 
 ```
 $ docker build -t biomedia/dhcp-structural-pipeline:latest .
@@ -118,13 +120,13 @@ Handy for debugging:
 
 ```
 $ docker run \
-    -v data:/data \
+    -v $PWD/data:/data \
     -it biomedia/dhcp-structural-pipeline:latest /bin/bash
 ```
 
 ## Install natively
 
-If you want to work on the code of the pipeline, it can be more convenient to
+If you want to work on the code of the pipeline, it will be more convenient to
 install natively to your machine. Only read on if you need to do a native
 install. 
 
