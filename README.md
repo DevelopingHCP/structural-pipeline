@@ -54,7 +54,9 @@ directory, though you'll obviously have to modify the next command slightly.
 Finally, execute the pipeline like this:
 
 ```
-$ docker run --rm -t -v $PWD/data:/data \
+$ docker run --rm -t \
+    -u $(id -u):$(id -u) \
+    -v $PWD/data:/data \
     biomedia/dhcp-structural-pipeline:latest \
     bash -c "cd /usr/src/structural-pipeline; \
         ./dhcp-pipeline.sh subject1 session1 44 \
@@ -65,7 +67,7 @@ Substituting subject and session codes, and the post-menstrual age at
 scan, see below. It'll download the binary the first time you run the
 command --- subsequent runs will be much faster.
 
-Once the command completes, you should find the output images in the `data`
+Once the command completes, you should find the output images in your `data`
 folder. 
 
 The `dhcp-pipeline.sh` script has the following arguments:
@@ -120,6 +122,7 @@ Handy for debugging:
 
 ```
 $ docker run \
+    -u $(id -u):$(id -u) \
     -v $PWD/data:/data \
     -it biomedia/dhcp-structural-pipeline:latest /bin/bash
 ```
