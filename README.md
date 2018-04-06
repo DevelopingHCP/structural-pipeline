@@ -57,10 +57,8 @@ Finally, execute the pipeline like this:
 $ docker run --rm -t \
     -u $(id -u):$(id -u) \
     -v $PWD/data:/data \
-    biomedia/dhcp-structural-pipeline:latest \
-    bash -c "cd /usr/src/structural-pipeline; \
-        ./dhcp-pipeline.sh subject1 session1 44 \
-            -d /data -T1 /data/T1w.nii.gz -T2 /data/T2w.nii.gz -t 8"
+    biomedia/dhcp-structural-pipeline:latest subject1 session1 44 \
+            -T1 data/T1w.nii.gz -T2 data/T2w.nii.gz -t 8
 ```
 
 Substituting subject and session codes, and the post-menstrual age at
@@ -114,17 +112,6 @@ the branch you want to build, and enter:
 ```
 $ docker build -t biomedia/dhcp-structural-pipeline:latest .
 $ docker push biomedia/dhcp-structural-pipeline:latest
-```
-
-### Run interactively
-
-Handy for debugging:
-
-```
-$ docker run \
-    -u $(id -u):$(id -u) \
-    -v $PWD/data:/data \
-    -it biomedia/dhcp-structural-pipeline:latest /bin/bash
 ```
 
 ## Install natively
