@@ -64,6 +64,7 @@ command=$@
 subjectID=$1
 sessionID=$2
 age=$3
+shift; shift; shift;
 
 # alias for the specific session
 subj=$subjectID-$sessionID
@@ -75,7 +76,6 @@ minimal=1
 noreorient=0
 cleanup=1
 
-shift; shift; shift;
 while [ $# -gt 0 ]; do
   case "$1" in
     -T2)  shift; T2=$1; ;;
@@ -91,6 +91,24 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+# consider the case where the user is running us inside docker with an
+# argument like:
+#
+#	-T2 data/T1w.nii.gz
+#
+# the user's data directory will be mapped to /data, and that's out WORKDIR,
+# so we need to remove the leading data/ component for the path to be valid
+#
+# we don't want to make this change unless we have to, so only drop the first
+# pathname component if the file named by T2 does not exist and	T2 is a 
+# relative path
+
+if [[ "$T2" != /* && ! -f "$T2" ]]; then
+  T1=${T1#*/}
+  T2=${T2#*/}
+fi
+
 
 ################ Checks ################
 

@@ -41,9 +41,14 @@ RUN apt-get install -y \
 	libgstreamer1.0-dev libqt4-dev
 
 COPY . /usr/src/structural-pipeline
+
 RUN ls /usr/src/structural-pipeline \
     && NUM_CPUS=${THREADS:-`cat /proc/cpuinfo | grep processor | wc -l`} \
     && echo "Maximum number of build threads = $NUM_CPUS" \
     && cd /usr/src/structural-pipeline \
     && ./setup.sh -j $NUM_CPUS
+
+WORKDIR /data
+ENTRYPOINT ["/usr/src/structural-pipeline/dhcp-pipeline.sh"]
+CMD ["-help"]
 
