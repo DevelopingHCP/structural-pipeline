@@ -10,7 +10,7 @@ Arguments:
   subject                       Subject ID
 
 Options:
-  -d / -data-dir  <directory>   The directory used to run the script and output the files. 
+  -d / -data-dir  <directory>   The directory used to run the script and output the files.
   -t / -threads  <number>       Number of threads (CPU cores) allowed for the registration to run in parallel (default: 1)
   -h / -help / --help           Print usage.
 "
@@ -47,7 +47,7 @@ shift
 while [ $# -gt 0 ]; do
   case "$1" in
     -d|-data-dir)  shift; datadir=$1; ;;
-    -t|-threads)  shift; threads=$1; ;; 
+    -t|-threads)  shift; threads=$1; ;;
     -h|-help|--help) usage; ;;
     -*) echo "$0: Unrecognized option $1" >&2; usage; ;;
      *) break ;;
@@ -56,8 +56,8 @@ while [ $# -gt 0 ]; do
 done
 
 echo "dHCP Surface pipeline
-Subject:    $subj 
-Directory:  $datadir 
+Subject:    $subj
+Directory:  $datadir
 Threads:    $threads
 
 $BASH_SOURCE $command
@@ -85,25 +85,26 @@ Surf=('white' 'pial' 'midthickness' 'inflated' 'very_inflated' 'sphere');
 completed=1
 for surf in white pial;do
     for h in L R;do
-        if [ ! -f $outvtk/$subj.$h.$surf.native.surf.vtk ];then 
+        if [ ! -f $outvtk/$subj.$h.$surf.native.surf.vtk ];then
             completed=0
         fi
     done
 done
 
-if [ $completed -eq 0 ]; then 
+if [ $completed -eq 0 ]; then
     run mirtk recon-neonatal-cortex -v --threads=$threads --config="$surface_recon_config" --sessions="$subj" --prefix="$outvtk/$subj" --temp="$outvtk/temp-recon/$subj" --white --pial
     rm -r $outvtk/temp-recon
 fi
 
 
 # create files of each hemisphere
+# JC: removed threading here
+# the speedup was tiny and it stopped us stop on errors
+# reimplement with gnu parallel, perhaps
 for hi in {0..1}; do
     h=${Hemi[$hi]}
-    runhemisphere $codedir/process-surfaces-hemisphere.sh $subj $h $segdir $outvtk $outwb $outtmp &
-    if [ $threads -eq 1 ];then wait;fi
+    runhemisphere $codedir/process-surfaces-hemisphere.sh $subj $h $segdir $outvtk $outwb $outtmp
 done
-if [ $threads -gt 1 ];then wait;fi
 
 
 # create files for both hemispheres for workbench
@@ -113,7 +114,7 @@ if  [ ! -f $outwb/$subj.sulc.native.dscalar.nii ];then
   run wb_command -cifti-palette $outwb/temp.$subj.sulc.native.dscalar.nii MODE_AUTO_SCALE_PERCENTAGE $outwb/temp.$subj.sulc.native.dscalar.nii -pos-percent 2 98 -palette-name Gray_Interp -disp-pos true -disp-neg true -disp-zero true
   run mv $outwb/temp.$subj.sulc.native.dscalar.nii $outwb/$subj.sulc.native.dscalar.nii
 fi
-      
+
 if  [ ! -f $outwb/$subj.curvature.native.dscalar.nii ];then
   run wb_command -cifti-create-dense-scalar $outwb/temp.$subj.curvature.native.dscalar.nii -left-metric $outwb/$subj.L.curvature.native.shape.gii -roi-left $outwb/$subj.L.roi.native.shape.gii -right-metric $outwb/$subj.R.curvature.native.shape.gii -roi-right $outwb/$subj.R.roi.native.shape.gii
   run wb_command -set-map-names $outwb/temp.$subj.curvature.native.dscalar.nii -map 1 "${subj}_Curvature"
@@ -142,12 +143,12 @@ if [ ! -f $outwb/$subj.drawem.native.dlabel.nii ];then
 fi
 
 # create myelin map etc.
-if [ -f restore/T1/$subj.nii.gz ];then 
+if [ -f restore/T1/$subj.nii.gz ];then
   run $codedir/create-myelin-map.sh $subj
 
   for STRINGII in MyelinMap@func SmoothedMyelinMap@func; do
     Map=`echo $STRINGII | cut -d "@" -f 1`
-    Ext=`echo $STRINGII | cut -d "@" -f 2`    
+    Ext=`echo $STRINGII | cut -d "@" -f 2`
     if  [ ! -f $outwb/$subj.$Map.native.dscalar.nii ];then
       run wb_command -cifti-create-dense-scalar $outwb/temp.$subj.$Map.native.dscalar.nii -left-metric $outwb/$subj.L.$Map.native."$Ext".gii -roi-left $outwb/$subj.L.roi.native.shape.gii -right-metric $outwb/$subj.R.${Map}.native."$Ext".gii -roi-right $outwb/$subj.R.roi.native.shape.gii
       run wb_command -set-map-names $outwb/temp.$subj.$Map.native.dscalar.nii -map 1 "${subj}_${Map}"
@@ -155,12 +156,12 @@ if [ -f restore/T1/$subj.nii.gz ];then
       run mv $outwb/temp.$subj.$Map.native.dscalar.nii $outwb/$subj.$Map.native.dscalar.nii
     fi
   done
-  if [ ! -f $outwb/$subj.T1.nii.gz ];then 
+  if [ ! -f $outwb/$subj.T1.nii.gz ];then
     ln restore/T1/${subj}_restore_defaced.nii.gz $outwb/$subj.T1.nii.gz
   fi
 fi
 
-if [ ! -f $outwb/$subj.T2.nii.gz ];then 
+if [ ! -f $outwb/$subj.T2.nii.gz ];then
   ln restore/T2/${subj}_restore_defaced.nii.gz $outwb/$subj.T2.nii.gz
 fi
 
@@ -188,11 +189,11 @@ run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.drawem.native.dla
 run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.T2.nii.gz
 
 
-if [ -f restore/T1/$subj.nii.gz ];then 
+if [ -f restore/T1/$subj.nii.gz ];then
   run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.T1.nii.gz
   run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.T1wDividedByT2w_defaced.nii.gz
   run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.T1wDividedByT2w_ribbon.nii.gz
   run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.MyelinMap.native.dscalar.nii
   run wb_command -add-to-spec-file $subj.native.wb.spec $C $subj.SmoothedMyelinMap.native.dscalar.nii
 fi
-  
+
