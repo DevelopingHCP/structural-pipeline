@@ -55,7 +55,7 @@ Finally, execute the pipeline like this:
 
 ```
 $ docker run --rm -t \
-    -u $(id -u):$(id -u) \
+    -u $(id -u):$(id -g) \
     -v $PWD/data:/data \
     biomedia/dhcp-structural-pipeline:latest subject1 session1 44 \
             -T1 data/T1w.nii.gz -T2 data/T2w.nii.gz -t 8
