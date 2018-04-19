@@ -99,7 +99,7 @@ fi
 
 # create files of each hemisphere
 # JC: removed threading here
-# the speedup was tiny and it stopped us stop on errors
+# the speedup was tiny and it stopped us stopping on errors
 # reimplement with gnu parallel, perhaps
 for hi in {0..1}; do
     h=${Hemi[$hi]}
