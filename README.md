@@ -51,7 +51,13 @@ $ cp T2w.nii.gz data
 The T1 image is optional. You can use any names for the images and the
 directory, though you'll obviously have to modify the next command slightly. 
 
-Finally, execute the pipeline like this:
+Get the latest version of the pipeline from dockerhub like this:
+
+```
+$ docker pull biomedia/dhcp-structural-pipeline:latest 
+```
+
+And finally, execute the pipeline like this:
 
 ```
 $ docker run --rm -t \
@@ -62,8 +68,7 @@ $ docker run --rm -t \
 ```
 
 Substituting subject and session codes, and the post-menstrual age at
-scan, see below. It'll download the binary the first time you run the
-command --- subsequent runs will be much faster.
+scan, see below. 
 
 Once the command completes, you should find the output images in your `data`
 folder. 
