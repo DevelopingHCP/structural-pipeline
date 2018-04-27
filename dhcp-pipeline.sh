@@ -1,17 +1,14 @@
 #!/bin/bash
 
-# fsl prefix ... this was blank for fsl4, but fsl5+ have a versioned command
-# prefix
-fslprefix=fsl5.0-
-
 # if FSLDIR is not defined, assume we need to read the FSL startup
 if [ -z ${FSLDIR+x} ]; then
-  if [ ! -f /etc/fsl/fsl.sh ]; then
+  if [ -f /etc/fsl/fsl.sh ]; then
+    . /etc/fsl/fsl.sh
+  else
     echo FSLDIR is not set and there is no system-wide FSL startup
     exit 1
   fi
 
-  . /etc/fsl/fsl.sh
 fi
 
 usage()
@@ -162,7 +159,7 @@ for modality in T1 T2;do
   if [ $noreorient -eq 1 ];then
     cp $mf $newf
   else
-    ${fslprefix}fslreorient2std $mf $newf
+    fslreorient2std $mf $newf
   fi
   eval "$modality=$newf"
 done
