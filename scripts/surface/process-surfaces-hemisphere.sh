@@ -150,11 +150,23 @@ if  [ ! -f $outwb/$subj.$h.$surf.native.surf.gii ];then
   echo
   echo "-------------------------------------------------------------------------------------"
   echo "Extract $h spherical surface"
+
+  # v1.1 had this mesh-to-sphere, but it caused large distortions since the
+  # templates were not being warped inthe same way (I think). We've not
+  # switched back to the original scheme.
   # need to replace the following with run
-  comm="mesh-to-sphere $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$subj.$h.$surf.native.surf.vtk -inflated $outvtk/$subj.$h.$insurf2.native.surf.vtk -parin $parameters_dir/spherical-mesh.cfg"
-  echo $comm
-  $comm
-  vtktogii $outvtk/$subj.$h.$surf.native.surf.vtk $outwb/$subj.$h.$surf.native.surf.gii SPHERICAL GRAY_WHITE
+  # comm="mesh-to-sphere $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$subj.$h.$surf.native.surf.vtk -inflated $outvtk/$subj.$h.$insurf2.native.surf.vtk -parin $parameters_dir/spherical-mesh.cfg"
+  # echo $comm
+  # $comm
+
+  run mesh-to-sphere \
+	  $outvtk/$subj.$h.$insurf1.native.surf.vtk \
+	  $outvtk/$subj.$h.$surf.native.surf.vtk \
+	  -parin $parameters_dir/parin-4-levels.cfg
+
+  run vtktogii \
+	  $outvtk/$subj.$h.$surf.native.surf.vtk \
+	  $outwb/$subj.$h.$surf.native.surf.gii SPHERICAL GRAY_WHITE
 fi
 
 

@@ -115,6 +115,7 @@ In the top directory of `dhcp-structural-pipeline`, use git to switch to
 the branch you want to build, and enter:
 
 ```
+$ docker pull ubuntu:xenial
 $ docker build -t biomedia/dhcp-structural-pipeline:latest .
 $ docker push biomedia/dhcp-structural-pipeline:latest
 ```
