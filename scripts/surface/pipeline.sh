@@ -21,7 +21,7 @@ Options:
 runhemisphere()
 {
   log=logs/$subj.surface.$h-hemisphere.log
-  err=logs/$subj.surface.$h-hemisphere.log
+  err=logs/$subj.surface.$h-hemisphere.err
   echo "$@"
   "$@" >$log 2>$err
   if [ ! $? -eq 0 ]; then
