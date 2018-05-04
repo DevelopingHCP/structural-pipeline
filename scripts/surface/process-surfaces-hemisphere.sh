@@ -152,17 +152,27 @@ if  [ ! -f $outwb/$subj.$h.$surf.native.surf.gii ];then
   echo "Extract $h spherical surface"
 
   # v1.1 had this mesh-to-sphere, but it caused large distortions since the
-  # templates were not being warped inthe same way (I think). We've not
+  # templates were not being warped in the same way (I think). We've now
   # switched back to the original scheme.
-  # need to replace the following with run
+
   # comm="mesh-to-sphere $outvtk/$subj.$h.$insurf1.native.surf.vtk $outvtk/$subj.$h.$surf.native.surf.vtk -inflated $outvtk/$subj.$h.$insurf2.native.surf.vtk -parin $parameters_dir/spherical-mesh.cfg"
   # echo $comm
   # $comm
 
-  run mesh-to-sphere \
-	  $outvtk/$subj.$h.$insurf1.native.surf.vtk \
-	  $outvtk/$subj.$h.$surf.native.surf.vtk \
-	  -parin $parameters_dir/parin-4-levels.cfg
+  # it'd be nice to use run here, but mesh-to-sphere exits with code 1 even on
+  # success
+  #
+  # run mesh-to-sphere \
+  #	  $outvtk/$subj.$h.$insurf2.native.surf.vtk \
+  #	  $outvtk/$subj.$h.$surf.native.surf.vtk \
+  #	  -parin $parameters_dir/parin-4-levels.cfg
+
+  comm="mesh-to-sphere 
+	  $outvtk/$subj.$h.$insurf2.native.surf.vtk 
+	  $outvtk/$subj.$h.$surf.native.surf.vtk 
+	  -parin $parameters_dir/parin-4-levels.cfg"
+  echo $comm
+  $comm
 
   run vtktogii \
 	  $outvtk/$subj.$h.$surf.native.surf.vtk \
