@@ -17,17 +17,21 @@ ARG THREADS
 
 # install prerequsites
 # - build tools
+# - FSL 5.0.11 bet needs "dc"
 # - FSL latest
+#
 #	  * -E is not suported on ubuntu (rhel only), so we make a quick n dirty
 #	    /etc/fsl/fsl.sh 
-#	  * fslinstaller.py fails in post_install as it gives the wrong flag to wget
-#	    to enable silent mode ... run the post install again to fix this
+#
+#	  * fslinstaller.py fails in post_install as it gives the wrong flag 
+#	    to wget to enable silent mode ... run the post install again 
+#	    to fix this
 
 RUN apt-get update 
 RUN apt-get install -y \
 	wget g++-5 git cmake unzip bc python python-contextlib2 \
 	libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev \
-	libgstreamer1.0-dev libqt4-dev
+	libgstreamer1.0-dev libqt4-dev dc
 COPY . /usr/src/structural-pipeline
 RUN cd /usr/src/structural-pipeline \
 	&& echo "please ignore the 'failed to download miniconda' error coming soon" \
