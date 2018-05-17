@@ -1,3 +1,7 @@
+# The dHCP Structural Pipeline has been moved [here](https://github.com/BioMedIA/dhcp-structural-pipeline). The present repository is deprecated and not maintained.
+<br>
+<br>
+
 # dHCP Structural Pipeline v1.1
 
 ![pipeline image](structural_pipeline.png)
