@@ -1,4 +1,4 @@
-# dHCP Structural Pipeline 
+# dHCP Structural Pipeline
 
 ![pipeline image](structural_pipeline.png)
 
