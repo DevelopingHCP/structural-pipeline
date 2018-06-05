@@ -27,6 +27,56 @@ A. Makropoulos and E. C. Robinson et al. "The Developing Human Connectome Projec
 ## License
 The dHCP structural pipeline is distributed under the terms outlined in LICENSE.txt
 
+## Install and run with docker
+You can build the pipeline in a docker container. This will work on any
+version of any platform, is automated, and fairly simple. First, install
+docker:
+
+https://docs.docker.com/engine/installation/
+
+Then in the top directory of `structural-pipeline`, use git to switch to the
+branch you want to build, and enter:
+
+```
+# docker build -t <user>/structural-pipeline:latest .
+```
+
+Substituting `<user>` for your username. This command must be run as root. 
+
+This will create a single docker image called
+`<user>/structural-pipeline:latest` containing all the required files 
+and all required dependencies. 
+
+You can then execute the pipeline like this (for example):
+
+```
+# docker run --rm -t -v $PWD/data:/data \
+    -u $(id -u <user>):$(id -g <user>) \
+    <user>/structural-pipeline:latest \
+    bash -c ". /etc/fsl/fsl.sh; \
+        cd /usr/src/structural-pipeline; \
+        ./dhcp-pipeline.sh subject1 session1 44 \
+            -d /data -T2 /data/sub-CC00183XX11_ses-60300_T2w.nii.gz -t 8"
+```
+
+Again, this must be run as root. This will mount the subdirectory `data` of
+your current directory as `/data` in the container, then execute the pipeline
+on the file `sub-CC00183XX11_ses-60300_T2w.nii.gz`. The output files will be
+written to the `data` subdirectory. 
+
+## Run interactively
+Handy for debugging:
+
+```
+# sudo docker run \
+    -v /home/john/pics/dhcp/data:/data \
+    -it john/structural-pipeline:latest /bin/bash
+```
+
+## Install locally
+If you want to work on the code of the pipeline, it can be more convenient to
+install locally to your machine. Only read on if you need to do a local
+install. 
 
 ## Dependencies
 #### 1. FSL

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# fsl prefix ... this was blank for fsl4, but fsl5+ have a versioned command
+# prefix
+fslprefix=fsl5.0-
+
 usage()
 {
   base=$(basename "$0")
@@ -130,7 +134,7 @@ for modality in T1 T2;do
   if [ $noreorient -eq 1 ];then
     cp $mf $newf
   else
-    fslreorient2std $mf $newf
+    ${fslprefix}fslreorient2std $mf $newf
   fi
   eval "$modality=$newf"
 done
