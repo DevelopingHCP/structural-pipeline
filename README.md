@@ -153,7 +153,7 @@ $ pip install contextlib2
 $ sudo apt -y update
 $ sudo apt -y install g++-5 git cmake unzip bc python python-contextlib2 
 $ sudo apt -y install libtbb-dev libboost-dev zlib1g-dev libxt-dev 
-$ sudo apt -y libexpat1-dev libgstreamer1.0-dev libqt4-dev
+$ sudo apt -y install libexpat1-dev libgstreamer1.0-dev libqt4-dev
 ```
 
 #### Debian GNU (tested on version 8)
@@ -161,8 +161,8 @@ $ sudo apt -y libexpat1-dev libgstreamer1.0-dev libqt4-dev
 ```
 $ sudo apt -y update
 $ sudo apt -y install git cmake unzip bc python python-contextlib2 
-$ sudo apt -y libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev 
-$ sudo apt -y libgstreamer1.0-dev libqt4-d
+$ sudo apt -y install libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev 
+$ sudo apt -y install libgstreamer1.0-dev libqt4-d
 $ # g++-5 is not in the default packages of Debian
 $ # install with the following commands:
 $ echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" | sudo tee -a /etc/apt/sources.list
