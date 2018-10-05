@@ -39,7 +39,7 @@ RUN cd /usr/src/structural-pipeline \
 	&& export FSLDIR=/usr/local/fsl \
 	&& echo "retrying miniconda install ..." \
 	&& /usr/local/fsl/etc/fslconf/post_install.sh \
-  && mkdir -p /etc/fsl \
+	&& mkdir -p /etc/fsl \
 	&& echo "FSLDIR=/usr/local/fsl; . \${FSLDIR}/etc/fslconf/fsl.sh; PATH=\${FSLDIR}/bin:\${PATH}; export FSLDIR PATH" > /etc/fsl/fsl.sh 
 
 RUN NUM_CPUS=${THREADS:-`cat /proc/cpuinfo | grep processor | wc -l`} \
