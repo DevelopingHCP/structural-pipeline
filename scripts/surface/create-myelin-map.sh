@@ -47,6 +47,7 @@ if [ -f $T1 ] ; then
         run fslmaths $outtmp/tissue_labels_R.nii.gz -thr $CGM_label -uthr $CGM_label -bin -mul $RightGreyRibbonValue $outtmp/out_R.nii.gz
 
         run fslmaths $outtmp/in_L.nii.gz -add $outtmp/in_R.nii.gz -add $outtmp/out_L.nii.gz -add $outtmp/out_R.nii.gz $outwb/$subj.ribbon.nii.gz
+        run fslcpgeom $T1 $outwb/$subj.ribbon.nii.gz
 
         for h in L R ; do
             rm $outtmp/dist_$h.nii.gz $outtmp/tissue_labels_$h.nii.gz $outtmp/in_$h.nii.gz $outtmp/out_$h.nii.gz

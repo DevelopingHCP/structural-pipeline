@@ -94,7 +94,7 @@ mkdir -p masks
 if [ ! -f masks/$subj.nii.gz ];then 
     run mirtk padding segmentations/${subj}_tissue_labels.nii.gz segmentations/${subj}_tissue_labels.nii.gz masks/$subj-labels.nii.gz 2 $CSF_label $BG_label 0
     run fslmaths masks/$subj-labels.nii.gz -bin -dilD -dilD -dilD -ero -ero masks/$subj-dil.nii.gz
-    run wb_command -volume-fill-holes masks/$subj-dil.nii.gz masks/$subj.nii.gz
+    run mirtk fill-holes masks/$subj-dil.nii.gz masks/$subj.nii.gz
     rm masks/$subj-labels.nii.gz masks/$subj-dil.nii.gz 
 fi
 
