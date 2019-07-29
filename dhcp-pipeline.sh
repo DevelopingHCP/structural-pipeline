@@ -30,6 +30,7 @@ Options:
   -additional                   If specified, the pipeline will produce some additional files not included in release v1.0 (such as segmentation prob.maps, warps to MNI space, ..) (default: False) 
   -t / -threads  <number>       Number of threads (CPU cores) used (default: 1)
   -no-reorient                  The images will not be reoriented before processing (using the FSL fslreorient2std command) (default: False) 
+  -recon-from-seg               Surface reconstruction using only the segmentation, no image edge information
   -no-cleanup                   The intermediate files produced (workdir directory) will not be deleted (default: False) 
   -h / -help / --help           Print usage.
 "
@@ -71,6 +72,7 @@ datadir=`pwd`
 threads=1
 minimal=1
 noreorient=0
+recon_from_seg=0
 cleanup=1
 
 while [ $# -gt 0 ]; do
@@ -81,6 +83,7 @@ while [ $# -gt 0 ]; do
     -t|-threads)  shift; threads=$1; ;;
     -additional)  minimal=0; ;;
     -no-reorient) noreorient=1; ;;
+    -recon-from-seg) recon_from_seg=1 ;;
     -no-cleanup) cleanup=0; ;;
     -h|-help|--help) usage; ;;
     -*) echo "$0: Unrecognized option $1" >&2; usage; ;;
@@ -132,6 +135,8 @@ T2:          $T2
 Directory:   $datadir 
 Threads:     $threads
 Minimal:     $minimal"
+recon_from_seg_arg=""
+[ $recon_from_seg -eq 0 ] || { recon_from_seg_arg="-recon-from-seg"; echo "Reconstruction from segmentation only."; }
 [ $threads -eq 1 ] || { echo "Warning: Number of threads>1: This may result in minor reproducibility differences"; }
 echo "
 
@@ -172,7 +177,7 @@ runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $roundedA
 runpipeline additional $scriptdir/misc/pipeline.sh $subj $roundedAge -d $workdir -t $threads
 
 # surface extraction
-runpipeline surface $scriptdir/surface/pipeline.sh $subj -d $workdir -t $threads
+runpipeline surface $scriptdir/surface/pipeline.sh $subj $recon_from_seg_arg -d $workdir -t $threads
 
 # create data directory for subject
 runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $roundedAge $datadir $workdir $minimal

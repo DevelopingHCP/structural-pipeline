@@ -10,7 +10,8 @@ Arguments:
   subject                       Subject ID
 
 Options:
-  -d / -data-dir  <directory>   The directory used to run the script and output the files.
+  -recon-from-seg               Surface reconstruction using only the segmentation, no image edge information
+  -d / -data-dir  <directory>   The directory used to run the script and output the files. 
   -t / -threads  <number>       Number of threads (CPU cores) allowed for the registration to run in parallel (default: 1)
   -h / -help / --help           Print usage.
 "
@@ -36,6 +37,7 @@ runhemisphere()
 command=$@
 subj=$1
 
+recon_from_seg=0
 datadir=`pwd`
 threads=1
 
@@ -46,6 +48,7 @@ codedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 shift
 while [ $# -gt 0 ]; do
   case "$1" in
+    -recon-from-seg) recon_from_seg=1 ;;
     -d|-data-dir)  shift; datadir=$1; ;;
     -t|-threads)  shift; threads=$1; ;;
     -h|-help|--help) usage; ;;
@@ -80,7 +83,9 @@ Hemi=('L' 'R');
 Cortex=('CORTEX_LEFT' 'CORTEX_RIGHT');
 Surf=('white' 'pial' 'midthickness' 'inflated' 'very_inflated' 'sphere');
 
-
+recon_config=$surface_recon_config
+[ $recon_from_seg -eq 0 ] || recon_config=$surface_recon_config_from_seg
+echo $recon_config
 # reconstruct surfaces
 completed=1
 for surf in white pial;do
@@ -91,8 +96,8 @@ for surf in white pial;do
     done
 done
 
-if [ $completed -eq 0 ]; then
-    run mirtk recon-neonatal-cortex -v --threads=$threads --config="$surface_recon_config" --sessions="$subj" --prefix="$outvtk/$subj" --temp="$outvtk/temp-recon/$subj" --white --pial
+if [ $completed -eq 0 ]; then 
+    run mirtk recon-neonatal-cortex -v --threads=$threads --config="$recon_config" --sessions="$subj" --prefix="$outvtk/$subj" --temp="$outvtk/temp-recon/$subj" --white --pial
     rm -r $outvtk/temp-recon
 fi
 
