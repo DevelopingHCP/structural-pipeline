@@ -37,6 +37,7 @@ export registration_config_template=$parameters_dir/ireg.cfg
 
 # surface reconstuction parameters
 export surface_recon_config=$parameters_dir/recon-neonatal-cortex.cfg
+export surface_recon_config_from_seg=$parameters_dir/recon-neonatal-cortex-from-seg.cfg
 
 # log function
 run()
