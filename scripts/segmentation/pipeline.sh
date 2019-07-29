@@ -63,13 +63,7 @@ cd $datadir
 
 if [ ! -f segmentations/${subj}_all_labels.nii.gz ];then
   # run Draw-EM
-  if [ -f $DRAWEMDIR/pipelines/neonatal-pipeline.sh ]; then
-    # this is the command for the old DrawEM 
-    run $DRAWEMDIR/pipelines/neonatal-pipeline.sh $T2 $age -t $threads -c 1 -p 1 -v 1 -atlas $template_name
-  else
-    # this is for 1.2.1
-    run mirtk neonatal-segmentation $T2 $age -t $threads -c 1 -p 1 -v 1 -atlas $template_name
-  fi
+  run mirtk neonatal-segmentation $T2 $age -t $threads -c 1 -p 1 -v 1 -atlas $template_name
   echo "----------------------------
 "
 fi

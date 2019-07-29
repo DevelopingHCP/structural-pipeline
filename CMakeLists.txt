@@ -37,5 +37,3 @@ macro(add_dhcp_executable name)
 endmacro()
 
 SUBDIRS(applications)
-SUBDIRS(ThirdParty/ANTs)
-

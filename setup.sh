@@ -192,9 +192,9 @@ set_if_undef VTK_folder="$pipeline_build/VTK"
 set_if_undef VTK_build="$pipeline_build/VTK/build"
 
 set_if_undef MIRTK_install=1
-set_if_undef MIRTK_git=https://github.com/BioMedIA/MIRTK.git
-set_if_undef MIRTK_branch=dhcp-v1
-set_if_undef MIRTK_version=078553da78ab449e12b877b2852ebcf5d10de7ba
+set_if_undef MIRTK_git=https://github.com/amakropoulos/MIRTK.git
+set_if_undef MIRTK_branch=dhcp-v1.1
+set_if_undef MIRTK_version=7afddb1e9af5972f63d6709d903869f747cdb673
 set_if_undef MIRTK_folder="$pipeline_build/MIRTK"
 set_if_undef MIRTK_build="$pipeline_build/MIRTK/build"
 set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_TBB=ON -DITK_DIR=$ITK_build"
@@ -247,18 +247,6 @@ run mkdir -p $pipelinebinaries_build
 run cd $pipelinebinaries_build
 run cmake $code_dir $cmake_flags $cxx_flags
 run make -j$num_cores
-
-
-
-if [ ! -d $code_dir/atlases ];then 
-    echo_green "Downloading atlases"
-    run $download $download_option $code_dir/atlases-dhcp-structural-pipeline-v1.zip "https://biomedic.doc.ic.ac.uk/brain-development/downloads/dHCP/atlases-dhcp-structural-pipeline-v1.zip"
-    run unzip $code_dir/atlases-dhcp-structural-pipeline-v1.zip -d $code_dir
-    run rm $code_dir/atlases-dhcp-structural-pipeline-v1.zip
-fi
-if [ ! -d $DRAWEMDIR/atlases ];then 
-    run ln -s $code_dir/atlases $DRAWEMDIR/atlases
-fi
 
 
 
