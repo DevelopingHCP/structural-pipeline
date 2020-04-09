@@ -93,13 +93,10 @@ for comm in unzip cmake git;do
         exit_error "$comm needs to be installed! "
     fi
 done
-
-cxx_compiler=g++
-c_compiler=gcc
-
-# workbench 1.2.2 at least needs gcc5
 # check if g++-5/gcc-5 exist or if g++/gcc are of version 5
 compiler_version_required=5
+cxx_compiler=g++
+c_compiler=gcc
 for compiler in cxx_compiler c_compiler;do
   compiler_bin=${!compiler}
   compiler_bin_version=${compiler_bin}-${compiler_version_required}
@@ -171,10 +168,6 @@ pipelinebinaries_build=$pipeline_build/pipeline/build
 
 cxx_flags="-DCMAKE_CXX_COMPILER=`which $cxx_compiler` -DCMAKE_C_COMPILER=`which $c_compiler`"
 
-# workbench 1.2.2 uses this to pick up the MESA install for -show-scene
-# current workbench has a -D cmake var for this (as you'd expect)
-export OSMESA_DIR=/usr
-
 set_if_undef WORKBENCH_install=1
 set_if_undef WORKBENCH_git=https://github.com/Washington-University/workbench.git
 set_if_undef WORKBENCH_branch=master
@@ -200,17 +193,16 @@ set_if_undef VTK_build="$pipeline_build/VTK/build"
 
 set_if_undef MIRTK_install=1
 set_if_undef MIRTK_git=https://github.com/BioMedIA/MIRTK.git
-set_if_undef MIRTK_branch=master
-set_if_undef MIRTK_version=
+set_if_undef MIRTK_branch=dhcp-v1
+set_if_undef MIRTK_version=078553da78ab449e12b877b2852ebcf5d10de7ba
 set_if_undef MIRTK_folder="$pipeline_build/MIRTK"
 set_if_undef MIRTK_build="$pipeline_build/MIRTK/build"
 set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_TBB=ON"
 
 set_if_undef SPHERICALMESH_install=1
 set_if_undef SPHERICALMESH_git=https://github.com/amakropoulos/SphericalMesh.git
-# there's no master for SM, 1.1 is the latest
 set_if_undef SPHERICALMESH_branch=dhcp-v1.1
-set_if_undef SPHERICALMESH_version=
+set_if_undef SPHERICALMESH_version=c41824cda791b806f79b88f2b27604a2f3268d19
 set_if_undef SPHERICALMESH_folder="$pipeline_build/SphericalMesh"
 set_if_undef SPHERICALMESH_build="$pipeline_build/SphericalMesh/build"
 set_if_undef SPHERICALMESH_cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build"
@@ -234,7 +226,7 @@ for package in ${packages};do
 
     run mkdir -p $package_build
     run cd $package_build
-    run cmake $package_folder -DCMAKE_BUILD_TYPE=Release  $package_cmake_flags $cxx_flags
+    run cmake $package_folder $package_cmake_flags $cxx_flags
     run make -j$num_cores $package_make_flags
     
 done
