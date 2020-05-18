@@ -225,8 +225,8 @@ for package in ${packages};do
     run git submodule update
 
     # aee8fba is the version used in the first and second data releases
-    # v1.2.1 has all the latest stuff, but segmentations look
-    # different
+    # v1.2.1 has all the latest stuff
+    # scripts/segmentation/pipeline.sh knows how to run the two versions
     if [ $package == "MIRTK" ]; then
       # ( cd Packages/DrawEM && git checkout aee8fba )
       ( cd Packages/DrawEM \
