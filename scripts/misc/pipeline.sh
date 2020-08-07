@@ -113,16 +113,20 @@ if [ -f T1/$subj.nii.gz -a ! -f $T1masked ];then
   process_image T1
 fi
 
-# register MNI -> T1 and transform a MNI mask
+# transform the serag mask to native and add on the brain mask
 if [ ! -f masks/${subj}_mask_defaced.nii.gz ];then 
-  if [ ! -f dofs/$subj-MNI-n.dof.gz ];then 
-    run mirtk compose-dofs dofs/$subj-template-$age-n.dof.gz $MNI_dofs/template-$age-MNI-n.dof.gz dofs/$subj-MNI-init-n.dof.gz 
-    run mirtk register $T2masked $MNI_T1 -dofin dofs/$subj-MNI-init-n.dof.gz -dofout dofs/$subj-MNI-n.dof.gz -parin $registration_config -threads $threads -v 0
-    rm dofs/$subj-MNI-init-n.dof.gz 
-  fi
-  run mirtk transform-image $MNI_mask masks/${subj}_MNI_mask.nii.gz -dofin dofs/$subj-MNI-n.dof.gz -target $T2masked
-  run fslmaths masks/${subj}_MNI_mask.nii.gz -add masks/$subj.nii.gz -bin masks/${subj}_mask_defaced.nii.gz
-  rm masks/${subj}_MNI_mask.nii.gz
+  run mirtk transform-image \
+    $parameters_dir/deface/template-$age-facemask.nii.gz \
+    masks/${subj}_serag_mask.nii.gz \
+    -dofin dofs/$subj-template-$age-n.dof.gz \
+    -target $T2masked \
+    -source-padding 1
+  run fslmaths \
+    masks/${subj}_serag_mask.nii.gz \
+    -add masks/$subj.nii.gz \
+    -bin \
+    masks/${subj}_mask_defaced.nii.gz
+  rm masks/${subj}_serag_mask.nii.gz
 fi
 
 # deface images
