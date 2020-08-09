@@ -120,7 +120,7 @@ if [ ! -f masks/${subj}_mask_defaced.nii.gz ];then
     masks/${subj}_serag_mask.nii.gz \
     -dofin dofs/$subj-template-$age-n.dof.gz \
     -target $T2masked \
-    -source-padding 1
+    -Sp 1
   run fslmaths \
     masks/${subj}_serag_mask.nii.gz \
     -add masks/$subj.nii.gz \
