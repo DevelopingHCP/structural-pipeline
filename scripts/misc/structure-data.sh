@@ -82,8 +82,8 @@ done
 ages="$age"
 if [ $age != 40 ];then ages="$ages 40";fi
 for cage in ${ages};do
-  run mirtk convert-dof dofs/template-$cage-$subj-n.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w.nii.gz -input-format mirtk -output-format fsl -target $code_dir/atlases/non-rigid-v2/T2/template-$cage.nii.gz -source $outputRawDir/${prefix}_T2w.nii.gz
-  run mirtk convert-dof dofs/$subj-template-$cage-n.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat.nii.gz -input-format mirtk -output-format fsl -source $code_dir/atlases/non-rigid-v2/T2/template-$cage.nii.gz -target $outputRawDir/${prefix}_T2w.nii.gz
+  run mirtk convert-dof dofs/template-$cage-$subj-n.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w.nii.gz -input-format mirtk -output-format fsl -target $template_T2/template-$cage.nii.gz -source $outputRawDir/${prefix}_T2w.nii.gz
+  run mirtk convert-dof dofs/$subj-template-$cage-n.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat.nii.gz -input-format mirtk -output-format fsl -source $template_T2/template-$cage.nii.gz -target $outputRawDir/${prefix}_T2w.nii.gz
 done
 
 # surfaces
@@ -126,8 +126,8 @@ if [ ! $minimal -eq 1 ];then
     run mirtk convert-dof dofs/template-$cage-$subj-n.dof.gz dofs/template-$cage-$subj-r.dof.gz -input-format mirtk -output-format rigid
     run mirtk convert-dof dofs/$subj-template-$cage-n.dof.gz dofs/$subj-template-$cage-r.dof.gz -input-format mirtk -output-format rigid
 
-    run mirtk convert-dof dofs/template-$cage-$subj-r.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w.mat -input-format mirtk -output-format fsl -target $code_dir/atlases/non-rigid-v2/T2/template-$cage.nii.gz -source $outputRawDir/${prefix}_T2w.nii.gz
-    run mirtk convert-dof dofs/$subj-template-$cage-r.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat.mat -input-format mirtk -output-format fsl -source $code_dir/atlases/non-rigid-v2/T2/template-$cage.nii.gz -target $outputRawDir/${prefix}_T2w.nii.gz
+    run mirtk convert-dof dofs/template-$cage-$subj-r.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w.mat -input-format mirtk -output-format fsl -target $template_T2/template-$cage.nii.gz -source $outputRawDir/${prefix}_T2w.nii.gz
+    run mirtk convert-dof dofs/$subj-template-$cage-r.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat.mat -input-format mirtk -output-format fsl -source $template_T2/template-$cage.nii.gz -target $outputRawDir/${prefix}_T2w.nii.gz
 
     run $action dofs/template-$cage-$subj-r.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w-r.dof.gz
     run $action dofs/$subj-template-$cage-r.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat-r.dof.gz
