@@ -2,7 +2,6 @@
 
 # local directories
 export parameters_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export code_dir=$parameters_dir/..
 
 # setup path from installation
 [ ! -f $parameters_dir/path.sh ] || . $parameters_dir/path.sh
@@ -20,14 +19,14 @@ export WM_label=3
 export BG_label=4
 
 # MNI T1, mask and warps
-export MNI_T1=$code_dir/atlases/MNI/MNI152_T1_1mm.nii.gz
-export MNI_mask=$code_dir/atlases/MNI/MNI152_T1_1mm_facemask.nii.gz
-export MNI_dofs=$code_dir/atlases/non-rigid-v2/dofs-MNI
+export MNI_T1=$DRAWEMDIR/atlases/MNI/MNI152_T1_1mm.nii.gz
+export MNI_mask=$DRAWEMDIR/atlases/MNI/MNI152_T1_1mm_facemask.nii.gz
+export MNI_dofs=$DRAWEMDIR/atlases/non-rigid-v2/dofs-MNI
 
 # Average space atlas name, T2 and warps
 export template_name="non-rigid-v2"
-export template_T2=$code_dir/atlases/non-rigid-v2/T2
-export template_dofs=$code_dir/atlases/non-rigid-v2/dofs
+export template_T2=$DRAWEMDIR/atlases/non-rigid-v2/T2
+export template_dofs=$DRAWEMDIR/atlases/non-rigid-v2/dofs
 export template_min_age=28
 export template_max_age=44
 
