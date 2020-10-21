@@ -7,7 +7,7 @@ export parameters_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 [ ! -f $parameters_dir/path.sh ] || . $parameters_dir/path.sh
 
 # cortical structures of labels file
-export cortical_structures=`cat $DRAWEMDIR/parameters/cortical.csv`
+export cortical_structures=`cat $DRAWEMDIR/parameters/cortical-gm.csv`
 
 # lookup table used with the wb_command to load labels
 export LUT=$DRAWEMDIR/parameters/segAllLut.txt
