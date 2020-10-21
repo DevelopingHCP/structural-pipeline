@@ -193,8 +193,8 @@ set_if_undef VTK_build="$pipeline_build/VTK/build"
 
 set_if_undef MIRTK_install=1
 set_if_undef MIRTK_git=https://github.com/amakropoulos/MIRTK.git
-set_if_undef MIRTK_branch=dhcp-v1.1
-set_if_undef MIRTK_version=7bfe49f3abea95209a5837f1c17ab09e91e3d699
+set_if_undef MIRTK_branch=feature/MCRIB
+set_if_undef MIRTK_version=5957f74b4958c15364afc5372398301dd4cce563
 set_if_undef MIRTK_folder="$pipeline_build/MIRTK"
 set_if_undef MIRTK_build="$pipeline_build/MIRTK/build"
 set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_TBB=ON -DITK_DIR=$ITK_build"
