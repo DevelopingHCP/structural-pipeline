@@ -170,7 +170,7 @@ if  [ ! -f $outwb/$subj.$h.$surf.native.label.gii ];then
   run mirtk padding $segdir/${subj}_tissue_labels.nii.gz $segdir/${subj}_tissue_labels.nii.gz $outvtk/$hs.mask.nii.gz 2 $CSF_label $BG_label 0 
   run dilate-labels $outvtk/$hs.mask.nii.gz $outvtk/$hs.mask.nii.gz -blur 1
   # exclude subcortical structures and dilate cortical labels to cover space
-  run mirtk padding $segdir/${subj}_labels.nii.gz $segdir/${subj}_labels.nii.gz $outvtk/$hs.labels.nii.gz `echo $cortical_structures|wc -w` $cortical_structures 0 -invert
+  run mirtk padding $segdir/${subj}_labels.nii.gz $segdir/${subj}_labels.nii.gz $outvtk/$hs.labels.nii.gz `echo $CORTICAL|wc -w` $CORTICAL 0 -invert
   if [ "$h" == "L" ];then oh=R;else oh=L;fi
   run mirtk padding $outvtk/$hs.labels.nii.gz $segdir/${subj}_${oh}_pial.nii.gz $outvtk/$hs.labels.nii.gz 1 0 
   run dilate-labels $outvtk/$hs.labels.nii.gz $outvtk/$hs.labels.nii.gz -blur 1
@@ -189,7 +189,7 @@ if  [ ! -f $outwb/$subj.$h.$surf.native.label.gii ];then
   run mirtk copy-pointset-attributes $outvtk/$subj.$h.$surf.native.label.vtk $outvtk/$subj.$h.$surf.native.label.vtk -pointdata curv Labels
   run mirtk delete-pointset-attributes $outvtk/$subj.$h.$surf.native.label.vtk $outvtk/$subj.$h.$surf.native.label.vtk -pointdata curv -pointdata RegionId
 
-  run wb_command -metric-label-import $outvtk/$hs.labels.shape.gii $LUT $outwb/temp.$subj.$h.$surf.native.label.gii -drop-unused-labels
+  run wb_command -metric-label-import $outvtk/$hs.labels.shape.gii $LOOKUP_TABLE $outwb/temp.$subj.$h.$surf.native.label.gii -drop-unused-labels
   run wb_command -set-structure $outwb/temp.$subj.$h.$surf.native.label.gii $C
   run wb_command -set-map-names $outwb/temp.$subj.$h.$surf.native.label.gii -map 1 ${subj}_${h}_${surf}
   mv $outwb/temp.$subj.$h.$surf.native.label.gii $outwb/$subj.$h.$surf.native.label.gii

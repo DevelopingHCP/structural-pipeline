@@ -15,6 +15,7 @@ Arguments:
   -T1 <subject_T1.nii.gz>       Nifti Image: The T1 image of the subject (Optional)
 
 Options:
+  -a / -atlas  <atlasname>      Atlas used for the segmentation, options: `echo $atlases|sed -e 's: :, :g'` (default: ALBERT)
   -d / -data-dir  <directory>   The directory used to run the script and output the files. 
   -additional                   If specified, the pipeline will produce some additional files not included in release v1.0 (such as segmentation prob.maps, warps to MNI space, ..) (default: False) 
   -t / -threads  <number>       Number of threads (CPU cores) used (default: 1)
@@ -44,6 +45,17 @@ runpipeline()
 }
 
 
+################ Configuration ################
+
+# initial configuration
+codedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+. $codedir/parameters/configuration.sh
+
+atlases=""
+for d in `find $DRAWEMDIR/parameters/* -maxdepth 1 -type d`;do
+  atlases="$atlases "`basename $d`;
+done
+
 ################ Arguments ################
 
 [ $# -ge 3 ] || { usage; }
@@ -62,6 +74,7 @@ minimal=1
 noreorient=0
 recon_from_seg=0
 cleanup=1
+atlasname=ALBERT
 
 shift; shift; shift;
 while [ $# -gt 0 ]; do
@@ -70,6 +83,7 @@ while [ $# -gt 0 ]; do
     -T1)  shift; T1=$1; ;;
     -d|-data-dir)  shift; datadir=$1; ;;
     -t|-threads)  shift; threads=$1; ;;
+    -a|-atlas)  shift; atlasname=$1; ;; 
     -additional)  minimal=0; ;;
     -no-reorient) noreorient=1; ;;
     -recon-from-seg) recon_from_seg=1 ;;
@@ -83,11 +97,17 @@ done
 
 ################ Checks ################
 
-[ "$T2" != "-" -a "$T2" != "" ] || { echo "T2 image not provided!" >&2; exit 1; }
+atlas_OK=0
+for atlas in $atlases;do
+  if [ "$atlas" == "$atlasname" ];then atlas_OK=1; break; fi;
+done
+if [ $atlas_OK -eq 0 ];then echo "Unknown atlas: $atlasname" >&2; usage; fi
 
-# check whether the different tools are set and load parameters
-codedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-. $codedir/parameters/configuration.sh
+# atlas configuration
+export ATLAS_NAME=$atlasname
+. $DRAWEMDIR/parameters/$atlasname/config.sh
+
+[ "$T2" != "-" -a "$T2" != "" ] || { echo "T2 image not provided!" >&2; exit 1; }
 
 scriptdir=$codedir/scripts
 
