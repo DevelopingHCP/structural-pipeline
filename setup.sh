@@ -192,12 +192,14 @@ set_if_undef VTK_folder="$pipeline_build/VTK"
 set_if_undef VTK_build="$pipeline_build/VTK/build"
 
 set_if_undef MIRTK_install=1
-set_if_undef MIRTK_git=https://github.com/amakropoulos/MIRTK.git
-set_if_undef MIRTK_branch=feature/MCRIB
-set_if_undef MIRTK_version=5957f74b4958c15364afc5372398301dd4cce563
+set_if_undef MIRTK_git=https://github.com/BioMedIA/MIRTK.git
+set_if_undef MIRTK_branch=master
+set_if_undef MIRTK_version=7905e32bcb0432fe3ebc0f79b5788fdc7acf656b
 set_if_undef MIRTK_folder="$pipeline_build/MIRTK"
 set_if_undef MIRTK_build="$pipeline_build/MIRTK/build"
 set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_TBB=ON -DITK_DIR=$ITK_build"
+
+set_if_undef DRAWEM_version=feature/MCRIB_integrated
 
 set_if_undef SPHERICALMESH_install=1
 set_if_undef SPHERICALMESH_git=https://github.com/amakropoulos/SphericalMesh.git
@@ -224,14 +226,10 @@ for package in ${packages};do
     run git reset --hard $package_version
     run git submodule update
 
-    # aee8fba is the version used in the first and second data releases
-    # v1.2.1 has all the latest stuff
-    # scripts/segmentation/pipeline.sh knows how to run the two versions
     if [ $package == "MIRTK" ]; then
-      # ( cd Packages/DrawEM && git checkout aee8fba )
       ( cd Packages/DrawEM \
-        && run echo checking out drawem 121 \
-        && git checkout v1.2.1 )
+        && run echo checking out drawem \
+        && git checkout $DRAWEM_version )
     fi
 
     run mkdir -p $package_build
