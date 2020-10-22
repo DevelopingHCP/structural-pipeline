@@ -63,7 +63,7 @@ cd $datadir
 
 if [ ! -f segmentations/${subj}_all_labels.nii.gz ];then
   # run Draw-EM
-  run mirtk neonatal-segmentation $T2 $age -t $threads -c 1 -p 1 -v 1 -atlas $template_name
+  run mirtk neonatal-segmentation $T2 $age -t $threads -c 1 -p 1 -v 1 -a $ATLAS_NAME
   echo "----------------------------
 "
 fi
@@ -80,14 +80,9 @@ fi
 # $subj_brain_mask.nii.gz     : mask generated with BET
 # posteriors/*/$subj.nii.gz   : posteriors of the different structures (where * the different structure directory)
 
-if [ "$template_name" != "non-rigid-v2" ];then 
-  # Note:
-  # DrawEM does an initial registration to the Serag template (non-rigid-v2)
-  # if Serag's template is not used as the common space of the structural pipeline then move it to a different file
-  # the scripts/misc/pipeline.sh will then calculate the new dof
+if [ -f dofs/$subj-template-$age-n.dof.gz ];then
   mv dofs/$subj-template-$age-n.dof.gz dofs/$subj-drawem-template-$age-n.dof.gz
 fi
-
 
 mkdir -p masks 
 # mask based on the tissue seg

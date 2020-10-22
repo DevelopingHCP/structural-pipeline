@@ -6,12 +6,6 @@ export parameters_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # setup path from installation
 [ ! -f $parameters_dir/path.sh ] || . $parameters_dir/path.sh
 
-# cortical structures of labels file
-export cortical_structures=`cat $DRAWEMDIR/parameters/cortical-gm.csv`
-
-# lookup table used with the wb_command to load labels
-export LUT=$DRAWEMDIR/parameters/segAllLut.txt
-
 # tissue labels of tissue-labels file
 export CSF_label=1
 export CGM_label=2
@@ -24,7 +18,6 @@ export MNI_mask=$DRAWEMDIR/atlases/MNI/MNI152_T1_1mm_facemask.nii.gz
 export MNI_dofs=$DRAWEMDIR/atlases/non-rigid-v2/dofs-MNI
 
 # Average space atlas name, T2 and warps
-export template_name="non-rigid-v2"
 export template_T2=$DRAWEMDIR/atlases/non-rigid-v2/T2
 export template_dofs=$DRAWEMDIR/atlases/non-rigid-v2/dofs
 export template_min_age=28
