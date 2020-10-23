@@ -83,10 +83,6 @@ fi
 # $subj_brain_mask.nii.gz     : mask generated with BET
 # posteriors/*/$subj.nii.gz   : posteriors of the different structures (where * the different structure directory)
 
-if [ -f dofs/$subj-template-$age-n.dof.gz ];then
-  mv dofs/$subj-template-$age-n.dof.gz dofs/$subj-drawem-template-$age-n.dof.gz
-fi
-
 mkdir -p masks 
 # mask based on the tissue seg
 if [ ! -f masks/$subj.nii.gz ];then 
