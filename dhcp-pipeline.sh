@@ -162,7 +162,7 @@ done
 
 
 # segmentation
-runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $roundedAge -d $workdir -t $threads
+runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $roundedAge -d $workdir -a $ATLAS_NAME -t $threads
 
 # generate some additional files
 runpipeline additional $scriptdir/misc/pipeline.sh $subj $roundedAge -d $workdir -t $threads
