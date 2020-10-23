@@ -83,9 +83,6 @@ Hemi=('L' 'R');
 Cortex=('CORTEX_LEFT' 'CORTEX_RIGHT');
 Surf=('white' 'pial' 'midthickness' 'inflated' 'very_inflated' 'sphere');
 
-recon_config=$surface_recon_config
-[ $recon_from_seg -eq 0 ] || recon_config=$surface_recon_config_from_seg
-echo $recon_config
 # reconstruct surfaces
 completed=1
 for surf in white pial;do
@@ -96,8 +93,17 @@ for surf in white pial;do
     done
 done
 
-if [ $completed -eq 0 ]; then 
-    run mirtk recon-neonatal-cortex -v --threads=$threads --config="$recon_config" --sessions="$subj" --prefix="$outvtk/$subj" --temp="$outvtk/temp-recon/$subj" --white --pial
+if [ $completed -eq 0 ]; then
+    # prepare config file by replacing variables from the segmentation configuration
+    if [ $recon_from_seg -eq 1 ];then
+        recon_config=$SURFACE_RECON_FROM_SEG_CONFIG
+    else
+        recon_config=$SURFACE_RECON_CONFIG
+    fi
+    eval "echo \"$(cat $recon_config)\"" > $outtmp/recon_config.cfg
+
+    # run surface reconstruction
+    run mirtk recon-neonatal-cortex -v --threads=$threads --config="$outtmp/recon_config.cfg" --sessions="$subj" --prefix="$outvtk/$subj" --temp="$outvtk/temp-recon/$subj" --white --pial
     rm -r $outvtk/temp-recon
 fi
 
