@@ -6,30 +6,27 @@ export parameters_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # setup path from installation
 [ ! -f $parameters_dir/path.sh ] || . $parameters_dir/path.sh
 
-# tissue labels of tissue-labels file
-export CSF_label=1
-export CGM_label=2
-export WM_label=3
-export BG_label=4
+# Draw-EM initial configuration
+. $DRAWEMDIR/parameters/configuration.sh
 
 # MNI T1, mask and warps
 export MNI_T1=$DRAWEMDIR/atlases/MNI/MNI152_T1_1mm.nii.gz
-export MNI_mask=$DRAWEMDIR/atlases/MNI/MNI152_T1_1mm_facemask.nii.gz
-export MNI_dofs=$DRAWEMDIR/atlases/non-rigid-v2/dofs-MNI
+export MNI_MASK=$DRAWEMDIR/atlases/MNI/MNI152_T1_1mm_facemask.nii.gz
+export MNI_DOFS=$DRAWEMDIR/atlases/non-rigid-v2/dofs-MNI
 
 # Average space atlas name, T2 and warps
-export template_T2=$DRAWEMDIR/atlases/non-rigid-v2/T2
-export template_dofs=$DRAWEMDIR/atlases/non-rigid-v2/dofs
-export template_min_age=28
-export template_max_age=44
+export TEMPLATE_T2=$DRAWEMDIR/atlases/non-rigid-v2/T2
+export TEMPLATE_DOFS=$DRAWEMDIR/atlases/non-rigid-v2/dofs
+export TEMPLATE_MIN_AGE=28
+export TEMPLATE_MAX_AGE=44
 
 # registration parameters
-export registration_config=$parameters_dir/ireg-structural.cfg
-export registration_config_template=$parameters_dir/ireg.cfg
+export REGISTRATION_CONFIG=$parameters_dir/ireg-structural.cfg
+export REGISTRATION_TEMPLATE_CONFIG=$parameters_dir/ireg.cfg
 
 # surface reconstuction parameters
-export surface_recon_config=$parameters_dir/recon-neonatal-cortex.cfg
-export surface_recon_config_from_seg=$parameters_dir/recon-neonatal-cortex-from-seg.cfg
+export SURFACE_RECON_CONFIG=$parameters_dir/recon-neonatal-cortex.cfg
+export SURFACE_RECON_FROM_SEG_CONFIG=$parameters_dir/recon-neonatal-cortex-from-seg.cfg
 
 # log function
 run()

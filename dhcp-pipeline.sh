@@ -15,7 +15,7 @@ Arguments:
   -T1 <subject_T1.nii.gz>       Nifti Image: The T1 image of the subject (Optional)
 
 Options:
-  -a / -atlas  <atlasname>      Atlas used for the segmentation, options: `echo $atlases|sed -e 's: :, :g'` (default: ALBERT)
+  -a / -atlas  <atlasname>      Atlas used for the segmentation, options: `echo $AVAILABLE_ATLASES|sed -e 's: :, :g'` (default: ALBERT)
   -d / -data-dir  <directory>   The directory used to run the script and output the files. 
   -additional                   If specified, the pipeline will produce some additional files not included in release v1.0 (such as segmentation prob.maps, warps to MNI space, ..) (default: False) 
   -t / -threads  <number>       Number of threads (CPU cores) used (default: 1)
@@ -50,11 +50,6 @@ runpipeline()
 # initial configuration
 codedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 . $codedir/parameters/configuration.sh
-
-atlases=""
-for d in `find $DRAWEMDIR/parameters/* -maxdepth 1 -type d`;do
-  atlases="$atlases "`basename $d`;
-done
 
 ################ Arguments ################
 
@@ -97,23 +92,16 @@ done
 
 ################ Checks ################
 
-atlas_OK=0
-for atlas in $atlases;do
-  if [ "$atlas" == "$atlasname" ];then atlas_OK=1; break; fi;
-done
-if [ $atlas_OK -eq 0 ];then echo "Unknown atlas: $atlasname" >&2; usage; fi
-
 # atlas configuration
-export ATLAS_NAME=$atlasname
-. $DRAWEMDIR/parameters/$atlasname/config.sh
+. $DRAWEMDIR/parameters/set_atlas.sh $atlasname
 
 [ "$T2" != "-" -a "$T2" != "" ] || { echo "T2 image not provided!" >&2; exit 1; }
 
 scriptdir=$codedir/scripts
 
 roundedAge=`printf "%.*f\n" 0 $age` #round
-[ $roundedAge -lt $template_max_age ] || { roundedAge=$template_max_age; }
-[ $roundedAge -gt $template_min_age ] || { roundedAge=$template_min_age; }
+[ $roundedAge -lt $TEMPLATE_MAX_AGE ] || { roundedAge=$TEMPLATE_MAX_AGE; }
+[ $roundedAge -gt $TEMPLATE_MIN_AGE ] || { roundedAge=$TEMPLATE_MIN_AGE; }
 
 ################ Run ################
 version=`cat $codedir/version`

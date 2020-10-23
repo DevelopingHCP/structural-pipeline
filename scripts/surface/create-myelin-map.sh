@@ -38,13 +38,13 @@ if [ -f $T1 ] ; then
             run fslmaths segmentations/${subj}_tissue_labels.nii.gz -mul $outtmp/dist_$h.nii.gz $outtmp/tissue_labels_$h.nii.gz
         done
 
-        run mirtk padding $outtmp/tissue_labels_L.nii.gz $outtmp/tissue_labels_L.nii.gz $outtmp/in_L.nii.gz 2 $CSF_label $CGM_label 0
+        run mirtk padding $outtmp/tissue_labels_L.nii.gz $outtmp/tissue_labels_L.nii.gz $outtmp/in_L.nii.gz 2 $CSF_TISSUE $GM_TISSUE 0
         run fslmaths $outtmp/in_L.nii.gz -bin -mul $LeftGreyRibbonValueIn $outtmp/in_L.nii.gz
-        run fslmaths $outtmp/tissue_labels_L.nii.gz -thr $CGM_label -uthr $CGM_label -bin -mul $LeftGreyRibbonValue $outtmp/out_L.nii.gz
+        run fslmaths $outtmp/tissue_labels_L.nii.gz -thr $GM_TISSUE -uthr $GM_TISSUE -bin -mul $LeftGreyRibbonValue $outtmp/out_L.nii.gz
 
-        run mirtk padding $outtmp/tissue_labels_R.nii.gz $outtmp/tissue_labels_R.nii.gz $outtmp/in_R.nii.gz 2 $CSF_label $CGM_label 0
+        run mirtk padding $outtmp/tissue_labels_R.nii.gz $outtmp/tissue_labels_R.nii.gz $outtmp/in_R.nii.gz 2 $CSF_TISSUE $GM_TISSUE 0
         run fslmaths $outtmp/in_R.nii.gz -bin -mul $RightGreyRibbonValueIn $outtmp/in_R.nii.gz
-        run fslmaths $outtmp/tissue_labels_R.nii.gz -thr $CGM_label -uthr $CGM_label -bin -mul $RightGreyRibbonValue $outtmp/out_R.nii.gz
+        run fslmaths $outtmp/tissue_labels_R.nii.gz -thr $GM_TISSUE -uthr $GM_TISSUE -bin -mul $RightGreyRibbonValue $outtmp/out_R.nii.gz
 
         run fslmaths $outtmp/in_L.nii.gz -add $outtmp/in_R.nii.gz -add $outtmp/out_L.nii.gz -add $outtmp/out_R.nii.gz $outwb/$subj.ribbon.nii.gz
         run fslcpgeom $T1 $outwb/$subj.ribbon.nii.gz

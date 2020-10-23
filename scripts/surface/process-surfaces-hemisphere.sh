@@ -167,7 +167,7 @@ if  [ ! -f $outwb/$subj.$h.$surf.native.label.gii ];then
   echo "-------------------------------------------------------------------------------------"
   echo "Project $h Draw-EM labels"
   # exclude csf,out and dilate tissues to cover space
-  run mirtk padding $segdir/${subj}_tissue_labels.nii.gz $segdir/${subj}_tissue_labels.nii.gz $outvtk/$hs.mask.nii.gz 2 $CSF_label $BG_label 0 
+  run mirtk padding $segdir/${subj}_tissue_labels.nii.gz $segdir/${subj}_tissue_labels.nii.gz $outvtk/$hs.mask.nii.gz 2 $CSF_TISSUE $BG_TISSUE 0 
   run dilate-labels $outvtk/$hs.mask.nii.gz $outvtk/$hs.mask.nii.gz -blur 1
   # exclude subcortical structures and dilate cortical labels to cover space
   run mirtk padding $segdir/${subj}_labels.nii.gz $segdir/${subj}_labels.nii.gz $outvtk/$hs.labels.nii.gz `echo $CORTICAL|wc -w` $CORTICAL 0 -invert
