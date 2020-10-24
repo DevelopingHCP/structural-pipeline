@@ -103,7 +103,7 @@ if [ -f T1/$subj.nii.gz -a ! -f $T1masked ];then
 
   if [ ! -f dofs/$subj-T2-T1-r.dof.gz ];then 
     # initial rigid registration
-    run mirtk padding $T2masked segmentations/${subj}_tissue_labels.nii.gz restore/T1/$subj-T2-brain.nii.gz 3 $CSF_TISSUE $GM_TISSUE $BG_TISSUE 0
+    run mirtk padding $T2masked segmentations/${subj}_tissue_labels.nii.gz restore/T1/$subj-T2-brain.nii.gz 3 $CSF_TISSUE_LABEL $GM_TISSUE_LABEL $BG_TISSUE_LABEL 0
     run mirtk register restore/T1/$subj-T2-brain.nii.gz T1/$subj.nii.gz -model Rigid -dofout dofs/$subj-T2-T1-init-r.dof.gz -threads $threads -v 0
     run mirtk convert-dof dofs/$subj-T2-T1-init-r.dof.gz dofs/$subj-T2-T1-init-r.mat  -input-format mirtk -output-format fsl -target T2/$subj.nii.gz -source T1/$subj.nii.gz
     # BBR registration
