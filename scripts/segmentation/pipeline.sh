@@ -86,7 +86,7 @@ fi
 mkdir -p masks 
 # mask based on the tissue seg
 if [ ! -f masks/$subj.nii.gz ];then 
-    run mirtk padding segmentations/${subj}_tissue_labels.nii.gz segmentations/${subj}_tissue_labels.nii.gz masks/$subj-labels.nii.gz 2 $CSF_TISSUE $BG_TISSUE 0
+    run mirtk padding segmentations/${subj}_tissue_labels.nii.gz segmentations/${subj}_tissue_labels.nii.gz masks/$subj-labels.nii.gz 2 $CSF_TISSUE_LABEL $BG_TISSUE_LABEL 0
     run fslmaths masks/$subj-labels.nii.gz -bin -dilD -dilD -dilD -ero -ero masks/$subj-dil.nii.gz
     run mirtk fill-holes masks/$subj-dil.nii.gz masks/$subj.nii.gz
     rm masks/$subj-labels.nii.gz masks/$subj-dil.nii.gz 
