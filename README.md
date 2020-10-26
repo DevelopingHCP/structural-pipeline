@@ -59,7 +59,7 @@ The dHCP structural requires installation of the following packages.
 * \# install brew if needed with the following command:
 * ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 * brew update
-* brew install gcc5 git cmake unzip tbb boost expat cartr/qt4/qt
+* brew install gcc7 git cmake unzip tbb boost expat qt5
 * sudo easy_install pip
 * pip install contextlib2
 
@@ -70,7 +70,7 @@ The dHCP structural requires installation of the following packages.
 <summary> <b>Ubuntu (tested on version 16.04)</b></summary>
 
 * sudo apt-get -y update
-* sudo apt-get -y install g++-5 git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev libqt4-dev
+* sudo apt-get -y install g++-7 git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev qt5-default
 
 </details>
 
@@ -78,11 +78,11 @@ The dHCP structural requires installation of the following packages.
 <summary> <b>Debian GNU (tested on version 8)</b></summary>
 
 * sudo apt-get -y update
-* sudo apt-get -y install git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev libqt4-d
+* sudo apt-get -y install git cmake unzip bc python python-contextlib2 libtbb-dev libboost-dev zlib1g-dev libxt-dev libexpat1-dev libgstreamer1.0-dev qt5-default
 * \# g++-5 is not in the default packages of Debian, install with the following commands:
 * echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" | sudo tee -a /etc/apt/sources.list
 * sudo apt-get -y update
-* sudo apt-get -y install g++-5
+* sudo apt-get -y install g++-7
 
 </details>
 
