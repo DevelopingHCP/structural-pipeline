@@ -139,8 +139,8 @@ for m in T1 T2;do
 done
 
 
-if [ ! -f dofs/template-$age-$subj-n.dof.gz ];then
-  run mirtk register $T2masked $TEMPLATE_T2/template-$age.nii.gz -dofout dofs/template-$age-$subj-n.dof.gz -parin $REGISTRATION_TEMPLATE_CONFIG -threads $threads -v 0
+if [ ! -f dofs/$subj-template-$age-n.dof.gz ];then
+  run mirtk register $T2masked $TEMPLATE_T2/template-$age.nii.gz -dofout dofs/$subj-template-$age-n.dof.gz -parin $REGISTRATION_TEMPLATE_CONFIG -threads $threads -v 0
 fi
 
 if [ ! -f dofs/$subj-template-$age-r.dof.gz ];then
