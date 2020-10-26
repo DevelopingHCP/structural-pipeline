@@ -94,7 +94,7 @@ for comm in unzip cmake git;do
     fi
 done
 # check if g++-5/gcc-5 exist or if g++/gcc are of version 5
-compiler_version_required=5
+compiler_version_required=7
 cxx_compiler=g++
 c_compiler=gcc
 for compiler in cxx_compiler c_compiler;do
@@ -105,7 +105,7 @@ for compiler in cxx_compiler c_compiler;do
     compiler_version=`$compiler_bin -dumpversion|cut -d'.' -f1`
     if [ $compiler_version -eq $compiler_version_required ];then continue; fi
   fi
-  exit_error "$compiler_bin version 5 needs to be installed! "
+  exit_error "$compiler_bin version $compiler_version_required needs to be installed! "
 done
 
 # arguments
@@ -171,15 +171,16 @@ cxx_flags="-DCMAKE_CXX_COMPILER=`which $cxx_compiler` -DCMAKE_C_COMPILER=`which 
 set_if_undef WORKBENCH_install=1
 set_if_undef WORKBENCH_git=https://github.com/Washington-University/workbench.git
 set_if_undef WORKBENCH_branch=master
-set_if_undef WORKBENCH_version=v1.2.2
+set_if_undef WORKBENCH_version=v1.4.2
 set_if_undef WORKBENCH_folder="$pipeline_build/workbench"
 set_if_undef WORKBENCH_build="$pipeline_build/workbench/build"
-set_if_undef WORKBENCH_cmake_flags="-DCMAKE_CXX_STANDARD=11 -DCMAKE_CXX_STANDARD_REQUIRED=ON -DCMAKE_CXX_EXTENSIONS=OFF -DCMAKE_CXX_FLAGS=\"-std=c++11 -Wno-c++11-narrowing\" $WORKBENCH_folder/src"
+set_if_undef WORKBENCH_cmake_flags="-DCMAKE_BUILD_TYPE=Release -DWORKBENCH_USE_QT5=TRUE $WORKBENCH_folder/src"
+set_if_undef WORKBENCH_make_flags="wb_view wb_command"
 
 set_if_undef ITK_install=1
 set_if_undef ITK_git=https://github.com/InsightSoftwareConsortium/ITK.git
 set_if_undef ITK_branch=master
-set_if_undef ITK_version=v4.11.1
+set_if_undef ITK_version=v5.1.1
 set_if_undef ITK_folder="$pipeline_build/ITK"
 set_if_undef ITK_build="$pipeline_build/ITK/build"
 set_if_undef ITK_cmake_flags="-DBUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF"
@@ -187,24 +188,24 @@ set_if_undef ITK_cmake_flags="-DBUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBS=ON -DBUIL
 set_if_undef VTK_install=1
 set_if_undef VTK_git=https://github.com/Kitware/VTK.git
 set_if_undef VTK_branch=release
-set_if_undef VTK_version=v7.0.0
+set_if_undef VTK_version=v9.0.1
 set_if_undef VTK_folder="$pipeline_build/VTK"
 set_if_undef VTK_build="$pipeline_build/VTK/build"
 
 set_if_undef MIRTK_install=1
 set_if_undef MIRTK_git=https://github.com/BioMedIA/MIRTK.git
 set_if_undef MIRTK_branch=master
-set_if_undef MIRTK_version=7905e32bcb0432fe3ebc0f79b5788fdc7acf656b
+set_if_undef MIRTK_version=77d3f391b49b0cee9e80da774fb074995fdf415f
 set_if_undef MIRTK_folder="$pipeline_build/MIRTK"
 set_if_undef MIRTK_build="$pipeline_build/MIRTK/build"
-set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_TBB=ON -DITK_DIR=$ITK_build"
+set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_ITK=ON -DITK_DIR=$ITK_build -DWITH_TBB=ON"
 
 set_if_undef DRAWEM_version=feature/MCRIB_integrated
 
 set_if_undef SPHERICALMESH_install=1
 set_if_undef SPHERICALMESH_git=https://github.com/amakropoulos/SphericalMesh.git
-set_if_undef SPHERICALMESH_branch=dhcp-v1.1
-set_if_undef SPHERICALMESH_version=c41824cda791b806f79b88f2b27604a2f3268d19
+set_if_undef SPHERICALMESH_branch=feature/VTK_9_support
+set_if_undef SPHERICALMESH_version=67273f6b28c78e3aeea6094b93af7849115a0fea
 set_if_undef SPHERICALMESH_folder="$pipeline_build/SphericalMesh"
 set_if_undef SPHERICALMESH_build="$pipeline_build/SphericalMesh/build"
 set_if_undef SPHERICALMESH_cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build"
