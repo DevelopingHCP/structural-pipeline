@@ -26,7 +26,9 @@ Arguments:
   -T1 <subject_T1.nii.gz>       Nifti Image: The T1 image of the subject (Optional)
 
 Options:
-  -a / -atlas  <atlasname>      Atlas used for the segmentation, options: `echo $AVAILABLE_ATLASES|sed -e 's: :, :g'` (default: ALBERT)
+  -template <atlasname>         Template used for common space of subjects, options: `echo $AVAILABLE_TEMPLATES|sed -e 's: :, :g'` (default: `echo $AVAILABLE_TEMPLATES|cut -d ' ' -f1`)
+  -a / -atlas  <atlasname>      Atlas used for the segmentation, options: `echo $AVAILABLE_ATLASES|sed -e 's: :, :g'` (default: `echo $AVAILABLE_ATLASES|cut -d ' ' -f1`)
+  -ta / -tissue-atlas  <atlasname>  Atlas used to compute the GM tissue probability, options: `echo $AVAILABLE_TISSUE_ATLASES|sed -e 's: :, :g'` (default: `echo $AVAILABLE_TISSUE_ATLASES|cut -d ' ' -f1`)
   -d / -data-dir  <directory>   The directory used to run the script and output the files. 
   -additional                   If specified, the pipeline will produce some additional files not included in release v1.0 (such as segmentation prob.maps, warps to MNI space, ..) (default: False) 
   -t / -threads  <number>       Number of threads (CPU cores) used (default: 1)
@@ -81,7 +83,9 @@ minimal=1
 noreorient=0
 recon_from_seg=0
 cleanup=1
-atlasname=ALBERT
+template=`echo $AVAILABLE_TEMPLATES|cut -d ' ' -f1`
+atlas=`echo $AVAILABLE_ATLASES|cut -d ' ' -f1`
+tissue_atlas=`echo $AVAILABLE_TISSUE_ATLASES|cut -d ' ' -f1`
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -89,7 +93,9 @@ while [ $# -gt 0 ]; do
     -T1)  shift; T1=$1; ;;
     -d|-data-dir)  shift; datadir=$1; ;;
     -t|-threads)  shift; threads=$1; ;;
-    -a|-atlas)  shift; atlasname=$1; ;; 
+    -template)  shift; template=$1; ;; 
+    -a|-atlas)  shift; atlas=$1; ;;
+    -ta|-tissue-atlas)  shift; tissue_atlas=$1; ;;
     -additional)  minimal=0; ;;
     -no-reorient) noreorient=1; ;;
     -recon-from-seg) recon_from_seg=1 ;;
@@ -121,28 +127,39 @@ fi
 
 ################ Checks ################
 
+# template configuration
+template_exists=`echo " $AVAILABLE_TEMPLATES "|grep " $template "`
+if [ "$template_exists" == "" ];then
+    echo "Unknown template: $template_exists" >&2;
+    exit;
+fi
+. $codedir/parameters/$template/configuration.sh
+
 # atlas configuration
-. $DRAWEMDIR/parameters/set_atlas.sh $atlasname
+. $DRAWEMDIR/parameters/set_atlas.sh $tissue_atlas $atlas
 
 [ "$T2" != "-" -a "$T2" != "" ] || { echo "T2 image not provided!" >&2; exit 1; }
 
 scriptdir=$codedir/scripts
 
-roundedAge=`printf "%.*f\n" 0 $age` #round
-[ $roundedAge -lt $TEMPLATE_MAX_AGE ] || { roundedAge=$TEMPLATE_MAX_AGE; }
-[ $roundedAge -gt $TEMPLATE_MIN_AGE ] || { roundedAge=$TEMPLATE_MIN_AGE; }
+rounded_age=`printf "%.*f\n" 0 $age` #round
+template_age=$rounded_age
+[ $template_age -lt $TEMPLATE_MAX_AGE ] || { template_age=$TEMPLATE_MAX_AGE; }
+[ $template_age -gt $TEMPLATE_MIN_AGE ] || { template_age=$TEMPLATE_MIN_AGE; }
 
 ################ Run ################
 version=`cat $codedir/version`
 echo "dHCP pipeline $version
-Subject:     $subjectID
-Session:     $sessionID 
-Age:         $age
-T1:          $T1
-T2:          $T2
-Directory:   $datadir 
-Threads:     $threads
-Minimal:     $minimal"
+Subject:      $subjectID
+Session:      $sessionID 
+Age:          $age
+T1:           $T1
+T2:           $T2
+Tissue atlas: $tissue_atlas
+Atlas:        $atlas
+Directory:    $datadir 
+Threads:      $threads
+Minimal:      $minimal"
 recon_from_seg_arg=""
 [ $recon_from_seg -eq 0 ] || { recon_from_seg_arg="-recon-from-seg"; echo "Reconstruction from segmentation only."; }
 [ $threads -eq 1 ] || { echo "Warning: Number of threads>1: This may result in minor reproducibility differences"; }
@@ -179,16 +196,16 @@ done
 
 
 # segmentation
-runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $roundedAge -d $workdir -a $ATLAS_NAME -t $threads
+runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $rounded_age -d $workdir -ta $tissue_atlas -a $atlas -t $threads
 
 # generate some additional files
-runpipeline additional $scriptdir/misc/pipeline.sh $subj $roundedAge -d $workdir -t $threads
+runpipeline additional $scriptdir/misc/pipeline.sh $subj $template_age -d $workdir -t $threads
 
 # surface extraction
 runpipeline surface $scriptdir/surface/pipeline.sh $subj $recon_from_seg_arg -d $workdir -t $threads
 
 # create data directory for subject
-runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $roundedAge $datadir $workdir $minimal
+runpipeline structure-data $scriptdir/misc/structure-data.sh $subjectID $sessionID $subj $template_age $datadir $workdir $minimal
 
 # clean-up
 if [ $cleanup -eq 1 ];then

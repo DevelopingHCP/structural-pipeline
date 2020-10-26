@@ -11,8 +11,9 @@ Arguments:
   subject                       Subject ID
 
 Options:
+  -a / -atlas  <atlasname>      Atlas used for the segmentation, options: `echo $AVAILABLE_ATLASES|sed -e 's: :, :g'` (default: `echo $AVAILABLE_ATLASES|cut -d ' ' -f1`)
+  -ta / -tissue-atlas  <atlasname>  Atlas used to compute the GM tissue probability, options: `echo $AVAILABLE_TISSUE_ATLASES|sed -e 's: :, :g'` (default: `echo $AVAILABLE_TISSUE_ATLASES|cut -d ' ' -f1`)
   -d / -data-dir  <directory>   The directory used to run the script and output the files. 
-  -a / -atlas  <atlasname>      Atlas used for the segmentation (default: ALBERT)
   -t / -threads  <number>       Number of threads (CPU cores) allowed for the registration to run in parallel (default: 1)
   -h / -help / --help           Print usage.
 "
@@ -29,7 +30,8 @@ subj=$2
 age=$3
 
 datadir=`pwd`
-atlasname=ALBERT
+atlas=`echo $AVAILABLE_ATLASES|cut -d ' ' -f1`
+tissue_atlas=`echo $AVAILABLE_TISSUE_ATLASES|cut -d ' ' -f1`
 threads=1
 
 # check whether the different tools are set and load parameters
@@ -40,7 +42,8 @@ shift; shift; shift
 while [ $# -gt 0 ]; do
   case "$1" in
     -d|-data-dir)  shift; datadir=$1; ;;
-    -a|-atlas)  shift; atlasname=$1; ;; 
+    -a|-atlas)  shift; atlas=$1; ;;
+    -ta|-tissue-atlas)  shift; tissue_atlas=$1; ;;
     -t|-threads)  shift; threads=$1; ;; 
     -h|-help|--help) usage; ;;
     -*) echo "$0: Unrecognized option $1" >&2; usage; ;;
@@ -50,11 +53,13 @@ while [ $# -gt 0 ]; do
 done
 
 echo "dHCP Segmentation pipeline
-T2:         $T2 
-Subject:    $subj 
-Age:        $age 
-Directory:  $datadir 
-Threads:    $threads
+T2:           $T2 
+Subject:      $subj 
+Age:          $age
+Tissue atlas: $tissue_atlas
+Atlas:        $atlas
+Directory:    $datadir 
+Threads:      $threads
 
 $BASH_SOURCE $command
 ----------------------------"
@@ -66,7 +71,7 @@ cd $datadir
 
 if [ ! -f segmentations/${subj}_all_labels.nii.gz ];then
   # run Draw-EM
-  run mirtk neonatal-segmentation $T2 $age -t $threads -c 1 -p 1 -v 1 -a $atlasname
+  run mirtk neonatal-segmentation $T2 $age -t $threads -c 1 -p 1 -v 1 -ta $tissue_atlas -a $atlas
   echo "----------------------------
 "
 fi
