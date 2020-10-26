@@ -9,16 +9,12 @@ export parameters_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Draw-EM initial configuration
 . $DRAWEMDIR/parameters/configuration.sh
 
+export AVAILABLE_TEMPLATES="neonatal"
+
 # MNI T1, mask and warps
 export MNI_T1=$DRAWEMDIR/atlases/MNI/MNI152_T1_1mm.nii.gz
 export MNI_MASK=$DRAWEMDIR/atlases/MNI/MNI152_T1_1mm_facemask.nii.gz
 export MNI_DOFS=$DRAWEMDIR/atlases/non-rigid-v2/dofs-MNI
-
-# Average space atlas name, T2 and warps
-export TEMPLATE_T2=$DRAWEMDIR/atlases/non-rigid-v2/T2
-export TEMPLATE_DOFS=$DRAWEMDIR/atlases/non-rigid-v2/dofs
-export TEMPLATE_MIN_AGE=28
-export TEMPLATE_MAX_AGE=44
 
 # registration parameters
 export REGISTRATION_CONFIG=$parameters_dir/ireg-structural.cfg
