@@ -170,7 +170,7 @@ if  [ ! -f $outwb/$subj.$h.$surf.native.label.gii ];then
   run mirtk padding $segdir/${subj}_tissue_labels.nii.gz $segdir/${subj}_tissue_labels.nii.gz $outvtk/$hs.mask.nii.gz 2 $CSF_TISSUE_LABEL $BG_TISSUE_LABEL 0 
   run dilate-labels $outvtk/$hs.mask.nii.gz $outvtk/$hs.mask.nii.gz -blur 1
   # exclude subcortical structures and dilate cortical labels to cover space
-  run mirtk padding $segdir/${subj}_labels.nii.gz $segdir/${subj}_labels.nii.gz $outvtk/$hs.labels.nii.gz `echo $CORTICAL|wc -w` $CORTICAL 0 -invert
+  run mirtk padding $segdir/${subj}_labels.nii.gz $segdir/${subj}_labels.nii.gz $outvtk/$hs.labels.nii.gz `echo $CORTICAL_GM|wc -w` $CORTICAL_GM 0 -invert
   if [ "$h" == "L" ];then oh=R;else oh=L;fi
   run mirtk padding $outvtk/$hs.labels.nii.gz $segdir/${subj}_${oh}_pial.nii.gz $outvtk/$hs.labels.nii.gz 1 0 
   run dilate-labels $outvtk/$hs.labels.nii.gz $outvtk/$hs.labels.nii.gz -blur 1
