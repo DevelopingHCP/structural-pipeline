@@ -39,7 +39,7 @@ The `dhcp-pipeline.sh` script has the following arguments:
 
 ```
 ./dhcp-pipeline.sh <subject_ID> <session_ID> <scan_age> -T2 <T2_image> \
-    [-T1 <T1_image>] [-t <num_threads>]
+    [-T1 <T1_image>] [-a <atlas> ] [-recon-from-seg] [-t <num_threads>]
 ```
 
 where:
@@ -51,7 +51,12 @@ Argument        | Type      | Description
 `scan_age` | double | Subject post-menstrual age (PMA) in weeks (number between 28 -- 44). If the age is less than 28w or more than 44w, it will be set to 28w or 44w respectively.
 `T2_image` | nifti image | The T2 image of the subject
 `T1_image` | nifti image | Optional, the T1 image of the subject
+`atlas` | string | Optional, specify the atlas to use for segmentation, options: ALBERT, MCRIB (default: ALBERT)
 `num_threads` | integer | Optional, the number of threads (CPU cores) used (default: 1)
+
+The `-recon-from-seg` option allows to reconstruct the cortical surfaces using only the segmentation (no image forces).
+This can often help in reconstructing surfaces of non-dHCP data.
+
 
 Examples:
 
@@ -216,11 +221,11 @@ The setup script installs the following software packages.
    
 Software        | Version           
 ------------- | ------------- 
-[ITK](https://github.com/InsightSoftwareConsortium/ITK) | 4.11.1 
-[VTK](https://github.com/Kitware/VTK) | 7.0.0     
-[Connectome Workbench](https://github.com/Washington-University/workbench) | 1.2.2  
-[MIRTK](https://github.com/BioMedIA/MIRTK) | dhcp-v1.1
-[SphericalMesh](https://github.com/amakropoulos/SphericalMesh) | dhcp-v1.1
+[ITK](https://github.com/InsightSoftwareConsortium/ITK) | 5.1.1
+[VTK](https://github.com/Kitware/VTK) | 9.0.1
+[Connectome Workbench](https://github.com/Washington-University/workbench) | 1.4.2
+[MIRTK](https://github.com/BioMedIA/MIRTK) | dhcp-v1.2
+[SphericalMesh](https://github.com/amakropoulos/SphericalMesh) | dhcp-v1.2
 
 The '-h' argument can be specified to provide more setup options:
 

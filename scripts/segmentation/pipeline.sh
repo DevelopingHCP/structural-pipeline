@@ -3,11 +3,11 @@
 usage()
 {
   base=$(basename "$0")
-  echo "usage: $base volume subject age [options]
+  echo "usage: $base T2 subject age [options]
 This script runs the dHCP surface pipeline.
 
 Arguments:
-  volume                        T2 volume to segment
+  T2                            T2 volume to segment
   subject                       Subject ID
 
 Options:
