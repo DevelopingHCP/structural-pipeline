@@ -32,6 +32,45 @@ software.
 The dHCP structural pipeline is distributed under the terms outlined in
 [LICENSE.txt](LICENSE.txt).
 
+## Running the pipeline
+
+The pipeline is run with the `dhcp-pipeline.sh` script.<br>
+The `dhcp-pipeline.sh` script has the following arguments:
+
+```
+./dhcp-pipeline.sh <subject_ID> <session_ID> <scan_age> -T2 <T2_image> \
+    [-T1 <T1_image>] [-t <num_threads>]
+```
+
+where:
+
+Argument        | Type      | Description     
+------------- | ------------- | ------------- 
+`subject_ID` | string | Subject ID
+`session_ID` | string | Session ID
+`scan_age` | double | Subject post-menstrual age (PMA) in weeks (number between 28 -- 44). If the age is less than 28w or more than 44w, it will be set to 28w or 44w respectively.
+`T2_image` | nifti image | The T2 image of the subject
+`T1_image` | nifti image | Optional, the T1 image of the subject
+`num_threads` | integer | Optional, the number of threads (CPU cores) used (default: 1)
+
+Examples:
+
+```
+./dhcp-pipeline.sh subject1 session1 44 -T2 subject1-T2.nii.gz -T1 subject1-T1.nii.gz -t 8
+./dhcp-pipeline.sh subject2 session1 36 -T2 subject2-T2.nii.gz -T1 subject2-T1.nii.gz 
+./dhcp-pipeline.sh subject3 session4 28 -T2 subject3-T2.nii.gz 
+```
+
+The output of the pipeline is the following directories:
+
+* `sourcedata`: folder containing the source images (T1,T2) of the processed subjects
+* `derivatives`: folder containing the output of the pipeline processing
+
+Measurements and reporting for the dHCP Structural Pipeline can be computed
+using:
+
+https://github.com/amakropoulos/structural-pipeline-measures
+
 ## Running the pipeline from dockerhub
 
 You can run the pipeline in a docker container. This will work on any
@@ -68,46 +107,10 @@ $ docker run --rm -t \
 ```
 
 Substituting subject and session codes, and the post-menstrual age at
-scan, see below. 
+scan, see above. 
 
 Once the command completes, you should find the output images in your `data`
 folder. 
-
-The `dhcp-pipeline.sh` script has the following arguments:
-
-```
-./dhcp-pipeline.sh <subject_ID> <session_ID> <scan_age> -T2 <T2_image> \
-    [-T1 <T1_image>] [-t <num_threads>]
-```
-
-where:
-
-Argument        | Type      | Description     
-------------- | ------------- | ------------- 
-`subject_ID` | string | Subject ID
-`session_ID` | string | Session ID
-`scan_age` | double | Subject post-menstrual age (PMA) in weeks (number between 28 -- 44). If the age is less than 28w or more than 44w, it will be set to 28w or 44w respectively.
-`T2_image` | nifti image | The T2 image of the subject
-`T1_image` | nifti image | Optional, the T1 image of the subject
-`num_threads` | integer | Optional, the number of threads (CPU cores) used (default: 1)
-
-Examples:
-
-```
-./dhcp-pipeline.sh subject1 session1 44 -T2 subject1-T2.nii.gz -T1 subject1-T1.nii.gz -t 8
-./dhcp-pipeline.sh subject2 session1 36 -T2 subject2-T2.nii.gz -T1 subject2-T1.nii.gz 
-./dhcp-pipeline.sh subject3 session4 28 -T2 subject3-T2.nii.gz 
-```
-
-The output of the pipeline is the following directories:
-
-* `sourcedata`: folder containing the source images (T1,T2) of the processed subjects
-* `derivatives`: folder containing the output of the pipeline processing
-
-Measurements and reporting for the dHCP Structural Pipeline can be computed
-using:
-
-https://github.com/amakropoulos/structural-pipeline-measures
 
 ### Rebuild the docker image
 
