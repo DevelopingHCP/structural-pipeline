@@ -119,6 +119,20 @@ if [ -f T1/$subj.nii.gz -a ! -f $T1masked ];then
   process_image T1
 fi
 
+if [ ! -f dofs/$subj-template-$age-n.dof.gz ];then
+  run mirtk register $T2masked $TEMPLATE_T2/template-$age.nii.gz -dofout dofs/$subj-template-$age-n.dof.gz -parin $REGISTRATION_TEMPLATE_CONFIG -threads $threads -v 0
+fi
+
+if [ ! -f dofs/$subj-template-$age-r.dof.gz ];then
+  run mirtk convert-dof dofs/$subj-template-$age-n.dof.gz dofs/$subj-template-$age-r.dof.gz -input-format mirtk -output-format rigid
+fi
+
+if [ ! -f dofs/template-$age-$subj-n.dof.gz ];then
+  run mirtk invert-dof dofs/$subj-template-$age-n.dof.gz dofs/template-$age-$subj-i.dof.gz
+  run mirtk register $TEMPLATE_T2/template-$age.nii.gz $T2masked -dofin dofs/template-$age-$subj-i.dof.gz -dofout dofs/template-$age-$subj-n.dof.gz -parin $REGISTRATION_TEMPLATE_CONFIG -threads $threads -v 0
+  run rm dofs/template-$age-$subj-i.dof.gz 
+fi
+
 # transform the serag mask to native and add on the brain mask
 if [ ! -f masks/${subj}_mask_defaced.nii.gz ];then
   run mirtk transform-image \
@@ -141,21 +155,6 @@ for m in T1 T2;do
     deface_image $m
   fi
 done
-
-
-if [ ! -f dofs/$subj-template-$age-n.dof.gz ];then
-  run mirtk register $T2masked $TEMPLATE_T2/template-$age.nii.gz -dofout dofs/$subj-template-$age-n.dof.gz -parin $REGISTRATION_TEMPLATE_CONFIG -threads $threads -v 0
-fi
-
-if [ ! -f dofs/$subj-template-$age-r.dof.gz ];then
-  run mirtk convert-dof dofs/$subj-template-$age-n.dof.gz dofs/$subj-template-$age-r.dof.gz -input-format mirtk -output-format rigid
-fi
-
-if [ ! -f dofs/template-$age-$subj-n.dof.gz ];then
-  run mirtk invert-dof dofs/$subj-template-$age-n.dof.gz dofs/template-$age-$subj-i.dof.gz
-  run mirtk register $TEMPLATE_T2/template-$age.nii.gz $T2masked -dofin dofs/template-$age-$subj-i.dof.gz -dofout dofs/template-$age-$subj-n.dof.gz -parin $REGISTRATION_TEMPLATE_CONFIG -threads $threads -v 0
-  run rm dofs/template-$age-$subj-i.dof.gz 
-fi
 
 if [ $age != 40 ];then 
   if [ ! -f dofs/$subj-template-40-n.dof.gz ];then
