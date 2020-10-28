@@ -101,8 +101,8 @@ done
 # template configuration
 template_exists=`echo " $AVAILABLE_TEMPLATES "|grep " $template "`
 if [ "$template_exists" == "" ];then
-    echo "Unknown template: $template_exists" >&2;
-    exit;
+  echo "Unknown template: $template" >&2;
+  exit;
 fi
 . $codedir/parameters/$template/configuration.sh
 
@@ -118,21 +118,29 @@ template_age=$rounded_age
 [ $template_age -lt $TEMPLATE_MAX_AGE ] || { template_age=$TEMPLATE_MAX_AGE; }
 [ $template_age -gt $TEMPLATE_MIN_AGE ] || { template_age=$TEMPLATE_MIN_AGE; }
 
+if [ $recon_from_seg -eq 0 ];then
+  reconstruction="segmentation + image"
+  recon_from_seg_arg=""
+else
+  reconstruction="segmentation"
+  recon_from_seg_arg="-recon-from-seg";
+fi
+
 ################ Run ################
 version=`cat $codedir/version`
 echo "dHCP pipeline $version
-Subject:      $subjectID
-Session:      $sessionID 
-Age:          $age
-T1:           $T1
-T2:           $T2
-Tissue atlas: $tissue_atlas
-Atlas:        $atlas
-Directory:    $datadir 
-Threads:      $threads
-Minimal:      $minimal"
-recon_from_seg_arg=""
-[ $recon_from_seg -eq 0 ] || { recon_from_seg_arg="-recon-from-seg"; echo "Reconstruction from segmentation only."; }
+Subject:        $subjectID
+Session:        $sessionID
+Age:            $age
+T1:             $T1
+T2:             $T2
+Tissue atlas:   $tissue_atlas
+Atlas:          $atlas
+Template:       $template
+Surface Recon:  $reconstruction
+Directory:      $datadir
+Threads:        $threads
+Minimal:        $minimal"
 [ $threads -eq 1 ] || { echo "Warning: Number of threads>1: This may result in minor reproducibility differences"; }
 echo "
 
