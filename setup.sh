@@ -204,8 +204,8 @@ set_if_undef DRAWEM_version=feature/MCRIB_integrated
 
 set_if_undef SPHERICALMESH_install=1
 set_if_undef SPHERICALMESH_git=https://github.com/amakropoulos/SphericalMesh.git
-set_if_undef SPHERICALMESH_branch=feature/VTK_9_support
-set_if_undef SPHERICALMESH_version=67273f6b28c78e3aeea6094b93af7849115a0fea
+set_if_undef SPHERICALMESH_branch=dhcp-v1.2
+set_if_undef SPHERICALMESH_version=16dc94e264215cc936f6908635f53418fcccc5af
 set_if_undef SPHERICALMESH_folder="$pipeline_build/SphericalMesh"
 set_if_undef SPHERICALMESH_build="$pipeline_build/SphericalMesh/build"
 set_if_undef SPHERICALMESH_cmake_flags="-DMIRTK_DIR=$MIRTK_build/lib/cmake/mirtk -DVTK_DIR=$VTK_build"
