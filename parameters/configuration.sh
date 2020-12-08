@@ -9,7 +9,7 @@ export parameters_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Draw-EM initial configuration
 . $DRAWEMDIR/parameters/configuration.sh
 
-export AVAILABLE_TEMPLATES="neonatal"
+export AVAILABLE_TEMPLATES="neonatal fetal"
 
 # MNI T1, mask and warps
 export MNI_T1=$DRAWEMDIR/atlases/MNI/MNI152_T1_1mm.nii.gz
