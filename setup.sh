@@ -200,7 +200,7 @@ set_if_undef MIRTK_folder="$pipeline_build/MIRTK"
 set_if_undef MIRTK_build="$pipeline_build/MIRTK/build"
 set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_ITK=ON -DITK_DIR=$ITK_build -DWITH_TBB=ON"
 
-set_if_undef DRAWEM_version=feature/MCRIB_integrated
+set_if_undef DRAWEM_version=feature/fetal_segmentation
 
 set_if_undef SPHERICALMESH_install=1
 set_if_undef SPHERICALMESH_git=https://github.com/amakropoulos/SphericalMesh.git
