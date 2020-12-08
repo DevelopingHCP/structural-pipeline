@@ -29,6 +29,7 @@ Options:
   -template <atlasname>         Template used for common space of subjects, options: `echo $AVAILABLE_TEMPLATES|sed -e 's: :, :g'` (default: `echo $AVAILABLE_TEMPLATES|cut -d ' ' -f1`)
   -a / -atlas  <atlasname>      Atlas used for the segmentation, options: `echo $AVAILABLE_ATLASES|sed -e 's: :, :g'` (default: `echo $AVAILABLE_ATLASES|cut -d ' ' -f1`)
   -ta / -tissue-atlas  <atlasname>  Atlas used to compute the GM tissue probability, options: `echo $AVAILABLE_TISSUE_ATLASES|sed -e 's: :, :g'` (default: `echo $AVAILABLE_TISSUE_ATLASES|cut -d ' ' -f1`)
+  -m / -mask <mask>             Brain mask to use for segmentation instead of computing it with BET
   -d / -data-dir  <directory>   The directory used to run the script and output the files. 
   -additional                   If specified, the pipeline will produce some additional files not included in release v1.0 (such as segmentation prob.maps, warps to MNI space, ..) (default: False) 
   -t / -threads  <number>       Number of threads (CPU cores) used (default: 1)
@@ -86,6 +87,7 @@ cleanup=1
 template=`echo $AVAILABLE_TEMPLATES|cut -d ' ' -f1`
 atlas=`echo $AVAILABLE_ATLASES|cut -d ' ' -f1`
 tissue_atlas=`echo $AVAILABLE_TISSUE_ATLASES|cut -d ' ' -f1`
+mask=""
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -96,6 +98,7 @@ while [ $# -gt 0 ]; do
     -template)  shift; template=$1; ;; 
     -a|-atlas)  shift; atlas=$1; ;;
     -ta|-tissue-atlas)  shift; tissue_atlas=$1; ;;
+    -m|-mask)  shift; mask=$1; ;;
     -additional)  minimal=0; ;;
     -no-reorient) noreorient=1; ;;
     -recon-from-seg) recon_from_seg=1 ;;
@@ -156,7 +159,7 @@ else
 fi
 
 ################ Run ################
-version=`cat $codedir/version`
+version=`cat $codedir/VERSION`
 echo "dHCP pipeline $version
 Subject:        $subjectID
 Session:        $sessionID
@@ -187,24 +190,37 @@ workdir=$datadir/workdir/$subj
 mkdir -p $workdir $logdir
 
 # copy files in the T1/T2 directory
-for modality in T1 T2;do 
+modalities="T1 T2"
+if [ "$mask" != "" ];then
+  modalities="$modalities mask"
+fi
+
+for modality in ${modalities};do
   mf=${!modality};
   if [ "$mf" == "-" -o "$mf" == "" ]; then continue; fi
   if [ ! -f "$mf" ];  then echo "The $modality image provided as argument does not exist!" >&2; exit 1; fi
 
   mkdir -p $workdir/$modality
   newf=$workdir/$modality/$subj.nii.gz
-  if [ $noreorient -eq 1 ];then
-    cp $mf $newf
+  if [[ "$mf" != *nii.gz ]];then
+    mirtk convert-image $mf $newf
   else
-    fslreorient2std $mf $newf
+    cp $mf $newf
+  fi
+
+  if [ $noreorient -eq 0 ];then
+    fslreorient2std $newf $newf
   fi
   eval "$modality=$newf"
 done
 
+mask_arg=""
+if [ "$mask" != "" ];then
+  mask_arg="-m $mask"
+fi
 
 # segmentation
-runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $rounded_age -d $workdir -ta $tissue_atlas -a $atlas -t $threads
+runpipeline segmentation $scriptdir/segmentation/pipeline.sh $T2 $subj $rounded_age -d $workdir -ta $tissue_atlas -a $atlas $mask_arg -t $threads
 
 # generate some additional files
 runpipeline additional $scriptdir/misc/pipeline.sh $subj $template_age -d $workdir -t $threads
