@@ -13,6 +13,7 @@ Arguments:
 Options:
   -a / -atlas  <atlasname>      Atlas used for the segmentation, options: `echo $AVAILABLE_ATLASES|sed -e 's: :, :g'` (default: `echo $AVAILABLE_ATLASES|cut -d ' ' -f1`)
   -ta / -tissue-atlas  <atlasname>  Atlas used to compute the GM tissue probability, options: `echo $AVAILABLE_TISSUE_ATLASES|sed -e 's: :, :g'` (default: `echo $AVAILABLE_TISSUE_ATLASES|cut -d ' ' -f1`)
+  -m / -mask <mask>             Brain mask to use for segmentation instead of computing it with BET
   -d / -data-dir  <directory>   The directory used to run the script and output the files. 
   -t / -threads  <number>       Number of threads (CPU cores) allowed for the registration to run in parallel (default: 1)
   -h / -help / --help           Print usage.
@@ -32,6 +33,7 @@ age=$3
 datadir=`pwd`
 atlas=`echo $AVAILABLE_ATLASES|cut -d ' ' -f1`
 tissue_atlas=`echo $AVAILABLE_TISSUE_ATLASES|cut -d ' ' -f1`
+mask_arg=""
 threads=1
 
 # check whether the different tools are set and load parameters
@@ -44,6 +46,7 @@ while [ $# -gt 0 ]; do
     -d|-data-dir)  shift; datadir=$1; ;;
     -a|-atlas)  shift; atlas=$1; ;;
     -ta|-tissue-atlas)  shift; tissue_atlas=$1; ;;
+    -m|-mask)  shift; mask_arg="-mask $1"; ;;
     -t|-threads)  shift; threads=$1; ;; 
     -h|-help|--help) usage; ;;
     -*) echo "$0: Unrecognized option $1" >&2; usage; ;;
@@ -71,7 +74,7 @@ cd $datadir
 
 if [ ! -f segmentations/${subj}_all_labels.nii.gz ];then
   # run Draw-EM
-  run mirtk neonatal-segmentation $T2 $age -t $threads -c 1 -p 1 -v 1 -ta $tissue_atlas -a $atlas
+  run mirtk neonatal-segmentation $T2 $age -t $threads -c 0 -p 1 -v 1 -ta $tissue_atlas -a $atlas $mask_arg
   echo "----------------------------
 "
 fi
