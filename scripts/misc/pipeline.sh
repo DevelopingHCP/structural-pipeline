@@ -136,7 +136,7 @@ fi
 # transform the serag mask to native and add on the brain mask
 if [ ! -f masks/${subj}_mask_defaced.nii.gz ];then
   run mirtk transform-image \
-    $parameters_dir/deface/template-$age-facemask.nii.gz \
+    $TEMPLATE_DEFACE_MASKS/template-$age-facemask.nii.gz \
     masks/${subj}_serag_mask.nii.gz \
     -dofin dofs/$subj-template-$age-n.dof.gz \
     -target $T2masked \
