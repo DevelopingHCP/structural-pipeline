@@ -80,7 +80,7 @@ done
 
 # warps
 ages="$age"
-if [ $age != 40 ];then ages="$ages 40";fi
+if [ $age != $TEMPLATE_CENTER_AGE ];then ages="$ages $TEMPLATE_CENTER_AGE";fi
 for cage in ${ages};do
   run mirtk convert-dof dofs/template-$cage-$subj-n.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w.nii.gz -input-format mirtk -output-format fsl -target $TEMPLATE_T2/template-$cage.nii.gz -source $outputRawDir/${prefix}_T2w.nii.gz
   run mirtk convert-dof dofs/$subj-template-$cage-n.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat.nii.gz -input-format mirtk -output-format fsl -source $TEMPLATE_T2/template-$cage.nii.gz -target $outputRawDir/${prefix}_T2w.nii.gz
@@ -135,7 +135,7 @@ if [ ! $minimal -eq 1 ];then
     run $action dofs/template-$cage-$subj-n.dof.gz $outputWarpDir/${prefix}_anat2std${cage}w-n.dof.gz
     run $action dofs/$subj-template-$cage-n.dof.gz $outputWarpDir/${prefix}_std${cage}w2anat-n.dof.gz
   done
-  
+
   run mirtk convert-dof dofs/$subj-MNI-n.dof.gz dofs/$subj-MNI-r.dof.gz -input-format mirtk -output-format rigid
   run mirtk convert-dof dofs/$subj-MNI-n.dof.gz $outputWarpDir/${prefix}_MNI2anat.nii.gz -input-format mirtk -output-format fsl -target $outputRawDir/${prefix}_T2w.nii.gz -source $MNI_T1
   run mirtk convert-dof dofs/$subj-MNI-r.dof.gz $outputWarpDir/${prefix}_MNI2anat.mat -input-format mirtk -output-format fsl -target $outputRawDir/${prefix}_T2w.nii.gz -source $MNI_T1
