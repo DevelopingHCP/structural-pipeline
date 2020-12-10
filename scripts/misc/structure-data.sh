@@ -74,7 +74,7 @@ run $action masks/$subj.nii.gz $outputDerivedDir/${prefix}_brainmask_drawem.nii.
 run $action masks/$subj-bet.nii.gz $outputDerivedDir/${prefix}_brainmask_bet.nii.gz
 
 # segmentations
-for seg in all_labels tissue_labels;do
+for seg in all_labels labels tissue_labels;do
     run $action segmentations/${subj}_${seg}.nii.gz $outputDerivedDir/${prefix}_drawem_${seg}.nii.gz
 done
 
