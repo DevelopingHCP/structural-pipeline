@@ -195,7 +195,7 @@ set_if_undef VTK_build="$pipeline_build/VTK/build"
 set_if_undef MIRTK_install=1
 set_if_undef MIRTK_git=https://github.com/BioMedIA/MIRTK.git
 set_if_undef MIRTK_branch=master
-set_if_undef MIRTK_version=77d3f391b49b0cee9e80da774fb074995fdf415f
+set_if_undef MIRTK_version=66ecbd6e33d39bdedfe406b96ee3307093dd864e
 set_if_undef MIRTK_folder="$pipeline_build/MIRTK"
 set_if_undef MIRTK_build="$pipeline_build/MIRTK/build"
 set_if_undef MIRTK_cmake_flags="-DMODULE_Deformable=ON -DMODULE_DrawEM=ON -DDEPENDS_Eigen3_DIR=$code_dir/ThirdParty/eigen-eigen-67e894c6cd8f -DWITH_VTK=ON -DDEPENDS_VTK_DIR=$VTK_build -DWITH_ITK=ON -DITK_DIR=$ITK_build -DWITH_TBB=ON"
