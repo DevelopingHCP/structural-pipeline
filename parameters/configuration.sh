@@ -17,7 +17,6 @@ export MNI_MASK=$DRAWEMDIR/atlases/MNI/MNI152_T1_1mm_facemask.nii.gz
 export MNI_DOFS=$DRAWEMDIR/atlases/non-rigid-v2/dofs-MNI
 
 # registration parameters
-export REGISTRATION_CONFIG=$parameters_dir/ireg-structural.cfg
 export REGISTRATION_TEMPLATE_CONFIG=$parameters_dir/ireg.cfg
 
 # surface reconstuction parameters
